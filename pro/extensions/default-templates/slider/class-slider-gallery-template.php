@@ -4,7 +4,7 @@ if ( !class_exists( 'FooGallery_Slider_Gallery_Template' ) ) {
 
 	class FooGallery_Slider_Gallery_Template {
 		/**
-		 * Wire up everything we need to run the extension
+		 * Wire up everything we need to run the extension.
 		 */
 		function __construct() {
 			add_filter( 'foogallery_gallery_templates', array( $this, 'add_template' ), 101 );

@@ -1,6 +1,6 @@
 <?php
 /**
- * FooGallery default responsive gallery template
+ * FooGallery default responsive gallery template.
  */
 global $current_foogallery;
 

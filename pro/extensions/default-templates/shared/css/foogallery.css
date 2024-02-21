@@ -6918,7 +6918,7 @@ html.fg-panel-no-scroll body {
 .fg-simple_portfolio.fg-transparent.fg-shadow-large .fg-item-inner {
     box-shadow: 0 1px 16px 0 rgba(128, 128, 128, 0.5);
 }
-/* Polaroid */
+/* Polaroid. */
 .foogallery.fg-preset.fg-polaroid .fg-item {
 	-webkit-backface-visibility: hidden;
 	backface-visibility: hidden;

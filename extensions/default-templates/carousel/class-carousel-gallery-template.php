@@ -74,7 +74,7 @@ if ( ! class_exists( 'FooGallery_Carousel_Gallery_Template' ) ) {
 		}
 
 		/**
-		 * Add the required data options if needed
+		 * Add the required data options if needed.
 		 *
 		 * @param $options
 		 * @param $gallery    FooGallery
