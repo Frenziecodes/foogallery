@@ -102,6 +102,8 @@ if ( ! class_exists( 'FooGallery_BoxSlider_Gallery_Template' ) ) {
                         'choices' => array(
                             'FadeSlider' => __('Fade Slider', 'foogallery'),
                             'TileSlider' => __('Tile Slider', 'foogallery'),
+                            'CarouselSlider' => __( 'Carousel Slider', 'foogallery' ),
+                            'CubeSlider' => __( 'Cube Slider', 'foogallery' ),
                         ),
                         'row_data' => array(
                             'data-foogallery-change-selector' => 'select',
@@ -184,6 +186,86 @@ if ( ! class_exists( 'FooGallery_BoxSlider_Gallery_Template' ) ) {
 							'data-foogallery-show-when-field-value'    => 'TileSlider',
                             'data-foogallery-change-selector' => 'input',
                             'data-foogallery-value-selector' => 'input',
+                            'data-foogallery-preview' => 'shortcode',
+                        ),
+                    ),
+
+                    // cube slider
+                    array(
+                        'id' => 'direction',
+                        'title' => __('Direction', 'foogallery'),
+                        'desc' => __('The direction in which the cube should rotate to the next slide.', 'foogallery'),
+                        'type' => 'select',
+                        'default' => 'horizontal',
+                        'choices' => array(
+                            'horizontal' => __('Horizontal', 'foogallery'),
+                            'vertical' => __('Vertical', 'foogallery'),
+                        ),
+                        'row_data' => array(
+							'data-foogallery-hidden'                   => true,
+							'data-foogallery-show-when-field'          => 'effect',
+							'data-foogallery-show-when-field-operator' => '===',
+							'data-foogallery-show-when-field-value'    => 'CubeSlider',
+                            'data-foogallery-change-selector' => 'select',
+                            'data-foogallery-value-selector' => 'option:selected',
+                            'data-foogallery-preview' => 'shortcode',
+                        ),
+                    ),
+                    array(
+                        'id' => 'perspective',
+                        'title' => __( 'Perspective', 'foogallery' ),
+                        'desc' => __( 'The perspective to apply to the parent viewport element containing the box.', 'foogallery' ),
+                        'type' => 'number',
+                        'default' => 1000,
+                        'row_data' => array(
+                            'data-foogallery-hidden'                   => true,
+							'data-foogallery-show-when-field'          => 'effect',
+							'data-foogallery-show-when-field-operator' => '===',
+							'data-foogallery-show-when-field-value'    => 'CubeSlider',
+                            'data-foogallery-change-selector' => 'input',
+                            'data-foogallery-value-selector' => 'input',
+                            'data-foogallery-preview' => 'shortcode',
+                        ),
+                    ),
+
+                    // CarouselSlider
+                    // array(
+                    //     'id' => 'timingFunction',
+                    //     'title' => __('Timing Function', 'foogallery'),
+                    //     'desc' => __(' The CSS transition timing function to use when animating slides into position.', 'foogallery'),
+                    //     'type' => 'select',
+                    //     'default' => 'ease-in-out',
+                    //     'choices' => array(
+                    //         'ease-in-out' => __('ease-in-out', 'foogallery'),
+                    //     ),
+                    //     'row_data' => array(
+					// 		'data-foogallery-hidden'                   => true,
+					// 		'data-foogallery-show-when-field'          => 'effect',
+					// 		'data-foogallery-show-when-field-operator' => '===',
+					// 		'data-foogallery-show-when-field-value'    => 'CarouselSlider',
+                    //         'data-foogallery-change-selector' => 'select',
+                    //         'data-foogallery-value-selector' => 'option:selected',
+                    //         'data-foogallery-preview' => 'shortcode',
+                    //     ),
+                    // ),
+
+                    array(
+                        'id' => 'cover',
+                        'title' => __('Cover', 'foogallery'),
+                        'desc' => __('If true sets the slide effect to cover over the previous slide.', 'foogallery'),
+                        'type' => 'select',
+                        'default' => 'false',
+                        'choices' => array(
+                            'false' => __('False', 'foogallery'),
+                            'true' => __('True', 'foogallery'),
+                        ),
+                        'row_data' => array(
+							'data-foogallery-hidden'                   => true,
+							'data-foogallery-show-when-field'          => 'effect',
+							'data-foogallery-show-when-field-operator' => '===',
+							'data-foogallery-show-when-field-value'    => 'CubeSlider',
+                            'data-foogallery-change-selector' => 'select',
+                            'data-foogallery-value-selector' => 'option:selected',
                             'data-foogallery-preview' => 'shortcode',
                         ),
                     ),

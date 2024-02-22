@@ -28,6 +28,9 @@ $timingFunction= foogallery_gallery_template_setting('timingFunction', '' ); //f
 $tileEffect= foogallery_gallery_template_setting('tileEffect', '' ); //tile slider
 $rows = foogallery_gallery_template_setting('rows', '' ); //tile slider
 $rowOffset = foogallery_gallery_template_setting('rowOffset', '' ); //tile slider
+$direction = foogallery_gallery_template_setting('direction', '' ); //cube slider
+$perspective = foogallery_gallery_template_setting('perspective', '' ); //cube slider
+$cover = foogallery_gallery_template_setting('cover', '' ); //Carousel Slider
 
 $lightbox = foogallery_gallery_template_setting_lightbox();
 $link = foogallery_gallery_template_setting( 'thumbnail_link', 'image' );
@@ -352,6 +355,8 @@ $foogallery_default_attributes = foogallery_build_container_attributes_safe( $cu
     BoxSlider,
     FadeSlider,
     TileSlider,
+    CubeSlider,
+    CarouselSlider,
   } from 'https://cdn.jsdelivr.net/npm/@boxslider/slider/+esm'
 
   // Common options for both FadeSlider and TileSlider
@@ -376,6 +381,17 @@ $foogallery_default_attributes = foogallery_build_container_attributes_safe( $cu
     rowOffset: <?php echo intval($rowOffset); ?>,
   });
 
+  // Specific options for CubeSlider
+  const cubeOptions = Object.assign({}, commonOptions, {
+    direction: "<?php echo $direction; ?>",
+    perspective: <?php echo intval($perspective); ?>,
+  });
+
+  // Specific options for CarouselSlider
+  const carouselOptions = Object.assign({}, commonOptions, {
+    cover: <?php echo $cover === 'true' ? 'true' : 'false'; ?>,
+  });
+
   // Get the slider effect.
   const sliderEffect = "<?php echo $slider; ?>";
 
@@ -386,6 +402,12 @@ $foogallery_default_attributes = foogallery_build_container_attributes_safe( $cu
       break;
     case "TileSlider":
       slider = new BoxSlider(document.getElementById('fg-template-boxslider-inner'), new TileSlider(), tileOptions);
+      break;
+    case "CubeSlider":
+      slider = new BoxSlider(document.getElementById('fg-template-boxslider-inner'), new CubeSlider(), cubeOptions);
+      break;
+    case "CarouselSlider":
+      slider = new BoxSlider(document.getElementById('fg-template-boxslider-inner'), new CarouselSlider(), commonOptions);
       break;
     default:
       // Default to FadeSlider for any other case
