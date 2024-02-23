@@ -1,6 +1,6 @@
 <?php
 /**
- * FooGallery FooGrid PRO gallery template with BoxSlider.
+ * FooGallery BoxSlider PRO gallery template.
  */
 global $current_foogallery;
 global $current_foogallery_arguments;
@@ -17,6 +17,7 @@ $text_play = foogallery_gallery_template_setting( 'text-play', $text_play_defaul
 $text_pause_default = foogallery_get_setting( 'language_boxslider_pause_text', __('Pause', 'foogallery') );
 $text_pause = foogallery_gallery_template_setting( 'text-pause', $text_pause_default );
 
+// common options
 $slider= foogallery_gallery_template_setting('effect', '' );  
 $speed= foogallery_gallery_template_setting('speed', '' );
 $autoScroll= foogallery_gallery_template_setting('autoScroll', '' );
@@ -24,7 +25,9 @@ $timeout= foogallery_gallery_template_setting('timeout', '' );
 $pauseOnHover= foogallery_gallery_template_setting('pauseOnHover', '' );
 $swipe= foogallery_gallery_template_setting('swipe', '' );
 $swipeTolerance= foogallery_gallery_template_setting('swipeTolerance', '' );
-$timingFunction= foogallery_gallery_template_setting('timingFunction', '' ); //fade slider
+// end of common options
+
+$timingFunction= foogallery_gallery_template_setting('timingFunction', '' ); //fade slider & Carousel slider
 $tileEffect= foogallery_gallery_template_setting('tileEffect', '' ); //tile slider
 $rows = foogallery_gallery_template_setting('rows', '' ); //tile slider
 $rowOffset = foogallery_gallery_template_setting('rowOffset', '' ); //tile slider
@@ -41,20 +44,23 @@ $foogallery_default_attributes = foogallery_build_container_attributes_safe( $cu
 ?>
 <div <?php echo $foogallery_default_attributes; ?>>
 
-<section class="fg-template-boxslider">
+    <section class="fg-template-boxslider">
 
-    <section id="fg-template-boxslider-inner">    
-        <?php foreach (foogallery_current_gallery_attachments_for_rendering() as $attachment) {
-            $image_src = wp_get_attachment_url($attachment->ID);
-            $image_srcset = wp_get_attachment_image_srcset($attachment->ID, 'full');
-        ?>
-            <figure>
-                <picture>
-                    <source srcset="<?php echo esc_attr($image_srcset); ?>" />
-                    <img src="<?php echo esc_attr($image_src); ?>" alt="<?php echo esc_attr($attachment->alt); ?>" class="fg-boxslider-template-image" />
-                </picture>
-            </figure>
-        <?php } ?>
+        <section id="fg-template-boxslider-inner">    
+            <?php foreach (foogallery_current_gallery_attachments_for_rendering() as $attachment) {
+                $image_src = wp_get_attachment_url($attachment->ID);
+                $image_srcset = wp_get_attachment_image_srcset($attachment->ID, 'full');
+            ?>
+                <figure class="slide">
+                    <picture>
+                        <source srcset="<?php echo esc_attr($image_srcset); ?>" />
+                        <img src="<?php echo esc_attr($image_src); ?>" alt="<?php echo esc_attr($attachment->alt); ?>" class="fg-boxslider-template-image" />
+                    </picture>
+                </figure>
+            <?php } ?>
+        </section>
+
+        
     </section>
 
     <section style="margin-top: 20px;">
@@ -72,283 +78,285 @@ $foogallery_default_attributes = foogallery_build_container_attributes_safe( $cu
             
         </div>
     </section>
-
-    <style>
-        
-        /* TODO: stylings */
-
-        /* Inner shadow */
-
-        /* Loading icon */
-
-        /* loaded effect */
-
-        /* Intagram filter */
-
-        /* Implement Hover effects */
-
-        /* Effect Type  */
-
-        /* Color Effect */
-
-        /* Scaling Effect */
-
-        /* Caption Visibility  */
-
-        /* Transition */
-
-        /* Icon  */
-
-        /* end of hover effects */
-
-        /* END OF TODO STYLINGS */        
-
-        .fg-boxslider{
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;        
-        }
-        .fg-boxslider.fg-left {
-            text-align: left;
-        }
-
-        .fg-boxslider.fg-center {
-            text-align: center;
-        }
-        .fg-boxslider.fg-right {
-            text-align: right;
-        }
-        .fg-template-boxslider{            
-            padding: 3px;
-        }
-        #fg-template-boxslider-inner {
-            display: block;
-            font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
-            height: auto;
-            width: 560px;
-            border: solid #333;
-            padding: auto;     
-        }
-        .fg-boxslider-template-image {
-            width: 100%!important;
-            height: 100%!important;
-        }
-
-        .fg-boxslider-slider-controls, .fg-boxslider-slider-controls-right, .fg-boxslider-slider-controls-left {
-            display: flex;
-            flex-direction: row;
-        }
-        .fg-boxslider-slider-controls{
-            justify-content: space-between;
-        }
-
-        /* Drop Shadows */
-        .foogallery.fg-boxslider.fg-light.fg-shadow-outline,
-        .foogallery.fg-boxslider.fg-dark.fg-shadow-outline,
-        .foogallery.fg-boxslider.fg-light.fg-shadow-small,
-        .foogallery.fg-boxslider.fg-dark.fg-shadow-small,
-        .foogallery.fg-boxslider.fg-light.fg-shadow-medium,
-        .foogallery.fg-boxslider.fg-dark.fg-shadow-medium,
-        .foogallery.fg-boxslider.fg-light.fg-shadow-large,
-        .foogallery.fg-boxslider.fg-dark.fg-shadow-large {
-            box-shadow: none;
-        }
-
-        .foogallery.fg-boxslider.fg-light.fg-shadow-outline .fg-template-boxslider {
-            box-shadow: 0 0 0 1px #ddd;
-        }
-        .foogallery.fg-boxslider.fg-dark.fg-shadow-outline .fg-template-boxslider {
-            box-shadow: 0 0 0 1px #222;
-        }
-        .foogallery.fg-boxslider.fg-light.fg-shadow-small .fg-template-boxslider,
-        .foogallery.fg-boxslider.fg-dark.fg-shadow-small .fg-template-boxslider {
-            box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.5);
-        }
-        .foogallery.fg-boxslider.fg-light.fg-shadow-medium .fg-template-boxslider,
-        .foogallery.fg-boxslider.fg-dark.fg-shadow-medium .fg-template-boxslider {
-            box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.5);
-        }
-        .foogallery.fg-boxslider.fg-light.fg-shadow-large .fg-template-boxslider,
-        .foogallery.fg-boxslider.fg-dark.fg-shadow-large .fg-template-boxslider {
-            box-shadow: 0 1px 16px 0 rgba(0, 0, 0, 0.5);
-        }
-        
-        /* Rounded corners */
-        .foogallery.fg-boxslider.fg-round-small,
-        .foogallery.fg-boxslider.fg-round-small .fg-template-boxslider {
-            border-radius: 5px;
-        }
-        .foogallery.fg-boxslider.fg-round-small,
-        .foogallery.fg-boxslider.fg-round-small {
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-        }
-        .foogallery.fg-boxslider.fg-round-small .fg-boxslider-slider-controls  button {
-            border-radius: 3px;
-        }
-
-        .foogallery.fg-boxslider.fg-border-thin.fg-round-small,
-        .foogallery.fg-boxslider.fg-border-thin.fg-round-small,
-        .foogallery.fg-boxslider.fg-border-thin.fg-round-small .fg-boxslider-slider-controls  button,
-        .foogallery.fg-boxslider.fg-border-medium.fg-round-small,
-        .foogallery.fg-boxslider.fg-border-medium.fg-round-small,
-        .foogallery.fg-boxslider.fg-border-medium.fg-round-small .fg-boxslider-slider-controls  button,
-        .foogallery.fg-boxslider.fg-border-thick.fg-round-small,
-        .foogallery.fg-boxslider.fg-border-thick.fg-round-small,
-        .foogallery.fg-boxslider.fg-border-thick.fg-round-small .fg-boxslider-slider-controls  button {
-            border-radius: 3px;
-        }
-
-        .foogallery.fg-boxslider.fg-round-medium,
-        .foogallery.fg-boxslider.fg-round-medium,
-        .foogallery.fg-boxslider.fg-round-medium .fg-template-boxslider {
-            border-radius: 10px;
-        }
-        .foogallery.fg-boxslider.fg-round-medium,
-        .foogallery.fg-boxslider.fg-round-medium {
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-        }
-        .foogallery.fg-boxslider.fg-round-medium .fg-boxslider-slider-controls  button {
-            border-radius: 5px;
-        }
-        .foogallery.fg-boxslider.fg-border-thin.fg-round-medium,
-        .foogallery.fg-boxslider.fg-border-thin.fg-round-medium,
-        .foogallery.fg-boxslider.fg-border-thin.fg-round-medium .fg-boxslider-slider-controls  button{
-            border-radius: 5px;
-        }
-        .foogallery.fg-boxslider.fg-border-medium.fg-round-medium,
-        .foogallery.fg-boxslider.fg-border-medium.fg-round-medium,
-        .foogallery.fg-boxslider.fg-border-medium.fg-round-medium .fg-boxslider-slider-controls  button,
-        .foogallery.fg-boxslider.fg-border-thick.fg-round-medium,
-        .foogallery.fg-boxslider.fg-border-thick.fg-round-medium,
-        .foogallery.fg-boxslider.fg-border-thick.fg-round-medium .fg-boxslider-slider-controls  button {
-            border-radius: 3px;
-        }
-
-        .foogallery.fg-boxslider.fg-round-large,
-        .foogallery.fg-boxslider.fg-round-large,
-        .foogallery.fg-boxslider.fg-round-large .fg-template-boxslider {
-            border-radius: 15px;
-        }
-        .foogallery.fg-boxslider.fg-round-large,
-        .foogallery.fg-boxslider.fg-round-large {
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-        }
-        .foogallery.fg-boxslider.fg-round-large .fg-boxslider-slider-controls  button {
-            border-radius: 11px;
-        }
-        .foogallery.fg-boxslider.fg-border-thin.fg-round-large,
-        .foogallery.fg-boxslider.fg-border-thin.fg-round-large,
-        .foogallery.fg-boxslider.fg-border-thin.fg-round-large .fg-boxslider-slider-controls  button {
-            border-radius: 11px;
-        }
-
-        .foogallery.fg-boxslider.fg-border-medium.fg-round-large,
-        .foogallery.fg-boxslider.fg-border-medium.fg-round-large,
-        .foogallery.fg-boxslider.fg-border-medium.fg-round-large .fg-boxslider-slider-controls  button {
-            border-radius: 5px;
-        }
-
-        .foogallery.fg-boxslider.fg-border-thick.fg-round-large,
-        .foogallery.fg-boxslider.fg-border-thick.fg-round-large,
-        .foogallery.fg-boxslider.fg-border-thick.fg-round-large .fg-boxslider-slider-controls  button {
-            border-radius: 3px;
-        }
-
-        .foogallery.fg-boxslider.fg-round-full .fg-template-boxslider,
-        .foogallery.fg-boxslider.fg-round-full .fg-boxslider-slider-controls  button {
-            border-radius: 50%;
-        }
-        
-        /* Border Size */
-        .foogallery.fg-boxslider .fg-boxslider-slider-controls  button,
-        .foogallery.fg-boxslider.fg-border-thin #fg-template-boxslider-inner {
-            border-width: 4px;
-        }
-        .foogallery.fg-boxslider.fg-border-medium .fg-boxslider-slider-controls  button,
-        .foogallery.fg-boxslider.fg-border-medium #fg-template-boxslider-inner {
-            border-width: 10px;
-        }
-        .foogallery.fg-boxslider.fg-border-thick .fg-boxslider-slider-controls  button,
-        .foogallery.fg-boxslider.fg-border-thick #fg-template-boxslider-inner {
-            border-width: 16px;
-        }
-        .foogallery.fg-boxslider .fg-boxslider-slider-controls  button,
-        .foogallery.fg-boxslider.fg-border-thin .fg-boxslider-slider-controls  button,
-        .foogallery.fg-boxslider.fg-border-medium .fg-boxslider-slider-controls  button,
-        .foogallery.fg-boxslider.fg-border-thick .fg-boxslider-slider-controls  button {
-            border-top-width: 1px;
-        }
-
-        /* Captions */ 
-
-        .fg-boxslider.fg-caption-always .fg-caption {
-            padding: 0;
-            border: none;
-        }
-        .fg-boxslider.fg-caption-always .fg-caption-title {
-            padding: 10px 10px 10px 10px;
-        }
-        .fg-boxslider.fg-caption-always .fg-caption-desc {
-            padding: 10px 10px 10px 10px;
-        }
-        .fg-boxslider.fg-caption-always .fg-caption-title+.fg-caption-desc {
-            padding: 0 10px 10px 10px;
-        }
-
-        /* light theme(default) */
-        .fg-light .fg-template-boxslider {
-            background-color: #fff;
-            color: #333;
-            border: 1px solid #333;
-        }
-        .fg-light .fg-boxslider-slider-controls  button {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            background-color: transparent;
-            border: solid #333;
-            height: 30px;
-            color: #333;
-            cursor: pointer;
-            margin: 2px;
-            transition: all 0.3s ease;
-        }
-        .fg-light .fg-boxslider-slider-controls  button:hover {
-            background-color: #333;
-            color: #fff;
-        }
-
-        /* dark theme */
-        .fg-dark .fg-template-boxslider {
-            background-color: #333;
-            color: #FFF;
-	        border: solid #FFF;
-        }
-        .fg-dark .fg-boxslider-slider-controls  button {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #333;
-	        border: solid #fff;
-            height: 30px;
-            min-width: 60px;
-            cursor: pointer;
-            margin: 2px;
-            transition: all 0.3s ease;
-            box-shadow: inset 0 0 0 1px #222;
-        }
-        .fg-dark .fg-boxslider-slider-controls  button:hover {
-            background-color: #444;
-        }
-
-    </style>
-</section>
 </div>
+
+<style>
+        
+    /* TODO: stylings */
+
+    /* Inner shadow */
+
+    /* Loading icon */
+
+    /* loaded effect */
+
+    /* Intagram filter */
+
+    /* Implement Hover effects */
+
+    /* Effect Type  */
+
+    /* Color Effect */
+
+    /* Scaling Effect */
+
+    /* Caption Visibility  */
+
+    /* Transition */
+
+    /* Icon  */
+
+    /* end of hover effects */
+
+    /* END OF TODO STYLINGS */        
+
+    .fg-boxslider{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .fg-template-boxslider{
+        position: relative;
+        height: 400px;
+        width: 600px;
+    }
+    #fg-template-boxslider-inner {
+        font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+        border: solid #333;
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;   
+    }
+    .fg-boxslider-template-image {
+        height: 400px;
+        width: 600px;
+    }
+
+    .fg-boxslider.fg-left {
+        text-align: left;
+    }
+
+    .fg-boxslider.fg-center {
+        text-align: center;
+    }
+    .fg-boxslider.fg-right {
+        text-align: right;
+    }
+
+    .fg-boxslider-slider-controls, .fg-boxslider-slider-controls-right, .fg-boxslider-slider-controls-left {
+        display: flex;
+        flex-direction: row;
+    }
+    .fg-boxslider-slider-controls{
+        justify-content: space-between;
+    }
+
+    /* Drop Shadows */
+    .foogallery.fg-boxslider.fg-light.fg-shadow-outline,
+    .foogallery.fg-boxslider.fg-dark.fg-shadow-outline,
+    .foogallery.fg-boxslider.fg-light.fg-shadow-small,
+    .foogallery.fg-boxslider.fg-dark.fg-shadow-small,
+    .foogallery.fg-boxslider.fg-light.fg-shadow-medium,
+    .foogallery.fg-boxslider.fg-dark.fg-shadow-medium,
+    .foogallery.fg-boxslider.fg-light.fg-shadow-large,
+    .foogallery.fg-boxslider.fg-dark.fg-shadow-large {
+        box-shadow: none;
+    }
+
+    .foogallery.fg-boxslider.fg-light.fg-shadow-outline .fg-template-boxslider {
+        box-shadow: 0 0 0 1px #ddd;
+    }
+    .foogallery.fg-boxslider.fg-dark.fg-shadow-outline .fg-template-boxslider {
+        box-shadow: 0 0 0 1px #222;
+    }
+    .foogallery.fg-boxslider.fg-light.fg-shadow-small .fg-template-boxslider,
+    .foogallery.fg-boxslider.fg-dark.fg-shadow-small .fg-template-boxslider {
+        box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.5);
+    }
+    .foogallery.fg-boxslider.fg-light.fg-shadow-medium .fg-template-boxslider,
+    .foogallery.fg-boxslider.fg-dark.fg-shadow-medium .fg-template-boxslider {
+        box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.5);
+    }
+    .foogallery.fg-boxslider.fg-light.fg-shadow-large .fg-template-boxslider,
+    .foogallery.fg-boxslider.fg-dark.fg-shadow-large .fg-template-boxslider {
+        box-shadow: 0 1px 16px 0 rgba(0, 0, 0, 0.5);
+    }
+    
+    /* Rounded corners */
+    .foogallery.fg-boxslider.fg-round-small,
+    .foogallery.fg-boxslider.fg-round-small .fg-template-boxslider {
+        border-radius: 5px;
+    }
+    .foogallery.fg-boxslider.fg-round-small,
+    .foogallery.fg-boxslider.fg-round-small {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .foogallery.fg-boxslider.fg-round-small .fg-boxslider-slider-controls  button {
+        border-radius: 3px;
+    }
+
+    .foogallery.fg-boxslider.fg-border-thin.fg-round-small,
+    .foogallery.fg-boxslider.fg-border-thin.fg-round-small,
+    .foogallery.fg-boxslider.fg-border-thin.fg-round-small .fg-boxslider-slider-controls  button,
+    .foogallery.fg-boxslider.fg-border-medium.fg-round-small,
+    .foogallery.fg-boxslider.fg-border-medium.fg-round-small,
+    .foogallery.fg-boxslider.fg-border-medium.fg-round-small .fg-boxslider-slider-controls  button,
+    .foogallery.fg-boxslider.fg-border-thick.fg-round-small,
+    .foogallery.fg-boxslider.fg-border-thick.fg-round-small,
+    .foogallery.fg-boxslider.fg-border-thick.fg-round-small .fg-boxslider-slider-controls  button {
+        border-radius: 3px;
+    }
+
+    .foogallery.fg-boxslider.fg-round-medium,
+    .foogallery.fg-boxslider.fg-round-medium,
+    .foogallery.fg-boxslider.fg-round-medium .fg-template-boxslider {
+        border-radius: 10px;
+    }
+    .foogallery.fg-boxslider.fg-round-medium,
+    .foogallery.fg-boxslider.fg-round-medium {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .foogallery.fg-boxslider.fg-round-medium .fg-boxslider-slider-controls  button {
+        border-radius: 5px;
+    }
+    .foogallery.fg-boxslider.fg-border-thin.fg-round-medium,
+    .foogallery.fg-boxslider.fg-border-thin.fg-round-medium,
+    .foogallery.fg-boxslider.fg-border-thin.fg-round-medium .fg-boxslider-slider-controls  button{
+        border-radius: 5px;
+    }
+    .foogallery.fg-boxslider.fg-border-medium.fg-round-medium,
+    .foogallery.fg-boxslider.fg-border-medium.fg-round-medium,
+    .foogallery.fg-boxslider.fg-border-medium.fg-round-medium .fg-boxslider-slider-controls  button,
+    .foogallery.fg-boxslider.fg-border-thick.fg-round-medium,
+    .foogallery.fg-boxslider.fg-border-thick.fg-round-medium,
+    .foogallery.fg-boxslider.fg-border-thick.fg-round-medium .fg-boxslider-slider-controls  button {
+        border-radius: 3px;
+    }
+
+    .foogallery.fg-boxslider.fg-round-large,
+    .foogallery.fg-boxslider.fg-round-large,
+    .foogallery.fg-boxslider.fg-round-large .fg-template-boxslider {
+        border-radius: 15px;
+    }
+    .foogallery.fg-boxslider.fg-round-large,
+    .foogallery.fg-boxslider.fg-round-large {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .foogallery.fg-boxslider.fg-round-large .fg-boxslider-slider-controls  button {
+        border-radius: 11px;
+    }
+    .foogallery.fg-boxslider.fg-border-thin.fg-round-large,
+    .foogallery.fg-boxslider.fg-border-thin.fg-round-large,
+    .foogallery.fg-boxslider.fg-border-thin.fg-round-large .fg-boxslider-slider-controls  button {
+        border-radius: 11px;
+    }
+
+    .foogallery.fg-boxslider.fg-border-medium.fg-round-large,
+    .foogallery.fg-boxslider.fg-border-medium.fg-round-large,
+    .foogallery.fg-boxslider.fg-border-medium.fg-round-large .fg-boxslider-slider-controls  button {
+        border-radius: 5px;
+    }
+
+    .foogallery.fg-boxslider.fg-border-thick.fg-round-large,
+    .foogallery.fg-boxslider.fg-border-thick.fg-round-large,
+    .foogallery.fg-boxslider.fg-border-thick.fg-round-large .fg-boxslider-slider-controls  button {
+        border-radius: 3px;
+    }
+
+    .foogallery.fg-boxslider.fg-round-full .fg-template-boxslider,
+    .foogallery.fg-boxslider.fg-round-full .fg-boxslider-slider-controls  button {
+        border-radius: 50%;
+    }
+    
+    /* Border Size */
+    .foogallery.fg-boxslider .fg-boxslider-slider-controls  button,
+    .foogallery.fg-boxslider.fg-border-thin #fg-template-boxslider-inner {
+        border-width: 2px;
+    }
+    .foogallery.fg-boxslider.fg-border-medium .fg-boxslider-slider-controls  button,
+    .foogallery.fg-boxslider.fg-border-medium #fg-template-boxslider-inner {
+        border-width: 10px;
+    }
+    .foogallery.fg-boxslider.fg-border-thick .fg-boxslider-slider-controls  button,
+    .foogallery.fg-boxslider.fg-border-thick #fg-template-boxslider-inner {
+        border-width: 16px;
+    }
+    .foogallery.fg-boxslider .fg-boxslider-slider-controls  button,
+    .foogallery.fg-boxslider.fg-border-thin .fg-boxslider-slider-controls  button,
+    .foogallery.fg-boxslider.fg-border-medium .fg-boxslider-slider-controls  button,
+    .foogallery.fg-boxslider.fg-border-thick .fg-boxslider-slider-controls  button {
+        border-top-width: 1px;
+    }
+
+    /* Captions */ 
+
+    .fg-boxslider.fg-caption-always .fg-caption {
+        padding: 0;
+        border: none;
+    }
+    .fg-boxslider.fg-caption-always .fg-caption-title {
+        padding: 10px 10px 10px 10px;
+    }
+    .fg-boxslider.fg-caption-always .fg-caption-desc {
+        padding: 10px 10px 10px 10px;
+    }
+    .fg-boxslider.fg-caption-always .fg-caption-title+.fg-caption-desc {
+        padding: 0 10px 10px 10px;
+    }
+
+    /* light theme(default) */
+    .fg-light .fg-template-boxslider {
+        background-color: #fff;
+        color: #333;
+        border: 1px solid #333;
+    }
+    .fg-light .fg-boxslider-slider-controls  button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background-color: transparent;
+        border: solid #333;
+        height: 30px;
+        color: #333;
+        cursor: pointer;
+        margin: 2px;
+        transition: all 0.3s ease;
+    }
+    .fg-light .fg-boxslider-slider-controls  button:hover {
+        background-color: #333;
+        color: #fff;
+    }
+
+    /* dark theme */
+    .fg-dark .fg-template-boxslider {
+        background-color: #333;
+        color: #FFF;
+        border: solid #FFF;
+    }
+    .fg-dark .fg-boxslider-slider-controls  button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #333;
+        border: solid #fff;
+        height: 30px;
+        min-width: 60px;
+        cursor: pointer;
+        margin: 2px;
+        transition: all 0.3s ease;
+        box-shadow: inset 0 0 0 1px #222;
+    }
+    .fg-dark .fg-boxslider-slider-controls  button:hover {
+        background-color: #444;
+    }
+
+</style>
 
 <script type="module">
   import {
@@ -389,6 +397,7 @@ $foogallery_default_attributes = foogallery_build_container_attributes_safe( $cu
 
   // Specific options for CarouselSlider
   const carouselOptions = Object.assign({}, commonOptions, {
+    timingFunction: "<?php echo $timingFunction; ?>",
     cover: <?php echo $cover === 'true' ? 'true' : 'false'; ?>,
   });
 
@@ -397,17 +406,17 @@ $foogallery_default_attributes = foogallery_build_container_attributes_safe( $cu
 
   let slider;
   switch (sliderEffect) {
-    case "FadeSlider":
+    case "fg-fade-slider":
       slider = new BoxSlider(document.getElementById('fg-template-boxslider-inner'), new FadeSlider(), fadeOptions);
       break;
-    case "TileSlider":
+    case "fg-tile-slider":
       slider = new BoxSlider(document.getElementById('fg-template-boxslider-inner'), new TileSlider(), tileOptions);
       break;
-    case "CubeSlider":
+    case "fg-cube-slider":
       slider = new BoxSlider(document.getElementById('fg-template-boxslider-inner'), new CubeSlider(), cubeOptions);
       break;
-    case "CarouselSlider":
-      slider = new BoxSlider(document.getElementById('fg-template-boxslider-inner'), new CarouselSlider(), commonOptions);
+    case "fg-carousel-slider":
+      slider = new BoxSlider(document.getElementById('fg-template-boxslider-inner'), new CarouselSlider(), carouselOptions);
       break;
     default:
       // Default to FadeSlider for any other case
