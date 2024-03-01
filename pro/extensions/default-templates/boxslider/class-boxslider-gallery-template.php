@@ -64,30 +64,7 @@ if ( ! class_exists( 'FooGallery_BoxSlider_Gallery_Template' ) ) {
                 'thumbnail_dimensions' => true,
                 'filtering_support' => true,
                 'enqueue_core' => true,
-                'fields' => array(
-					array(
-						'id'      => 'thumbnail_size',
-						'title'   => __( 'Thumbnail Size', 'foogallery' ),
-						'desc'    => __( 'Choose the size of your thumbs.', 'foogallery' ),
-						'type'    => 'thumb_size',
-						'default' => array(
-							'width' => 320,
-							'height' => 180,
-							'crop' => true
-						),
-						'row_data'=> array(
-							'data-foogallery-change-selector' => 'input',
-							'data-foogallery-preview' => 'shortcode'
-						)
-					),
-					array(
-						'id'      => 'thumbnail_link',
-						'title'   => __( 'Thumbnail Link', 'foogallery' ),
-						'section' => __( 'General', 'foogallery' ),
-						'default' => 'image',
-						'type'    => 'thumb_link',
-						'desc'    => __( 'You can choose to link each thumbnail to the full size image, the image\'s attachment page, a custom URL, or you can choose to not link to anything.', 'foogallery' ),
-					),
+                'fields' => array(					
 					array(
                         'id'      => 'lightbox',
                         'desc'    => __( 'Choose which lightbox you want to use in the gallery', 'foogallery' ),
@@ -333,7 +310,7 @@ if ( ! class_exists( 'FooGallery_BoxSlider_Gallery_Template' ) ) {
                         'title' => __( 'swipe', 'foogallery' ),
                         'desc' => __( 'Enable swiping the box to navigate to the next or previous slide.', 'foogallery' ),
                         'type' => 'radio',
-                        'default' => 'true',
+                        'default' => 'false',
                         'choices' => array(
                             'true' => __( 'True', 'foogallery' ),
                             'false' => __( 'false', 'foogallery' ),
@@ -464,8 +441,8 @@ if ( ! class_exists( 'FooGallery_BoxSlider_Gallery_Template' ) ) {
 		 */
 		function get_thumbnail_dimensions( $dimensions, $foogallery ) {
 			$dimensions = $foogallery->get_meta( 'boxslider_thumbnail_size', array(
-				'width' => 640,
-				'height' => 360,
+				'width' => 600,
+				'height' => 400,
                 'crop' => true
 			) );
             if ( !array_key_exists( 'crop', $dimensions ) ) {
@@ -482,8 +459,8 @@ if ( ! class_exists( 'FooGallery_BoxSlider_Gallery_Template' ) ) {
          */
         function build_gallery_template_arguments( $args ) {
             $args = foogallery_gallery_template_setting( 'thumbnail_size', array(
-	            'width' => 640,
-	            'height' => 360,
+	            'width' => 600,
+	            'height' => 400,
 	            'crop' => true
             ) );
             if ( !array_key_exists( 'crop', $args ) ) {
@@ -512,7 +489,7 @@ if ( ! class_exists( 'FooGallery_BoxSlider_Gallery_Template' ) ) {
 			$speed = foogallery_gallery_template_setting( 'speed', 800 );
 			$timeout = foogallery_gallery_template_setting( 'timeout', 5000 );
 			$pauseOnHover = foogallery_gallery_template_setting( 'pauseOnHover', 'true' );
-			$swipe = foogallery_gallery_template_setting( 'swipe', 'true' );
+			$swipe = foogallery_gallery_template_setting( 'swipe', 'false' );
 			$swipeTolerance = foogallery_gallery_template_setting( 'swipeTolerance', 30 );
 
 			$options['template']['autoScroll'] = $autoScroll;			

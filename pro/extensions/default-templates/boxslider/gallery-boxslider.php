@@ -36,9 +36,8 @@ $perspective = foogallery_gallery_template_setting('perspective', '' ); //cube s
 $cover = foogallery_gallery_template_setting('cover', '' ); //Carousel Slider
 
 $lightbox = foogallery_gallery_template_setting_lightbox();
-$link = foogallery_gallery_template_setting( 'thumbnail_link', 'image' );
 
-$foogallery_default_classes = foogallery_build_class_attribute_safe( $current_foogallery, 'foogallery-link-' . $link, 'foogallery-lightbox-' . $lightbox );
+$foogallery_default_classes = foogallery_build_class_attribute_safe( $current_foogallery, 'foogallery-lightbox-' . $lightbox );
 $foogallery_default_attributes = foogallery_build_container_attributes_safe( $current_foogallery, array( 'class' => $foogallery_default_classes ) );
 
 ?>
@@ -46,7 +45,7 @@ $foogallery_default_attributes = foogallery_build_container_attributes_safe( $cu
 
     <div class="fg-bx">     
 
-        <section class="fg-template-boxslider">
+        <section class="fg-template-boxslider <?php echo esc_attr($slider); ?>">
 
             <section id="fg-template-boxslider-inner">    
                 <?php foreach (foogallery_current_gallery_attachments_for_rendering() as $attachment) {
@@ -65,21 +64,24 @@ $foogallery_default_attributes = foogallery_build_container_attributes_safe( $cu
             
         </section>
 
-        <section style="margin-top: 20px;">
-            <div class="fg-boxslider-slider-controls">
-
-                <div class="fg-boxslider-slider-controls-left">
-                    <button id="fg-temp-boxslider-prev-slide" aria-controls="foogallery-box-slider-template"><?php echo esc_html( $text_prev ); ?></button>
-                    <button id="fg-temp-boxslider-next-slide" aria-controls="foogallery-box-slider-template"><?php echo esc_html( $text_next ); ?></button>
-                </div>            
-                    
-                <div class="fg-boxslider-slider-controls-right">
-                    <button id="fg-temp-boxslider-play-slide" aria-controls="foogallery-box-slider-template"><?php echo esc_html( $text_play ); ?></button>
-                    <button id="fg-temp-boxslider-pause-slide" aria-controls="foogallery-box-slider-template"><?php echo esc_html( $text_pause ); ?></button>
-                </div>
-                
-            </div>
-        </section>
+        <?php
+            if ($swipe === 'true') {
+                ?>
+                <section style="margin-top: 20px;">
+                    <div class="fg-boxslider-slider-controls">
+                        <div class="fg-boxslider-slider-controls-left">
+                            <button id="fg-temp-boxslider-prev-slide" aria-controls="foogallery-box-slider-template"><?php echo esc_html($text_prev); ?></button>
+                            <button id="fg-temp-boxslider-next-slide" aria-controls="foogallery-box-slider-template"><?php echo esc_html($text_next); ?></button>
+                        </div>
+                        <div class="fg-boxslider-slider-controls-right">
+                            <button id="fg-temp-boxslider-play-slide" aria-controls="foogallery-box-slider-template"><?php echo esc_html($text_play); ?></button>
+                            <button id="fg-temp-boxslider-pause-slide" aria-controls="foogallery-box-slider-template"><?php echo esc_html($text_pause); ?></button>
+                        </div>
+                    </div>
+                </section>
+                <?php
+            }
+        ?>
        
     </div>
 </div>
@@ -105,8 +107,14 @@ $foogallery_default_attributes = foogallery_build_container_attributes_safe( $cu
         border-bottom: solid #333;
         width: 100%;
         height: 100%;
-        transform-style: preserve-3d;   
+        transform-style: preserve-3d;
     }
+    /* tile slider effect */
+    
+    .fg-tile-slider #fg-template-boxslider-inner {
+        transform-style: preserve-3d;
+    }
+    
     .fg-boxslider-template-image {
         height: 400px;
         width: 600px;
@@ -406,7 +414,7 @@ $foogallery_default_attributes = foogallery_build_container_attributes_safe( $cu
   const prevButton = document.getElementById('fg-temp-boxslider-prev-slide');
   const nextButton = document.getElementById('fg-temp-boxslider-next-slide');
   const playButton = document.getElementById('fg-temp-boxslider-play-slide');
-  const pauseButton = document.getElementById('fg-temp-boxslider-pause-slide');
+  const pauseButton = document.getElementById('fg-temp-boxslider-pause-slide'); 
 
   // Add event listeners to the buttons
   prevButton.addEventListener('click', () => slider.prev());
