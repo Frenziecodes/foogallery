@@ -595,9 +595,10 @@ if ( ! class_exists( 'FooGallery_Pro_Video' ) ) {
 
 				foreach ( $gallery->video_embeds as $embed ) {
 					?>
-					<div id="<?php echo $embed['id']; ?>" data-provider="<?php echo $embed['provider']; ?>">
-						<?php echo $embed['html']; ?>
+					<div id="<?php echo esc_attr( $embed['id'] ); ?>" data-provider="<?php echo esc_attr( $embed['provider'] ); ?>">
+						<?php echo wp_kses_post( $embed['html'] ); ?>
 					</div>
+
 					<?php
 				}
 

@@ -22,7 +22,7 @@ if ( ! class_exists( 'FooGallery_Pro_Bulk_Management' ) ) {
 		function add_bulk_button( $foogallery ) {
 ?>
 			<button type="button" class="button button-primary button-large alignright bulk_media_management">
-				<?php _e( 'Bulk Taxonomy Manager', 'foogallery' ); ?>
+				<?php esc_html_e( 'Bulk Taxonomy Manager', 'foogallery' ); ?>
 			</button>
 <?php
 		}
@@ -49,7 +49,7 @@ if ( ! class_exists( 'FooGallery_Pro_Bulk_Management' ) ) {
 			}
 
 			?>
-            <div class="foogallery-bulk-management-modal-wrapper" data-foogalleryid="<?php echo $post->ID; ?>" data-nonce="<?php echo wp_create_nonce( 'foogallery-bulk-management-content' ); ?>" style="display: none;">
+			<div class="foogallery-bulk-management-modal-wrapper" data-foogalleryid="<?php echo esc_attr( $post->ID ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'foogallery-bulk-management-content' ) ); ?>" style="display: none;">
                 <div class="media-modal wp-core-ui">
                     <button type="button" class="media-modal-close foogallery-bulk-management-modal-close">
                         <span class="media-modal-icon"><span class="screen-reader-text">Close media panel</span></span>
@@ -57,16 +57,16 @@ if ( ! class_exists( 'FooGallery_Pro_Bulk_Management' ) ) {
                     <div class="media-modal-content">
                         <div class="media-frame wp-core-ui">
                             <div class="foogallery-bulk-management-modal-title">
-                                <h1><?php _e('Bulk Taxonomy Manager', 'foogallery'); ?></h1>
+                                <h1><?php esc_html_e('Bulk Taxonomy Manager', 'foogallery'); ?></h1>
                                 <select class="foogallery-bulk-management-select-taxonomy">
                                     <?php
                                     $taxonomy_objects = get_object_taxonomies( 'attachment', 'objects' );
                                     foreach ( $taxonomy_objects as $taxonomy_object ) {
-                                        echo '<option value="' . $taxonomy_object->name . '">' . $taxonomy_object->label . '</option>';
+										echo '<option value="' . esc_attr( $taxonomy_object->name ) . '">' . esc_html( $taxonomy_object->label ) . '</option>';
                                     }
                                     ?>
                                 </select>
-                                <a class="foogallery-bulk-management-modal-reload button" href="#" style="display: none;"><span style="padding-top: 4px;" class="dashicons dashicons-update"></span> <?php _e('Reload', 'foogallery'); ?></a>
+                                <a class="foogallery-bulk-management-modal-reload button" href="#" style="display: none;"><span style="padding-top: 4px;" class="dashicons dashicons-update"></span> <?php esc_html_e('Reload', 'foogallery'); ?></a>
                             </div>
                             <div class="foogallery-bulk-management-modal-container not-loaded">
                                 <div class="spinner is-active"></div>
@@ -76,7 +76,7 @@ if ( ! class_exists( 'FooGallery_Pro_Bulk_Management' ) ) {
                                     <div class="media-toolbar-primary">
                                         <a href="#"
                                            class="foogallery-bulk-management-modal-close button button-large button-secondary"
-                                           title="<?php esc_attr_e('Close', 'foogallery'); ?>"><?php _e('Close', 'foogallery'); ?></a>
+                                           title="<?php esc_attr_e('Close', 'foogallery'); ?>"><?php esc_html_e('Close', 'foogallery'); ?></a>
                                     </div>
                                 </div>
                             </div>
@@ -168,17 +168,17 @@ if ( ! class_exists( 'FooGallery_Pro_Bulk_Management' ) ) {
                     }
                 }
 				if ( $assignments > 0 ) {
-				    echo ' ' . sprintf( _n('%d assignment added.', '%d assignments added.', $assignments, 'foogallery'), $assignments );
-                }
+					echo ' ' . sprintf( esc_html( _n('%d assignment added.', '%d assignments added.', $assignments, 'foogallery') ), intval( $assignments ) );
+				}
 				if ( $removals > 0 ) {
-					echo ' ' . sprintf( _n('%d assignment removed.', '%d assignments removed.', $removals, 'foogallery'), $removals );
-                }
+					echo ' ' . sprintf( esc_html( _n('%d assignment removed.', '%d assignments removed.', $removals, 'foogallery') ), intval( $removals ) );
+				}
 				if ( ($assignments + $removals) === 0 ) {
-					echo __( 'Nothing was done.', 'foogallery' );
+					echo esc_html__( 'Nothing was done.', 'foogallery' );
 				}
 				if ( $errors > 0 ) {
-					echo ' ' . sprintf( _n('%d error!', '%d errors!', $errors, 'foogallery'), $errors );
-				}
+					echo ' ' . sprintf( esc_html( _n('%d error!', '%d errors!', $errors, 'foogallery') ), intval( $errors ) );
+				}				
 			}
 
 			die();
@@ -202,7 +202,7 @@ if ( ! class_exists( 'FooGallery_Pro_Bulk_Management' ) ) {
 			echo '<div class="foogallery-bulk-management-modal-content-terms">';
 
 			foreach ($terms as $term) {
-				echo '<a href="#" class="button button-small foogallery-bulk-management-select-term" data-term-id="' . $term->term_id . '">' . $term->name . '</a>';
+				echo '<a href="#" class="button button-small foogallery-bulk-management-select-term" data-term-id="' . esc_attr( $term->term_id ) . '">' . esc_html( $term->name ) . '</a>';
 			}
 
 			echo '</div>';
@@ -248,11 +248,11 @@ if ( ! class_exists( 'FooGallery_Pro_Bulk_Management' ) ) {
                     'File' => basename( $attachment_post->guid )
                 )
 				?>
-                <li data-attachment-id="<?php echo $attachment_id; ?>" data-terms="<?php echo esc_attr( json_encode( $term_data ) ); ?>" data-meta="<?php echo esc_attr( json_encode( $meta_data ) ); ?>">
-                    <div>
-						<?php echo $img_tag; ?>
-                    </div>
-                </li>
+                <li data-attachment-id="<?php echo esc_attr( $attachment_id ); ?>" data-terms="<?php echo esc_attr( json_encode( $term_data ) ); ?>" data-meta="<?php echo esc_attr( json_encode( $meta_data ) ); ?>">
+					<div>
+						<?php echo wp_kses_post( $img_tag ); ?>
+					</div>
+				</li>
 				<?php
 			}
 
@@ -270,23 +270,23 @@ if ( ! class_exists( 'FooGallery_Pro_Bulk_Management' ) ) {
 		    echo '<div class="foogallery-bulk-management-modal-sidebar-inner">';
 
 			if ( foogallery_get_setting( 'disable_attachment_taxonomies' ) === 'on' ) {
-				echo __('You have chosen to disable attachment taxonomies. You can turn on attachment taxonomies which will allow you to assign attachments to Media Tags and Media Categories.', 'foogallery');
+				echo esc_html__('You have chosen to disable attachment taxonomies. You can turn on attachment taxonomies which will allow you to assign attachments to Media Tags and Media Categories.', 'foogallery');
 			}
 
 			if ( empty( $taxonomy ) ) {
-				echo '<h2>' . __( 'No Taxonomies Available!', 'foogallery' ) . '</h2>';
+				echo '<h2>' . esc_html__( 'No Taxonomies Available!', 'foogallery' ) . '</h2>';
 			    return;
             }
 
-			echo '<h2>' . sprintf( __( 'Bulk Assign %s', 'foogallery' ), $taxonomy_object->label ) . '</h2>';
-			echo '<p>' . __( 'You can quickly and easily assign multiple taxonomy terms to the items in your gallery. You can also click on a term above the gallery items to see which items have already been assigned to the selected term.', 'foogallery' ) . '</p>';
+			echo '<h2>' . sprintf( esc_html__( 'Bulk Assign %s', 'foogallery' ), esc_html( $taxonomy_object->label ) ) . '</h2>';
+			echo '<p>' . esc_html__( 'You can quickly and easily assign multiple taxonomy terms to the items in your gallery. You can also click on a term above the gallery items to see which items have already been assigned to the selected term.', 'foogallery' ) . '</p>';
 
-			echo '<h3>' . __( 'Select Gallery Items', 'foogallery' ) . '</h3>';
-			echo '<span class="foogallery-bulk-management-modal-selected foogallery-bulk-management-modal-toggle"><strong>0</strong> ' . __( 'item(s) selected.', 'foogallery' );
-			echo '&nbsp;<a href="#clear" class="foogallery-bulk-management-modal-action-clear">' . __( 'Clear Selection', 'foogallery') . '</a>';
+			echo '<h3>' . esc_html__( 'Select Gallery Items', 'foogallery' ) . '</h3>';
+			echo '<span class="foogallery-bulk-management-modal-selected foogallery-bulk-management-modal-toggle"><strong>0</strong> ' . esc_html__( 'item(s) selected.', 'foogallery' );
+			echo '&nbsp;<a href="#clear" class="foogallery-bulk-management-modal-action-clear">' . esc_html__( 'Clear Selection', 'foogallery') . '</a>';
 	        echo '</span><br />';
 
-			echo '<h3>' . sprintf( __( 'Select %s', 'foogallery' ), $taxonomy_object->label ) . '</h3>';
+			echo '<h3>' . sprintf( esc_html__( 'Select %s', 'foogallery' ), esc_html( $taxonomy_object->label ) ) . '</h3>';
 
 			$nonce_for_adding_term = wp_create_nonce( 'foogallery-attachment-taxonomy' );
             $taxonomy_data = array();
@@ -296,21 +296,21 @@ if ( ! class_exists( 'FooGallery_Pro_Bulk_Management' ) ) {
                 'terms' => foogallery_build_terms_recursive($taxonomy, array('hide_empty' => false)),
                 'query_var' => true,
                 'labels' => array(
-                    'placeholder' => __( 'Select one or more', 'foogallery' ) . ' ' . strtolower( $taxonomy_object->label ),
+                    'placeholder' => esc_html__( 'Select one or more', 'foogallery' ) . ' ' . strtolower( $taxonomy_object->label ),
                     'add' => $taxonomy_object->labels->add_new_item
                 ),
             );
 
-            echo '<input type="text" data-taxonomy="' . $taxonomy_object->name . '" class="foogallery-bulk-management-selectize" id="bulk-management-input-' . $taxonomy . '" data-taxonomy-data="' . esc_attr( json_encode($taxonomy_data) ) . '" />';
+			echo '<input type="text" data-taxonomy="' . esc_attr( $taxonomy_object->name ) . '" class="foogallery-bulk-management-selectize" id="bulk-management-input-' . esc_attr( $taxonomy ) . '" data-taxonomy-data="' . esc_attr( json_encode( $taxonomy_data ) ) . '" />';
 
 			echo '<br /><div class="foogallery-bulk-management-modal-actions foogallery-bulk-management-modal-toggle">';
-			echo '<button type="button" class="button button-large button-primary foogallery-bulk-management-modal-action-assign" data-nonce="' . wp_create_nonce( 'foogallery-bulk-management-assign' ) . '">' . __( 'Bulk Assign', 'foogallery' ) . '</button>';
+			echo '<button type="button" class="button button-large button-primary foogallery-bulk-management-modal-action-assign" data-nonce="' . esc_attr( wp_create_nonce( 'foogallery-bulk-management-assign' ) ) . '">' . esc_html__( 'Bulk Assign', 'foogallery' ) . '</button>';
 			echo '<div style="display: none" class="spinner is-active"></div>';
 			echo '<div class="foogallery-bulk-management-modal-action-message"></div>';
 			echo '</div>';
 
 			echo '<div style="display: none" class="foogallery-bulk-management-modal-metadata">';
-            echo '<h3>' . __( 'Last Selected Image Details', 'foogallery' ) . '</h3>';
+            echo '<h3>' . esc_html__( 'Last Selected Image Details', 'foogallery' ) . '</h3>';
             echo '<div class="foogallery-bulk-management-modal-metadata-inner"></div>';
             echo '</div>';
 

@@ -19,17 +19,17 @@ if ( 'on' === $link_custom_url && '' !== $lightbox && ! empty( $featured_attachm
 	$featured_attachment->type = 'iframe';
 }
 
-$foogallery_single_thumbnail_classes = foogallery_build_class_attribute_safe( $current_foogallery, 'foogallery-single-thumbnail', 'foogallery-lightbox-' . $lightbox, $position );
+$foogallery_single_thumbnail_classes = foogallery_build_class_attribute_safe( $current_foogallery, 'foogallery-single-thumbnail', 'foogallery-lightbox-' . esc_attr( $lightbox ), esc_attr( $position ) );
 $foogallery_single_thumbnail_attributes = foogallery_build_container_attributes_safe( $current_foogallery, array( 'class' => $foogallery_single_thumbnail_classes ) );
 ?>
-<div <?php echo $foogallery_single_thumbnail_attributes; ?>>
-    <?php echo foogallery_attachment_html( $featured_attachment, $args ); ?>
-    <div class="fg-st-hidden">
-    <?php
-    foreach ( foogallery_current_gallery_attachments_for_rendering() as $attachment ) {
-        if ( $attachment->url !== $featured_attachment->url ) {
-            echo foogallery_attachment_html( $attachment );
-        }
-    } ?>
-    </div>
+<div <?php echo wp_kses_post( $foogallery_single_thumbnail_attributes ); ?>>
+	<?php echo wp_kses_post( foogallery_attachment_html( $featured_attachment, $args ) ); ?>
+	<div class="fg-st-hidden">
+	<?php
+	foreach ( foogallery_current_gallery_attachments_for_rendering() as $attachment ) {
+		if ( $attachment->url !== $featured_attachment->url ) {
+			echo wp_kses_post( foogallery_attachment_html( $attachment ) );
+		}
+	} ?>
+	</div>
 </div>

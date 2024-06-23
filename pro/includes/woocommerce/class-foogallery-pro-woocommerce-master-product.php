@@ -412,7 +412,7 @@ if ( ! class_exists( 'FooGallery_Pro_Woocommerce_Master_Product' ) ) {
                     echo '</div>';
                 }
 
-                echo '<button class="button button-primary button-small ecommerce-master-product-selector">' . __( 'Select Master Product', 'foogallery' ) . '</button>';
+                echo '<button class="button button-primary button-small ecommerce-master-product-selector">' . esc_html_e( 'Select Master Product', 'foogallery' ) . '</button>';
                 $field_name = FOOGALLERY_META_SETTINGS . '[' . $template['slug'] . '_' . $field['id'] . ']';
                 echo '<input class="ecommerce-master-product-input" type="hidden" name=' . esc_attr( $field_name ) . ' value="' . esc_html( $field['value'] ) . '" />';
             }
@@ -429,12 +429,12 @@ if ( ! class_exists( 'FooGallery_Pro_Woocommerce_Master_Product' ) ) {
                 $product = wc_get_product( $product_id );
 
                 if ( $product === false ) {
-                    echo '<p><span class="dashicons dashicons-warning" style="color:#d63638"></span>' . __('The master product does not exist! Please select another product.', 'foogallery') . '</p>';
+                    echo '<p><span class="dashicons dashicons-warning" style="color:#d63638"></span>' . esc_html_e('The master product does not exist! Please select another product.', 'foogallery') . '</p>';
                 } else {
                     echo '<strong>' . esc_html($product->get_name('edit')) . '</strong>';
                     echo ' (ID : ' . esc_html($product_id) . ')';
                     $url = get_edit_post_link($product_id);
-                    echo ' <a class="post-edit-link" target="_blank" href="' . esc_url($url) . '">' . __('edit', 'foogallery') . '</a>';
+                    echo ' <a class="post-edit-link" target="_blank" href="' . esc_url($url) . '">' . esc_html_e('edit', 'foogallery') . '</a>';
 
                     $validation_response = $this->validate_master_product($product);
 
@@ -448,7 +448,7 @@ if ( ! class_exists( 'FooGallery_Pro_Woocommerce_Master_Product' ) ) {
                             echo esc_html($error['message']) . '</p>';
                         }
                     } else {
-                        echo '<p><span class="dashicons dashicons-yes-alt" style="color:#00a32a"></span>' . __('This product has been setup correctly to be a master product.', 'foogallery') . '</p>';
+                        echo '<p><span class="dashicons dashicons-yes-alt" style="color:#00a32a"></span>' . esc_html_e('This product has been setup correctly to be a master product.', 'foogallery') . '</p>';
                     }
                 }
             }
@@ -749,16 +749,16 @@ if ( ! class_exists( 'FooGallery_Pro_Woocommerce_Master_Product' ) ) {
             }
 
             ?>
-            <div class="foogallery-master-product-modal-wrapper" data-foogalleryid="<?php echo $post->ID; ?>" data-nonce="<?php echo wp_create_nonce( 'foogallery_master_product' ); ?>" style="display: none;">
+			<div class="foogallery-master-product-modal-wrapper" data-foogalleryid="<?php echo esc_attr( $post->ID ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'foogallery_master_product' ) ); ?>" style="display: none;">
                 <div class="media-modal wp-core-ui">
                     <button type="button" class="media-modal-close foogallery-master-product-modal-close">
-						<span class="media-modal-icon"><span class="screen-reader-text"><?php _e( 'Close', 'foogallery' ); ?></span>
+						<span class="media-modal-icon"><span class="screen-reader-text"><?php esc_html_e( 'Close', 'foogallery' ); ?></span>
                     </button>
                     <div class="media-modal-content">
                         <div class="media-frame wp-core-ui">
                             <div class="foogallery-master-product-modal-title">
-                                <h1><?php _e('Select a Master Product', 'foogallery'); ?></h1>
-                                <a class="foogallery-master-product-modal-reload button" href="#"><span style="padding-top: 4px;" class="dashicons dashicons-update"></span> <?php _e('Reload', 'foogallery'); ?></a>
+                                <h1><?php esc_html_e('Select a Master Product', 'foogallery'); ?></h1>
+                                <a class="foogallery-master-product-modal-reload button" href="#"><span style="padding-top: 4px;" class="dashicons dashicons-update"></span> <?php esc_html_e('Reload', 'foogallery'); ?></a>
                             </div>
                             <div class="foogallery-master-product-modal-container not-loaded">
                                 <div class="spinner is-active"></div>
@@ -768,10 +768,10 @@ if ( ! class_exists( 'FooGallery_Pro_Woocommerce_Master_Product' ) ) {
                                     <div class="media-toolbar-primary">
                                         <a href="#"
                                            class="foogallery-master-product-modal-close button button-large button-secondary"
-                                           title="<?php esc_attr_e('Close', 'foogallery'); ?>"><?php _e('Close', 'foogallery'); ?></a>
+                                           title="<?php esc_attr_e('Close', 'foogallery'); ?>"><?php esc_html_e('Close', 'foogallery'); ?></a>
                                         <a href="#" disabled="disabled"
                                            class="foogallery-master-product-modal-set button button-large button-primary"
-                                           title="<?php esc_attr_e('Select Master Product', 'foogallery'); ?>"><?php _e('Select Master Product', 'foogallery'); ?></a>
+                                           title="<?php esc_attr_e('Select Master Product', 'foogallery'); ?>"><?php esc_html_e('Select Master Product', 'foogallery'); ?></a>
                                     </div>
                                 </div>
                             </div>
@@ -794,7 +794,7 @@ if ( ! class_exists( 'FooGallery_Pro_Woocommerce_Master_Product' ) ) {
                 $search = safe_get_from_request( 'search' );
                 $product_id = intval( safe_get_from_request( 'product_id' ) );
 
-                echo '<div class="foogallery-master-product-modal-content" data-selected="' . $product_id . '">';
+				echo '<div class="foogallery-master-product-modal-content" data-selected="' . esc_attr( $product_id ) . '">';
                 echo '<div class="foogallery-master-product-modal-content-inner">';
                 echo '<div class="foogallery-master-product-modal-content-inner-search">';
                 echo '<input type="search" value="' . esc_attr( $search ) . '" />';
@@ -825,11 +825,11 @@ if ( ! class_exists( 'FooGallery_Pro_Woocommerce_Master_Product' ) ) {
                         if ( empty( $price ) ) {
                             $price = '&nbsp;';
                         }
-                        echo '<li ' . $class . ' data-id="' . $product->get_id() . '">';
-                        echo '<img src="' . $thumb_url . '" />';
-                        echo '<h3>' . $product->get_title() . '</h3>';
-                        echo '<span>' . $price . '</span>';
-                        echo '</li>';
+                        echo '<li ' . esc_attr( $class ) . ' data-id="' . esc_attr( $product->get_id() ) . '">';
+						echo '<img src="' . esc_url( $thumb_url ) . '" />';
+						echo '<h3>' . esc_html( $product->get_title() ) . '</h3>';
+						echo '<span>' . esc_html( $price ) . '</span>';
+						echo '</li>';
                     }
                     echo '</ul>';
                 }
@@ -839,8 +839,8 @@ if ( ! class_exists( 'FooGallery_Pro_Woocommerce_Master_Product' ) ) {
 
                 echo '<div class="foogallery-master-product-modal-sidebar">';
                 $class = $product_id === 0 ? ' hidden' : '';
-                echo '<div class="foogallery-master-product-modal-sidebar-inner foogallery-master-product-modal-details' . $class . '">';
-                echo '<h2>' . __( 'Selected Master Product', 'foogallery' ) . '</h2>';
+				echo '<div class="foogallery-master-product-modal-sidebar-inner foogallery-master-product-modal-details' . esc_attr( $class ) . '">';
+                echo '<h2>' . esc_html_e( 'Selected Master Product', 'foogallery' ) . '</h2>';
                 echo '<div class="foogallery-master-product-modal-details-inner">';
                 if ( $product_id > 0 ) {
                     $this->render_master_product_details($product_id);
@@ -848,14 +848,14 @@ if ( ! class_exists( 'FooGallery_Pro_Woocommerce_Master_Product' ) ) {
                 echo '</div>';
                 echo '</div>';
                 echo '<div class="foogallery-master-product-modal-sidebar-inner foogallery-master-product-modal-help">';
-                echo '<h2>' . __( 'Master Product Help', 'foogallery' ) . '</h2>';
-                echo '<p>' . __( 'A master product can be set for a gallery, so that every item within the gallery will use details from the master product. This allows you to setup a single product across all images, and will save you time when configuring your gallery in order to sell your images online.', 'foogallery' ) . '</p>';
-                echo '<p>' . __( 'A master product should be a variable product with multiple variations that you can configure to have different prices. Usually these variations are different by size, but you can have variations that use more attributes, e.g. size/format, print material, frame, etc.', 'foogallery' ) . '</p>';
-                echo '<p>' . __( 'A master product will work as a simple product, but we recommend using a variable product.', 'foogallery' ) . '</p>';
-                echo '<p>' . __( 'Additionally, a master product should be published and the Catalog Visibility should set to "Hidden".', 'foogallery' ) . '</p>';
+                echo '<h2>' . esc_html_e( 'Master Product Help', 'foogallery' ) . '</h2>';
+                echo '<p>' . esc_html_e( 'A master product can be set for a gallery, so that every item within the gallery will use details from the master product. This allows you to setup a single product across all images, and will save you time when configuring your gallery in order to sell your images online.', 'foogallery' ) . '</p>';
+                echo '<p>' . esc_html_e( 'A master product should be a variable product with multiple variations that you can configure to have different prices. Usually these variations are different by size, but you can have variations that use more attributes, e.g. size/format, print material, frame, etc.', 'foogallery' ) . '</p>';
+                echo '<p>' . esc_html_e( 'A master product will work as a simple product, but we recommend using a variable product.', 'foogallery' ) . '</p>';
+                echo '<p>' . esc_html_e( 'Additionally, a master product should be published and the Catalog Visibility should set to "Hidden".', 'foogallery' ) . '</p>';
                 $generated_product_id = $this->find_generated_master_product();
                 if ( $generated_product_id === 0 ) {
-                    echo '<p>' . __('To help you get started, we can generate a master product that meets these requirements, which you can customize to your needs:', 'foogallery') . '</p>';
+                    echo '<p>' . esc_html_e('To help you get started, we can generate a master product that meets these requirements, which you can customize to your needs:', 'foogallery') . '</p>';
                     echo '<a href="#" class="foogallery-master-product-generate button button-small button-primary" title="' . esc_attr__('Generate Master Product', 'foogallery') . '">' . esc_html__('Generate Master Product', 'foogallery') . '</a>';
                     echo '<div class="spinner"></div>';
                 }

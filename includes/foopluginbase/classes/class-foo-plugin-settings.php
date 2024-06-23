@@ -137,8 +137,8 @@ if ( !class_exists( 'Foo_Plugin_Settings_v2_2' ) ) {
 		 */
 		function echo_section_desc( $arg ) {
 			$section =  $this->_settings_sections[ $arg['id'] ];
-			echo $section['desc'];
-		}
+			echo esc_html( $section['desc'] );
+		}		
 
 		/**
 		 * Add a section to a tab
@@ -313,13 +313,13 @@ if ( !class_exists( 'Foo_Plugin_Settings_v2_2' ) ) {
 			switch ( $type ) {
 
 				case 'heading':
-					echo '</td></tr><tr valign="top"><td colspan="2">' . $desc;
+					echo '</td></tr><tr valign="top"><td colspan="2">' . esc_html( $desc );
 					break;
-
+			
 				case 'html':
-					echo $desc;
+					echo esc_html( $desc );
 					break;
-
+			
 				case 'checkbox':
 					$checked = '';
 					if ( isset( $options[$id] ) && $options[$id] == 'on' ) {
@@ -329,27 +329,22 @@ if ( !class_exists( 'Foo_Plugin_Settings_v2_2' ) ) {
 					} else if ( $has_options === false && $default == 'on' ) {
 						$checked = ' checked="checked"';
 					}
-
-					//echo '<input type="hidden" name="'.$this->plugin_slug.'[' . $id . '_default]" value="' . $default . '" />';
-					echo '<input' . $field_class . ' type="checkbox" id="' . $id . '" name="' . $this->plugin_slug . '[' . $id . ']" value="on"' . $checked . ' /> <label for="' . $id . '"><small>' . $desc . '</small></label>';
-
+			
+					echo '<input' . esc_attr( $field_class ) . ' type="checkbox" id="' . esc_attr( $id ) . '" name="' . esc_attr( $this->plugin_slug ) . '[' . esc_attr( $id ) . ']" value="on"' . esc_attr( $checked ) . ' /> <label for="' . esc_attr( $id ) . '"><small>' . esc_html( $desc ) . '</small></label>';
 					break;
-
+			
 				case 'select':
-					echo '<select' . $field_class . ' name="' . $this->plugin_slug . '[' . $id . ']">';
-
+					echo '<select' . esc_attr( $field_class ) . ' name="' . esc_attr( $this->plugin_slug ) . '[' . esc_attr( $id ) . ']">';
 					foreach ( $choices as $value => $label ) {
 						$selected = '';
 						if ( $options[$id] == $value ) {
 							$selected = ' selected="selected"';
 						}
-						echo '<option ' . $selected . ' value="' . $value . '">' . $label . '</option>';
+						echo '<option ' . esc_attr( $selected ) . ' value="' . esc_attr( $value ) . '">' . esc_html( $label ) . '</option>';
 					}
-
 					echo '</select>';
-
 					break;
-
+			
 				case 'radio':
 					$i           = 0;
 					$saved_value = $options[$id];
@@ -361,68 +356,63 @@ if ( !class_exists( 'Foo_Plugin_Settings_v2_2' ) ) {
 						if ( $saved_value == $value ) {
 							$selected = ' checked="checked"';
 						}
-						echo '<input' . $field_class . $selected . ' type="radio" name="' . $this->plugin_slug . '[' . $id . ']" id="' . $id . $i . '" value="' . $value . '"> <label for="' . $id . $i . '">' . $label . '</label>';
+						echo '<input' . esc_attr( $field_class ) . esc_attr( $selected ) . ' type="radio" name="' . esc_attr( $this->plugin_slug ) . '[' . esc_attr( $id ) . ']" id="' . esc_attr( $id . $i ) . '" value="' . esc_attr( $value ) . '"> <label for="' . esc_attr( $id . $i ) . '">' . esc_html( $label ) . '</label>';
 						if ( $i < count( $choices ) - 1 ) {
 							echo '<br />';
 						}
 						$i++;
 					}
-
 					break;
-
+			
 				case 'textarea':
-					echo '<textarea' . $field_class . ' id="' . $id . '" name="' . $this->plugin_slug . '[' . $id . ']" placeholder="' . $placeholder . '">' . esc_attr( $options[$id] ) . '</textarea>';
-
+					echo '<textarea' . esc_attr( $field_class ) . ' id="' . esc_attr( $id ) . '" name="' . esc_attr( $this->plugin_slug ) . '[' . esc_attr( $id ) . ']" placeholder="' . esc_attr( $placeholder ) . '">' . esc_textarea( $options[$id] ) . '</textarea>';
 					break;
-
+			
 				case 'password':
-					echo '<input' . $field_class . ' type="password" id="' . $id . '" name="' . $this->plugin_slug . '[' . $id . ']" value="' . esc_attr( $options[$id] ) . '" />';
-
+					echo '<input' . esc_attr( $field_class ) . ' type="password" id="' . esc_attr( $id ) . '" name="' . esc_attr( $this->plugin_slug ) . '[' . esc_attr( $id ) . ']" value="' . esc_attr( $options[$id] ) . '" />';
 					break;
-
+			
 				case 'text':
 					echo '<input class="regular-text ' . esc_attr( $class ) . '" type="text" id="' . esc_attr( $id ) . '" name="' . esc_attr( $this->plugin_slug ) . '[' . esc_attr( $id ) . ']" placeholder="' . esc_attr( $placeholder ) . '" value="' . esc_attr( foogallery_sanitize_javascript( $options[$id], array() ) ) . '" />';
-
 					break;
-
+			
 				case 'checkboxlist':
 					$i = 0;
 					foreach ( $choices as $value => $label ) {
-
 						$checked = '';
 						if ( isset( $options[$id][$value] ) && $options[$id][$value] == 'true' ) {
 							$checked = 'checked="checked"';
 						}
-
-						echo '<input' . $field_class . ' ' . $checked . ' type="checkbox" name="' . $this->plugin_slug . '[' . $id . '|' . $value . ']" id="' . $id . $i . '" value="on"> <label for="' . $id . $i . '">' . $label . '</label>';
+						echo '<input' . esc_attr( $field_class ) . ' ' . esc_attr( $checked ) . ' type="checkbox" name="' . esc_attr( $this->plugin_slug ) . '[' . esc_attr( $id ) . '|' . esc_attr( $value ) . ']" id="' . esc_attr( $id . $i ) . '" value="on"> <label for="' . esc_attr( $id . $i ) . '">' . esc_html( $label ) . '</label>';
 						if ( $i < count( $choices ) - 1 ) {
 							echo '<br />';
 						}
 						$i++;
 					}
-
 					break;
+			
 				case 'image':
-					echo '<input class="regular-text image-upload-url" type="text" id="' . $id . '" name="' . $this->plugin_slug . '[' . $id . ']" placeholder="' . $placeholder . '" value="' . esc_attr( $options[$id] ) . '" />';
-					echo '<input data-uploader-title="' . __('Select An Image', $this->plugin_slug) . '" data-link="' . $id . '" class="image-upload-button" type="button" name="upload_button" value="' . __( 'Select Image', $this->plugin_slug ) . '" />';
+					echo '<input class="regular-text image-upload-url" type="text" id="' . esc_attr( $id ) . '" name="' . esc_attr( $this->plugin_slug ) . '[' . esc_attr( $id ) . ']" placeholder="' . esc_attr( $placeholder ) . '" value="' . esc_attr( $options[$id] ) . '" />';
+					echo '<input data-uploader-title="' . esc_attr__( 'Select An Image', $this->plugin_slug ) . '" data-link="' . esc_attr( $id ) . '" class="image-upload-button" type="button" name="upload_button" value="' . esc_attr__( 'Select Image', $this->plugin_slug ) . '" />';
 					break;
-
+			
 				default:
 					do_action( $this->plugin_slug . '_admin_settings_custom_type_render_setting', $args );
 					break;
-			}
+			}			
 
 			do_action( $this->plugin_slug . '_admin_settings_after_render_setting', $args );
 
 			if ( is_array( $errors ) ) {
 				foreach ( $errors as $error ) {
-					echo "<span class='error'>{$error['message']}</span>";
+					echo "<span class='error'>" . esc_html( $error['message'] ) . "</span>";
 				}
 			}
-
+			
 			if ( $type != 'checkbox' && $type != 'heading' && $type != 'html' && $desc != '' ) {
-				echo '<br /><small>' . $desc . '</small>';
+				echo '<br /><small>' . esc_html( $desc ) . '</small>';
 			}
+			
 		}
 
 		/**

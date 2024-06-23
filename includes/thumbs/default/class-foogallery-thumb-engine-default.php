@@ -38,42 +38,38 @@ if ( ! class_exists( 'FooGallery_Thumb_Engine_Default' ) ) {
 		 */
 		function render_thumb_test_page() {
 			global $foogallery_thumbnail_generation_test_errors;
-
-			echo '<h2>Thumbnail Test Page</h2>';
-
+		
+			echo '<h2>' . esc_html__( 'Thumbnail Test Page', 'foogallery' ) . '</h2>';
+		
 			$this->render_thumb_test_html( FOOGALLERY_URL . 'includes/thumbs/default/tests/test3', 'PNG+No extension Resize to 30x30', 30, 30 );
 			$this->render_thumb_test_html( FOOGALLERY_URL . 'includes/thumbs/default/tests/test1.png', 'PNG Resize to 50x50' );
 			$this->render_thumb_test_html( FOOGALLERY_URL . 'includes/thumbs/default/tests/test2.png?test=1&another=true', 'PNG+Querystring Resize to 40x40', 40, 40 );
-
+		
 			$this->render_thumb_test_html( FOOGALLERY_URL . 'includes/thumbs/default/tests/test4.gif', 'GIF Resize to 50x50' );
 			$this->render_thumb_test_html( FOOGALLERY_URL . 'includes/thumbs/default/tests/test5.jpg', 'JPG Resize to 50x50' );
 			$this->render_thumb_test_html( FOOGALLERY_URL . 'includes/thumbs/default/tests/test6.bmp', 'BMP Resize to 50x50' );
-
+		
 			$this->render_thumb_test_html( 'https://assets.fooplugins.com/test.jpg', 'Remote Resize to 50x50' );
 			$this->render_thumb_test_html( FooGallery_Thumbnails::find_first_image_in_media_library(), 'Media Resize to 50x50' );
-
+		
 			$this->render_thumb_test_html( 'https://fooplugins.s3.amazonaws.com/test.php', 'Remote test for non image', 50, 50, true );
-
-			echo '<h2>ERRORS</h2>';
+		
+			echo '<h2>' . esc_html__( 'ERRORS', 'foogallery' ) . '</h2>';
 			echo '<textarea style="width: 100%;font-family: \'courier new\'; height: 500px;">';
-
-			if ( is_array( $foogallery_thumbnail_generation_test_errors) ) {
+		
+			if ( is_array( $foogallery_thumbnail_generation_test_errors ) ) {
 				foreach ( $foogallery_thumbnail_generation_test_errors as $error ) {
-					echo $error['title'] . '
-=======================================
-URL : ' . $error['url'] . '
-Error : ';
-					print_r( $error['error'] );
-					echo "\n";
-					echo "\n";
+					echo esc_html( $error['title'] ) . '
+		=======================================
+		URL : ' . esc_url( $error['url'] ) . '
+		Error : ' . esc_html( print_r( $error['error'], true ) ) . "\n\n";
 				}
-
 			} else {
-				echo 'None :)';
+				echo esc_html__( 'None :)', 'foogallery' );
 			}
 			echo '</textarea>';
 		}
-
+		
 		/**
 		 * Renders a single thumb test
 		 *
@@ -84,31 +80,31 @@ Error : ';
 		 */
 		function render_thumb_test_html( $url, $title, $width = 50, $height = 50, $expect_error = false ) {
 			global $foogallery_thumbnail_generation_test_errors;
-
+		
 			if ( $url === false ) {
 				return;
 			}
-
+		
 			$engine = foogallery_thumb_active_engine();
-
-			//always clear the cache for the file
+		
+			// Always clear the cache for the file
 			$engine->clear_local_cache_for_file( $url );
-
+		
 			$resize_url = $engine->generate( $url, array(
 				'width'  => $width,
 				'height' => $height,
 				'crop'   => true
 			) );
-
-			echo '<h3>' . $title . '</h3>';
-			echo 'original : <code>' . $url . '</code><br />';
-			echo 'result : <code>' . $resize_url . '</code><br /><br />';
-
+		
+			echo '<h3>' . esc_html( $title ) . '</h3>';
+			echo 'original : <code>' . esc_url( $url ) . '</code><br />';
+			echo 'result : <code>' . esc_url( $resize_url ) . '</code><br /><br />';
+		
 			if ( isset( $engine->last_error ) ) {
-				print_r( $engine->last_error );
-
-				if ( !$expect_error ) {
-					if ( !isset( $foogallery_thumbnail_generation_test_errors ) ) {
+				echo '<pre>' . esc_html( print_r( $engine->last_error, true ) ) . '</pre>';
+		
+				if ( ! $expect_error ) {
+					if ( ! isset( $foogallery_thumbnail_generation_test_errors ) ) {
 						$foogallery_thumbnail_generation_test_errors = array();
 					}
 					$foogallery_thumbnail_generation_test_errors[] = array(
@@ -117,17 +113,14 @@ Error : ';
 						'error' => $engine->last_error
 					);
 				}
-
 			} else {
-				echo '<img src="' . $url . '" />';
+				echo '<img src="' . esc_url( $url ) . '" />';
 				echo '&nbsp;&nbsp;&nbsp;→→→&nbsp;&nbsp;&nbsp;';
-				echo '<img src="' . $resize_url . '" />';
+				echo '<img src="' . esc_url( $resize_url ) . '" />';
 			}
-
-
-
+		
 			echo '<br />';
-		}
+		}		
 
 		/**
 		 * The default engine uses a local cache to store thumbnails

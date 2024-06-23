@@ -107,14 +107,15 @@ if ( current_user_can( 'activate_plugins' ) ) {
 		}
 	</style>
 	<div class="wrap about-wrap">
-		<h1><?php echo $title; ?></h1>
-		<p><?php echo $support_text; ?></p>
-    <textarea class="foogallery-debug">
-<?php foreach ( $debug_info as $key => $value ) {
-	echo $key . ' : ';
-	print_r( $value );
-	echo "\n";
-} ?>
-    </textarea>
+		<h1><?php echo esc_html( $title ); ?></h1>
+		<p><?php echo wp_kses_post( $support_text ); ?></p>
+		<textarea class="foogallery-debug">
+			<?php foreach ( $debug_info as $key => $value ) {
+				echo esc_html( $key ) . ' : ';
+				echo esc_html( print_r( $value, true ) );
+				echo "\n";
+			} ?>
+		</textarea>
 	</div>
+
 <?php }

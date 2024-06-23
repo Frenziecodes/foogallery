@@ -359,14 +359,15 @@ if ( !class_exists( 'FooGallery_Simple_Portfolio_Gallery_Template' ) ) {
 			}
 			?>
 			<style>
-                #<?php echo $id; ?>.fg-simple_portfolio {
-                    justify-content: <?php echo $alignment; ?>;
-                }
-                #<?php echo $id; ?>.fg-simple_portfolio .fg-item {
-                    flex-basis: <?php echo $thumb_width; ?>px;
-                    margin: <?php echo $gutter; ?>px;
-                }
+				#<?php echo esc_attr( $id ); ?>.fg-simple_portfolio {
+					justify-content: <?php echo esc_attr( $alignment ); ?>;
+				}
+				#<?php echo esc_attr( $id ); ?>.fg-simple_portfolio .fg-item {
+					flex-basis: <?php echo esc_attr( $thumb_width ); ?>px;
+					margin: <?php echo esc_attr( $gutter ); ?>px;
+				}
 			</style>
+
 			<?php
 		}
 	}

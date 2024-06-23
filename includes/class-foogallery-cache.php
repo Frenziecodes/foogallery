@@ -148,11 +148,11 @@ if ( ! class_exists( 'FooGallery_Cache' ) ) {
 			$gallery_cache = get_post_meta( $gallery->ID, FOOGALLERY_META_CACHE, true );
 
 			if ( !empty( $gallery_cache ) && is_string( $gallery_cache ) ) {
-				//output the cached gallery html
-				echo $gallery_cache;
-				return true; //return that we will override
+				// Output the cached gallery HTML
+				echo wp_kses_post( $gallery_cache );
+				return true; // Return that we will override
 			} else {
-				//we should cache the result for next time
+				// We should cache the result for next time
 				$this->cache_gallery_html_output( $gallery->ID );
 			}
 
@@ -198,7 +198,7 @@ if ( ! class_exists( 'FooGallery_Cache' ) ) {
 		function render_settings( $args ) {
 			if ('clear_gallery_cache_button' === $args['type'] ) { ?>
 				<div id="foogallery_clear_html_cache_container">
-					<input type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'foogallery_clear_html_cache' ) ); ?>" class="button-primary foogallery_clear_html_cache" value="<?php _e( 'Clear Gallery HTML Cache', 'foogallery' ); ?>">
+					<input type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'foogallery_clear_html_cache' ) ); ?>" class="button-primary foogallery_clear_html_cache" value="<?php esc_html_e( 'Clear Gallery HTML Cache', 'foogallery' ); ?>">
 					<span id="foogallery_clear_html_cache_spinner" style="position: absolute" class="spinner"></span>
 				</div>
 			<?php }
@@ -212,7 +212,7 @@ if ( ! class_exists( 'FooGallery_Cache' ) ) {
 
 				$this->clear_all_gallery_caches();
 
-				_e('The cache for all galleries has been cleared!', 'foogallery' );
+				esc_html_e('The cache for all galleries has been cleared!', 'foogallery' );
 				die();
 			}
 		}

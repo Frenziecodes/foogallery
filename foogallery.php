@@ -449,26 +449,26 @@ if ( function_exists( 'foogallery_fs' ) ) {
 			 * @return   array|false    The blog ids, false if no matches.
 			 */
 			private static function get_blog_ids() {
-
-				if ( function_exists( 'get_sites' ) ) {
-
-					$sites    = get_sites();
-					$blog_ids = array();
-					foreach ( $sites as $site ) {
-						$blog_ids[] = $site->blog_id;
-					}
-
-					return $blog_ids;
-				} else {
-					//pre WP 3.7 - do this the old way!
-					global $wpdb;
-
-					// get an array of blog ids
-					$sql = "SELECT blog_id FROM $wpdb->blogs WHERE archived = '0' AND spam = '0' AND deleted = '0'";
-
-					return $wpdb->get_col( $sql );
+				// Try to get the cached blog IDs
+				$cached_blog_ids = wp_cache_get( 'foogallery_blog_ids', 'foogallery' );
+			
+				if ( false !== $cached_blog_ids ) {
+					return $cached_blog_ids;
 				}
+			
+				// Fetch the blog IDs using get_sites()
+				$sites    = get_sites( array( 'archived' => 0, 'spam' => 0, 'deleted' => 0 ) );
+				$blog_ids = array();
+				foreach ( $sites as $site ) {
+					$blog_ids[] = $site->blog_id;
+				}
+			
+				// Cache the blog IDs
+				wp_cache_set( 'foogallery_blog_ids', $blog_ids, 'foogallery', 12 * HOUR_IN_SECONDS );
+			
+				return $blog_ids;
 			}
+			
 		}
 	}
 

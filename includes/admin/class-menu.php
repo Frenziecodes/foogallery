@@ -91,13 +91,13 @@ if ( ! class_exists( 'FooGallery_Admin_Menu' ) ) {
 				do_action( 'foogallery_settings_reset' );
 				?>
 				<div id="message" class="updated">
-					<p><strong><?php printf( __( '%s settings reset to defaults.', 'foogallery' ), foogallery_plugin_name() ); ?></strong></p>
+					<p><strong><?php printf( esc_html__( '%s settings reset to defaults.', 'foogallery' ), esc_html( foogallery_plugin_name() ) ); ?></strong></p>
 				</div>
 			<?php } else if ( isset($_GET['settings-updated']) ) { ?>
 				<div id="message" class="updated">
-					<p><strong><?php printf( __( '%s settings updated.', 'foogallery' ), foogallery_plugin_name() ); ?></strong></p>
+					<p><strong><?php printf( esc_html__( '%s settings updated.', 'foogallery' ), esc_html( foogallery_plugin_name() ) ); ?></strong></p>
 				</div>
-			<?php }
+			<?php }			
 
 			$instance = FooGallery_Plugin::get_instance();
 			$instance->admin_settings_render_page();
@@ -117,16 +117,16 @@ if ( ! class_exists( 'FooGallery_Admin_Menu' ) ) {
 
 		function create_demo_galleries() {
 			if ( check_admin_referer( 'foogallery_admin_import_demos' ) ) {
-
+		
 				$results = foogallery_create_demo_content();
-
+		
 				if ( $results === false ) {
-					echo __('There was a problem creating the demo galleries!', 'foogallery');
+					echo esc_html__( 'There was a problem creating the demo galleries!', 'foogallery' );
 				} else {
-					echo sprintf(__('%d sample images imported, and %d demo galleries created!', 'foogallery'), $results['attachments'], $results['galleries']);
+					printf( esc_html__( '%d sample images imported, and %d demo galleries created!', 'foogallery' ), intval( $results['attachments'] ), intval( $results['galleries'] ) );
 				}
 			}
 			die();
-		}
+		}		
 	}
 }

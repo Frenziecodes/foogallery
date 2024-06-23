@@ -353,22 +353,40 @@ function foogallery_album_template_setting( $key, $default = '' ) {
  * uninstall all albums and setting for albums
  */
 function foogallery_album_uninstall() {
-	if ( !current_user_can( 'install_plugins' ) ) exit;
+    if ( ! current_user_can( 'install_plugins' ) ) {
+        exit;
+    }
 
-	//delete all albums posts
-	global $wpdb;
-	$query = "SELECT p.ID FROM {$wpdb->posts} AS p WHERE p.post_type IN (%s)";
-	$gallery_post_ids = $wpdb->get_col( $wpdb->prepare( $query, FOOGALLERY_CPT_ALBUM ) );
+    // Try to get cached gallery post IDs
+    $cache_key = 'foogallery_album_post_ids';
+    $gallery_post_ids = wp_cache_get( $cache_key );
 
-	if ( !empty( $gallery_post_ids ) ) {
-		$deleted = 0;
-		foreach ( $gallery_post_ids as $post_id ) {
-			$del = wp_delete_post( $post_id );
-			if ( false !== $del ) {
-				++$deleted;
-			}
-		}
-	}
+    if ( false === $gallery_post_ids ) {
+        // If no cached value, query the database using get_posts
+        $args = array(
+            'post_type'   => FOOGALLERY_CPT_ALBUM,
+            'post_status' => 'any',
+            'fields'      => 'ids',
+            'numberposts' => -1
+        );
+        $gallery_post_ids = get_posts( $args );
+
+        // Cache the results
+        wp_cache_set( $cache_key, $gallery_post_ids, '', 12 * HOUR_IN_SECONDS );
+    }
+
+    if ( ! empty( $gallery_post_ids ) ) {
+        $deleted = 0;
+        foreach ( $gallery_post_ids as $post_id ) {
+            $del = wp_delete_post( $post_id );
+            if ( false !== $del ) {
+                ++$deleted;
+            }
+        }
+    }
+
+    // Clear the cache after deletion
+    wp_cache_delete( $cache_key );
 }
 
 /**

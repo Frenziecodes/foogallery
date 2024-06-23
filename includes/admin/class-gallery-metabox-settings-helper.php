@@ -72,22 +72,21 @@ if ( ! class_exists( 'FooGallery_Admin_Gallery_MetaBox_Settings_Helper' ) ) {
                     }
 				}
 			    ?>
-				<div class="foogallery-vertical-tab <?php echo $tab_active; ?>"
-					 data-name="<?php echo $template['slug']; ?>-<?php echo $section_slug; ?>">
-					<span class="dashicons <?php echo $section['icon_class']; ?>"></span>
-					<span class="foogallery-tab-text"><?php echo $section['name']; ?></span>
-                    <?php
-                    if ( isset( $section['subsections'] ) ) { ?>
-                        <div class="foogallery-vertical-child-tabs">
-                        <?php foreach ( $section['subsections'] as $subsection_slug => $subsection ) { ?>
-                            <div class="foogallery-vertical-child-tab <?php echo $subsection_active; ?>" data-name="<?php echo esc_attr( $template['slug'] . '-' . $subsection_slug ); ?>">
-                                <span class="foogallery-tab-text"><?php echo esc_html( $subsection['name'] ); ?></span>
-                            </div>
-                        <?php
-	                        $subsection_active = '';
-                            } ?>
-                        </div>
-                    <?php } ?>
+				<div class="foogallery-vertical-tab <?php echo esc_attr( $tab_active ); ?>"
+					data-name="<?php echo esc_attr( $template['slug'] . '-' . $section_slug ); ?>">
+					<span class="dashicons <?php echo esc_attr( $section['icon_class'] ); ?>"></span>
+					<span class="foogallery-tab-text"><?php echo esc_html( $section['name'] ); ?></span>
+					<?php if ( isset( $section['subsections'] ) ) { ?>
+						<div class="foogallery-vertical-child-tabs">
+							<?php foreach ( $section['subsections'] as $subsection_slug => $subsection ) { ?>
+								<div class="foogallery-vertical-child-tab <?php echo esc_attr( $subsection_active ); ?>"
+									data-name="<?php echo esc_attr( $template['slug'] . '-' . $subsection_slug ); ?>">
+									<span class="foogallery-tab-text"><?php echo esc_html( $subsection['name'] ); ?></span>
+								</div>
+								<?php $subsection_active = ''; ?>
+							<?php } ?>
+						</div>
+					<?php } ?>
 				</div>
 				<?php
 				$tab_active = '';
@@ -119,8 +118,8 @@ if ( ! class_exists( 'FooGallery_Admin_Gallery_MetaBox_Settings_Helper' ) ) {
 				}
 
 				?>
-				<div class="foogallery-tab-content <?php echo $tab_active; ?>"
-					 data-name="<?php echo $template['slug']; ?>-<?php echo $section_slug; ?>">
+				<div class="foogallery-tab-content <?php echo esc_attr( $tab_active ); ?>"
+					data-name="<?php echo esc_attr( $template['slug'] . '-' . $section_slug ); ?>">
 					<?php $this->render_gallery_template_settings_tab_contents_fields( $template, $section ); ?>
 				</div>
 				<?php
@@ -163,43 +162,43 @@ if ( ! class_exists( 'FooGallery_Admin_Gallery_MetaBox_Settings_Helper' ) ) {
 						}
 					}
 					?>
-					<tr class="<?php echo $field_class; ?>"<?php echo $field_row_data_html; ?>>
+					<tr class="<?php echo esc_attr( $field_class ); ?>" <?php echo esc_attr( $field_row_data_html ); ?>>
 						<?php if ( 'help' === $field_type ) { ?>
 							<td colspan="2">
 								<div class="foogallery-help">
 									<?php if ( array_key_exists( 'title', $field ) ) { ?>
-									<?php echo '<strong>' . $field['title'] . '</strong><br /><br />'; ?>
+									<?php echo '<strong>' . esc_html( $field['title'] ) . '</strong><br /><br />'; ?>
 									<?php } ?>
-									<?php echo $field['desc']; ?>
+									<?php echo esc_html( $field['desc'] ); ?>
 								</div>
 							</td>
 						<?php } else if ( 'promo' === $field_type ) { ?>
-                            <td colspan="2">
-                                <div class="foogallery-promo">
-	                                <button class="foogallery-admin-promo-dismiss notice-dismiss"></button>
-	                                <?php echo '<strong>' . $field['title'] . '</strong><br /><br />'; ?>
+							<td colspan="2">
+								<div class="foogallery-promo">
+									<button class="foogallery-admin-promo-dismiss notice-dismiss"></button>
+									<?php echo '<strong>' . esc_html( $field['title'] ) . '</strong><br /><br />'; ?>
 									<?php
-                                    echo $field['desc'];
+									echo esc_html( $field['desc'] );
 									if ( array_key_exists( 'cta_text', $field ) ) {
-									    echo '<a class="button-primary" href="' . $field['cta_link'] . '" target="_blank">' . $field['cta_text'] . '</a>';
-                                    }
+										echo '<a class="button-primary" href="' . esc_url( $field['cta_link'] ) . '" target="_blank">' . esc_html( $field['cta_text'] ) . '</a>';
+									}
 									if ( array_key_exists( 'cta', $field ) ) {
 										foreach ( $field['cta'] as $cta ) {
-											$button_class = isset( $cta['class'] ) ? $cta['class'] : 'button-primary';
-											echo '<a class="' . $button_class . '" href="' . $cta['link'] . '" target="_blank">' . $cta['text'] . '</a>';
+											$button_class = isset( $cta['class'] ) ? esc_attr( $cta['class'] ) : 'button-primary';
+											echo '<a class="' . esc_attr( $button_class ) . '" href="' . esc_url( $cta['link'] ) . '" target="_blank">' . esc_html( $cta['text'] ) . '</a>';
 										}
 									}
 									?>
-                                </div>
-                            </td>
+								</div>
+							</td>
 						<?php } else { ?>
 							<th>
-								<label for="FooGallerySettings_<?php echo $template['slug'] . '_' . $field['id']; ?>"><?php echo $field['title']; ?></label>
+								<label for="FooGallerySettings_<?php echo esc_attr( $template['slug'] . '_' . $field['id'] ); ?>"><?php echo esc_html( $field['title'] ); ?></label>
 								<?php if ( $is_promo ) { ?>
-                                    <span data-balloon-length="large" data-balloon-pos="right" data-balloon="<?php echo esc_attr($field['promo']); ?>"><i class="dashicons dashicons-star-filled"></i></span>
+									<span data-balloon-length="large" data-balloon-pos="right" data-balloon="<?php echo esc_attr( $field['promo'] ); ?>"><i class="dashicons dashicons-star-filled"></i></span>
 								<?php } ?>
-                                <?php if ( !empty( $field['desc'] ) ) { ?>
-									<span data-balloon-length="large" data-balloon-pos="right" data-balloon="<?php echo esc_attr($field['desc']); ?>"><i class="dashicons dashicons-editor-help"></i></span>
+								<?php if ( !empty( $field['desc'] ) ) { ?>
+									<span data-balloon-length="large" data-balloon-pos="right" data-balloon="<?php echo esc_attr( $field['desc'] ); ?>"><i class="dashicons dashicons-editor-help"></i></span>
 								<?php } ?>
 							</th>
 							<td>
@@ -207,6 +206,7 @@ if ( ! class_exists( 'FooGallery_Admin_Gallery_MetaBox_Settings_Helper' ) ) {
 							</td>
 						<?php } ?>
 					</tr>
+
 				<?php } ?>
 				</tbody>
 			</table>
@@ -243,12 +243,12 @@ if ( ! class_exists( 'FooGallery_Admin_Gallery_MetaBox_Settings_Helper' ) ) {
 			foreach ( $this->gallery_templates as $template ) {
 				$field_visibility = ( $this->current_gallery_template !== $template['slug'] ) ? 'style="display:none"' : '';
 				?><div
-				class="foogallery-settings-container foogallery-settings-container-<?php echo $template['slug']; ?>"
-				<?php echo $field_visibility; ?>>
+				class="foogallery-settings-container foogallery-settings-container-<?php echo esc_attr( $template['slug'] ); ?>"
+				<?php echo esc_attr( $field_visibility ); ?>>
 				<?php $this->render_gallery_template_settings( $template ); ?>
 				</div><?php
 			}
-		}
+		}		
 
 		/**
 		 * build up and return a model that we can use to render the gallery settings
@@ -359,7 +359,7 @@ if ( ! class_exists( 'FooGallery_Admin_Gallery_MetaBox_Settings_Helper' ) ) {
 		public function render_hidden_gallery_template_selector() {
 			?>
 			<span class="hidden foogallery-template-selector"> &mdash;
-				<select id="FooGallerySettings_GalleryTemplate" name="<?php echo FOOGALLERY_META_TEMPLATE; ?>">
+				<select id="FooGallerySettings_GalleryTemplate" name="<?php echo esc_attr( FOOGALLERY_META_TEMPLATE ); ?>">
                     <?php
 					foreach ( $this->gallery_templates as $template ) {
 						$selected = ( $this->current_gallery_template === $template['slug'] ) ? 'selected' : '';
@@ -380,7 +380,7 @@ if ( ! class_exists( 'FooGallery_Admin_Gallery_MetaBox_Settings_Helper' ) ) {
 							$mandatory_classes = ' data-mandatory-classes="' . $template['mandatory_classes'] . '" ';
 						}
 
-						echo "<option {$selected}{$preview_css}{$mandatory_classes} value=\"{$template['slug']}\">{$template['name']}</option>";
+						echo '<option ' . esc_attr( $selected ) . esc_attr( $preview_css ) . esc_attr( $mandatory_classes ) . ' value="' . esc_attr( $template['slug'] ) . '">' . esc_html( $template['name'] ) . '</option>';
 					}
 					?>
                 </select>

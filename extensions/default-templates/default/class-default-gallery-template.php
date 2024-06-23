@@ -42,17 +42,17 @@ if ( ! class_exists( 'FooGallery_Default_Gallery_Template' ) ) {
 			}
 
 			$id         = $gallery->container_id();
-			$dimensions = foogallery_gallery_template_setting('thumbnail_dimensions');
+			$dimensions = foogallery_gallery_template_setting( 'thumbnail_dimensions' );
 			if ( is_array( $dimensions ) && array_key_exists( 'width', $dimensions ) && intval( $dimensions['width'] ) > 0 ) {
 				$width      = intval( $dimensions['width'] );
 
 				// @formatter:off
 				?>
-<style type="text/css">
-	<?php echo '#' . $id; ?> .fg-image {
-        width: <?php echo $width; ?>px;
-    }
-</style>
+				<style type="text/css">
+					<?php echo esc_attr( '#' . $id ); ?> .fg-image {
+						width: <?php echo esc_attr( $width ); ?>px;
+					}
+				</style>
 				<?php
 				// @formatter:on
 			}

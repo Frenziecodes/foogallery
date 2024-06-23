@@ -25,24 +25,24 @@ if ( ! class_exists( 'FooGallery_Datasource_MediaLibrary' ) ) {
          * Toggles the attachment modal setting.
          */
         public function attachment_modal_toggle() {
-            $nonce = safe_get_from_request( 'nonce' );
-
-            if ( wp_verify_nonce( $nonce, 'foogallery_toggle_attachment_modal' ) ) {
-
-                $setting_value = foogallery_get_setting( 'advanced_attachment_modal' );
-                if ( 'on' === $setting_value ) {
-                    $setting_value = '';
-                    echo __( 'The Attachment Modal feature has been disabled. The page will now refresh.' ,'foogallery' );
-                } else {
-                    $setting_value = 'on';
-                    echo __( 'The Attachment Modal feature has been enabled. The page will now refresh.' ,'foogallery' );
-                }
-
-                foogallery_set_setting( 'advanced_attachment_modal', $setting_value );
-            }
-
-            die();
-        }
+			$nonce = safe_get_from_request( 'nonce' );
+		
+			if ( wp_verify_nonce( $nonce, 'foogallery_toggle_attachment_modal' ) ) {
+		
+				$setting_value = foogallery_get_setting( 'advanced_attachment_modal' );
+				if ( 'on' === $setting_value ) {
+					$setting_value = '';
+					echo esc_html__( 'The Attachment Modal feature has been disabled. The page will now refresh.' ,'foogallery' );
+				} else {
+					$setting_value = 'on';
+					echo esc_html__( 'The Attachment Modal feature has been enabled. The page will now refresh.' ,'foogallery' );
+				}
+		
+				foogallery_set_setting( 'advanced_attachment_modal', $setting_value );
+			}
+		
+			die();
+		}		
 
 		/**
 		 * Returns the number of attachments used from the media library
@@ -103,10 +103,10 @@ if ( ! class_exists( 'FooGallery_Datasource_MediaLibrary' ) ) {
 		public function output_add_button( $foogallery ) {
 			?>
 			<button type="button" class="button button-primary button-hero upload_image_button"
-					data-uploader-title="<?php _e( 'Add Media To Gallery', 'foogallery' ); ?>"
-					data-uploader-button-text="<?php _e( 'Add Media', 'foogallery' ); ?>"
-					data-post-id="<?php echo $foogallery->ID; ?>">
-				<span class="dashicons dashicons-admin-media"></span><?php _e( 'Add From Media Library', 'foogallery' ); ?>
+					data-uploader-title="<?php esc_html_e( 'Add Media To Gallery', 'foogallery' ); ?>"
+					data-uploader-button-text="<?php esc_html_e( 'Add Media', 'foogallery' ); ?>"
+					data-post-id="<?php echo esc_attr( $foogallery->ID ); ?>">
+				<span class="dashicons dashicons-admin-media"></span><?php esc_html_e( 'Add From Media Library', 'foogallery' ); ?>
 			</button>
 			<?php
 		}
@@ -130,68 +130,73 @@ if ( ! class_exists( 'FooGallery_Datasource_MediaLibrary' ) ) {
                 $attachment_ids = $foogallery->attachment_id_csv();
             }
 			?>
-			<input type="hidden" data-foogallery-preview="include" name='foogallery_attachments' id="foogallery_attachments" value="<?php echo $attachment_ids; ?>"/>
-            <div class="foogallery-attachments-list-container <?php echo $show_attachments && $has_attachments ? '' : 'hidden'; ?>">
-                <ul class="foogallery-attachments-list <?php echo $media_button_start ? 'foogallery-add-media-button-start' : ''; ?>">
-                    <?php if ( $media_button_start ) {
-                        $this->render_add_media_button( $foogallery->ID );
-                    } ?>
-                    <?php
-                    //render all attachments that have been added to the gallery from the media library
-                    if ( $has_attachments && $show_attachments ) {
-                        foreach ( $foogallery->attachments() as $attachment ) {
-                            $this->render_attachment_item( $attachment );
-                        }
-                    } ?>
-                    <?php if ( !$media_button_start ) {
-                        $this->render_add_media_button( $foogallery->ID );
-                    } ?>
-                </ul>
-                <div style="clear: both;"></div>
-                <textarea style="display: none" id="foogallery-attachment-template"><?php $this->render_attachment_item(); ?></textarea>
-                <div class="foogallery-attachments-list-bar">
-                    <span class="foogallery-feature-promo">
-                    <?php
-                    $modal_enabled = foogallery_get_setting( 'advanced_attachment_modal' );
-                    $toggle_attachment_modal_nonce = wp_create_nonce( 'foogallery_toggle_attachment_modal' );
-                    $attachment_modal_url = 'https://fooplugins.com/documentation/foogallery/getting-started-foogallery/advanced-attachment-modal/';
-                    $attachment_modal_link_html = sprintf('<a target="_blank" href="%s">%s</a>',$attachment_modal_url, __( 'Advanced Attachment Modal', 'foogallery' ) );
+			<input type="hidden" data-foogallery-preview="include" name="foogallery_attachments" id="foogallery_attachments" value="<?php echo esc_attr( $attachment_ids ); ?>"/>
+			<div class="foogallery-attachments-list-container <?php echo esc_attr( $show_attachments && $has_attachments ? '' : 'hidden' ); ?>">
+				<ul class="foogallery-attachments-list <?php echo esc_attr( $media_button_start ? 'foogallery-add-media-button-start' : '' ); ?>">
+					<?php if ( $media_button_start ) {
+						$this->render_add_media_button( $foogallery->ID );
+					} ?>
+					<?php
+					// Render all attachments that have been added to the gallery from the media library
+					if ( $has_attachments && $show_attachments ) {
+						foreach ( $foogallery->attachments() as $attachment ) {
+							$this->render_attachment_item( $attachment );
+						}
+					} ?>
+					<?php if ( !$media_button_start ) {
+						$this->render_add_media_button( $foogallery->ID );
+					} ?>
+				</ul>
+				<div style="clear: both;"></div>
+				<textarea style="display: none" id="foogallery-attachment-template"><?php $this->render_attachment_item(); ?></textarea>
+				<div class="foogallery-attachments-list-bar">
+					<span class="foogallery-feature-promo">
+					<?php
+					$modal_enabled = foogallery_get_setting( 'advanced_attachment_modal' );
+					$toggle_attachment_modal_nonce = wp_create_nonce( 'foogallery_toggle_attachment_modal' );
+					$attachment_modal_url = 'https://fooplugins.com/documentation/foogallery/getting-started-foogallery/advanced-attachment-modal/';
+					$attachment_modal_link_html = sprintf('<a target="_blank" href="%s">%s</a>', esc_url( $attachment_modal_url ), esc_html__( 'Advanced Attachment Modal', 'foogallery' ) );
 
-                    if ( 'on' !== $modal_enabled ) {
-                        printf( __( 'Try the new %s feature : a better way to update your attachment details!', 'foogallery' ), $attachment_modal_link_html );
-                        $attachment_modal_action = __( 'Enable it now!', 'foogallery' );
-                    } else {
-                        printf( __( 'The new %s feature is enabled and ready to use!', 'foogallery' ), $attachment_modal_link_html );
-                        $attachment_modal_action = __( 'Disable it now!', 'foogallery' );
-                    }
-                    ?>
-                        <a data-nonce="<?php echo $toggle_attachment_modal_nonce; ?>" class="button button-small button-secondary foogallery-attachment-modal-toggle" target="_blank" href="#advanced_attachment_modal"><?php echo $attachment_modal_action; ?></a>
-                    </span>
-                    <?php do_action('foogallery_attachments_list_bar_buttons', $foogallery ); ?>
+					if ( 'on' !== $modal_enabled ) {
+						printf( 
+							esc_html__( 'Try the new %s feature: a better way to update your attachment details!', 'foogallery' ), 
+							wp_kses_post( $attachment_modal_link_html ) 
+						);
+						$attachment_modal_action = esc_html__( 'Enable it now!', 'foogallery' );
+					} else {
+						printf( 
+							esc_html__( 'The new %s feature is enabled and ready to use!', 'foogallery' ), 
+							wp_kses_post( $attachment_modal_link_html ) 
+						);
+						$attachment_modal_action = esc_html__( 'Disable it now!', 'foogallery' );
+					}					
+					?>
+						<a data-nonce="<?php echo esc_attr( $toggle_attachment_modal_nonce ); ?>" class="button button-small button-secondary foogallery-attachment-modal-toggle" target="_blank" href="#advanced_attachment_modal"><?php echo esc_html( $attachment_modal_action ); ?></a>
+					</span>
+					<?php do_action('foogallery_attachments_list_bar_buttons', $foogallery ); ?>
 
-                    <button type="button" class="button button-primary button-large alignright upload_image_button"
-                            data-uploader-title="<?php _e( 'Add Media To Gallery', 'foogallery' ); ?>"
-                            data-uploader-button-text="<?php _e( 'Add Media', 'foogallery' ); ?>"
-                            data-post-id="<?php echo $foogallery->ID; ?>">
-                        <?php _e( 'Add Media', 'foogallery' ); ?>
-                    </button>
+					<button type="button" class="button button-primary button-large alignright upload_image_button"
+							data-uploader-title="<?php esc_html_e( 'Add Media To Gallery', 'foogallery' ); ?>"
+							data-uploader-button-text="<?php esc_html_e( 'Add Media', 'foogallery' ); ?>"
+							data-post-id="<?php echo esc_attr( $foogallery->ID ); ?>">
+						<?php esc_html_e( 'Add Media', 'foogallery' ); ?>
+					</button>
 
-                    <button type="button" class="button button-primary button-large alignright remove_all_media">
-		                <?php _e( 'Remove All Media', 'foogallery' ); ?>
-                    </button>
-
-                </div>
-            </div>
+					<button type="button" class="button button-primary button-large alignright remove_all_media">
+						<?php esc_html_e( 'Remove All Media', 'foogallery' ); ?>
+					</button>
+				</div>
+			</div>
 			<?php
 		}
 
 		private function render_add_media_button( $foogallery_id) {
 		    ?>
             <li class="add-attachment datasource-medialibrary">
-                <a href="#" data-uploader-title="<?php _e( 'Add Media To Gallery', 'foogallery' ); ?>"
-                   data-uploader-button-text="<?php _e( 'Add Media', 'foogallery' ); ?>"
-                   data-post-id="<?php echo $foogallery_id; ?>" class="upload_image_button"
-                   title="<?php _e( 'Add From Media Library', 'foogallery' ); ?>">
+                <a href="#" data-uploader-title="<?php esc_html_e( 'Add Media To Gallery', 'foogallery' ); ?>"
+                   data-uploader-button-text="<?php esc_html_e( 'Add Media', 'foogallery' ); ?>"
+				   data-post-id="<?php echo esc_attr( $foogallery_id ); ?>" class="upload_image_button"
+                   title="<?php esc_html_e( 'Add From Media Library', 'foogallery' ); ?>">
                     <div class="dashicons dashicons-plus"></div>
                 </a>
             </li>
@@ -214,17 +219,18 @@ if ( ! class_exists( 'FooGallery_Datasource_MediaLibrary' ) ) {
 			$data_attribute = empty($attachment_id) ? '' : "data-attachment-id=\"{$attachment_id}\"";
 			$img_tag        = empty($attachment) ? '<img width="150" height="150" />' : "<img width=\"150\" height=\"150\" data-src=\"{$attachment[0]}\" />";
 			?>
-			<li class="attachment details" <?php echo $data_attribute; ?>>
-				<div class="attachment-preview type-image <?php echo $extra_class; ?>">
+			<li class="attachment details" <?php echo esc_attr( $data_attribute ); ?>>
+    			<div class="attachment-preview type-image <?php echo esc_attr( $extra_class ); ?>">
+
 					<div class="thumbnail">
-						<div class="centered">
-							<?php echo $img_tag; ?>
-						</div>
+					<div class="centered">
+						<?php echo wp_kses_post( $img_tag ); ?>
 					</div>
-					<a class="info" href="#" title="<?php _e( 'Edit Info', 'foogallery' ); ?>">
+					</div>
+					<a class="info" href="#" title="<?php esc_html_e( 'Edit Info', 'foogallery' ); ?>">
 						<span class="dashicons dashicons-info"></span>
 					</a>
-					<a class="remove" href="#" title="<?php _e( 'Remove from gallery', 'foogallery' ); ?>">
+					<a class="remove" href="#" title="<?php esc_html_e( 'Remove from gallery', 'foogallery' ); ?>">
 						<span class="dashicons dashicons-dismiss"></span>
 					</a>
 				</div>

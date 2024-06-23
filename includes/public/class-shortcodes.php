@@ -63,9 +63,9 @@ if ( ! class_exists( 'FooGallery_Shortcodes' ) ) {
 		function render_custom_css( $foogallery ) {
 			if ( !empty( $foogallery->custom_css ) ) {
 				echo '<style type="text/css">';
-				echo $foogallery->custom_css;
+				echo esc_html( wp_strip_all_tags( $foogallery->custom_css ) );
 				echo '</style>';
 			}
-		}
+		}		
 	}
 }

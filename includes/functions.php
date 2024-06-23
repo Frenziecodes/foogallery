@@ -479,9 +479,9 @@ function foogallery_build_class_attribute_safe( $gallery ) {
  * @param $gallery FooGallery
  */
 function foogallery_build_class_attribute_render_safe( $gallery ) {
-	$args = func_get_args();
-	$result = call_user_func_array("foogallery_build_class_attribute_safe", $args);
-	echo $result;
+    $args = func_get_args();
+    $result = call_user_func_array("foogallery_build_class_attribute_safe", $args);
+    echo esc_attr( $result );
 }
 
 /**
@@ -822,20 +822,19 @@ function foogallery_get_caption_desc_for_attachment($attachment_post, $source = 
  * Runs thumbnail tests and outputs results in a table format
  */
 function foogallery_output_thumbnail_generation_results() {
-	$thumbs = new FooGallery_Thumbnails();
-	try {
-		$results = $thumbs->run_thumbnail_generation_tests();
+    $thumbs = new FooGallery_Thumbnails();
+    try {
+        $results = $thumbs->run_thumbnail_generation_tests();
         if ( $results['success'] ) {
-            echo '<span style="color:#0c0">' . __('Thumbnail generation test ran successfully.', 'foogallery') . '</span>';
+            echo '<span style="color:#0c0">' . esc_html__( 'Thumbnail generation test ran successfully.', 'foogallery' ) . '</span>';
         } else {
-            echo '<span style="color:#c00">' . __('Thumbnail generation test failed!', 'foogallery') . '</span>';
-            var_dump( $results['error'] );
-			var_dump( $results['file_info'] );
+            echo '<span style="color:#c00">' . esc_html__( 'Thumbnail generation test failed!', 'foogallery' ) . '</span>';
+            echo '<pre>' . esc_html( print_r( $results['error'], true ) ) . '</pre>';
+            echo '<pre>' . esc_html( print_r( $results['file_info'], true ) ) . '</pre>';
         }
-	}
-	catch (Exception $e) {
-		echo 'Exception: ' . $e->getMessage();
-	}
+    } catch ( Exception $e ) {
+        echo 'Exception: ' . esc_html( $e->getMessage() );
+    }
 }
 
 /**
@@ -978,37 +977,53 @@ function foogallery_retina_options() {
  * Does a full uninstall of the plugin including all data and settings!
  */
 function foogallery_uninstall() {
+    if ( ! current_user_can( 'install_plugins' ) ) {
+        exit;
+    }
 
-	if ( !current_user_can( 'install_plugins' ) ) exit;
+    // Try to get cached gallery post IDs
+    $cache_key = 'foogallery_gallery_post_ids';
+    $gallery_post_ids = wp_cache_get( $cache_key, 'foogallery' );
 
-	//delete all gallery posts first
-	global $wpdb;
-	$query = "SELECT p.ID FROM {$wpdb->posts} AS p WHERE p.post_type IN (%s)";
-	$gallery_post_ids = $wpdb->get_col( $wpdb->prepare( $query, FOOGALLERY_CPT_GALLERY ) );
+    if ( false === $gallery_post_ids ) {
+        // Fetch the gallery post IDs using get_posts()
+        $args = array(
+            'post_type'   => FOOGALLERY_CPT_GALLERY,
+            'post_status' => 'any',
+            'fields'      => 'ids',
+            'numberposts' => -1
+        );
+        $gallery_post_ids = get_posts( $args );
 
-	if ( !empty( $gallery_post_ids ) ) {
-		$deleted = 0;
-		foreach ( $gallery_post_ids as $post_id ) {
-			$del = wp_delete_post( $post_id );
-			if ( false !== $del ) {
-				++$deleted;
-			}
-		}
-	}
+        // Cache the results
+        wp_cache_set( $cache_key, $gallery_post_ids, 'foogallery', 12 * HOUR_IN_SECONDS );
+    }
 
-	//delete all options
-	if ( is_network_admin() ) {
-		delete_site_option( FOOGALLERY_SLUG );
-	} else {
-		delete_option( FOOGALLERY_SLUG );
-	}
-	delete_option( FOOGALLERY_OPTION_VERSION );
-	delete_option( FOOGALLERY_OPTION_THUMB_TEST );
-	delete_option( FOOGALLERY_EXTENSIONS_ACTIVATED_OPTIONS_KEY );
-	delete_option( FOOGALLERY_EXTENSIONS_ERRORS_OPTIONS_KEY );
+    if ( ! empty( $gallery_post_ids ) ) {
+        $deleted = 0;
+        foreach ( $gallery_post_ids as $post_id ) {
+            $del = wp_delete_post( $post_id, true ); // Force delete
+            if ( false !== $del ) {
+                ++$deleted;
+            }
+        }
+    }
 
-	//let any extensions clean up after themselves
-	do_action( 'foogallery_uninstall' );
+    // Clear the cache after deletion
+    wp_cache_delete( $cache_key, 'foogallery' );
+
+    // Delete options
+    if ( is_network_admin() ) {
+        delete_site_option( FOOGALLERY_SLUG );
+    } else {
+        delete_option( FOOGALLERY_SLUG );
+    }
+    delete_option( FOOGALLERY_OPTION_VERSION );
+    delete_option( FOOGALLERY_OPTION_THUMB_TEST );
+    delete_option( FOOGALLERY_EXTENSIONS_ACTIVATED_OPTIONS_KEY );
+    delete_option( FOOGALLERY_EXTENSIONS_ERRORS_OPTIONS_KEY );
+
+    do_action( 'foogallery_uninstall' );
 }
 
 /**
@@ -1223,14 +1238,38 @@ function foogallery_current_gallery_attachments_for_rendering() {
  *
  * @return null or attachment ID
  */
-function foogallery_get_attachment_id_by_url($url) {
-	global $wpdb;
-	$query = "SELECT ID FROM {$wpdb->posts} WHERE guid=%s";
-	$attachment = $wpdb->get_col( $wpdb->prepare( $query, $url ) );
-	if ( count( $attachment ) > 0 ) {
-		return $attachment[0];
-	}
-	return null;
+function foogallery_get_attachment_id_by_url( $url ) {
+    // Generate a cache key based on the URL.
+    $cache_key = 'foogallery_attachment_id_' . md5( $url );
+    $attachment_id = wp_cache_get( $cache_key, 'foogallery' );
+
+    if ( false === $attachment_id ) {
+        // Use WP_Query to retrieve the attachment ID
+        $args = array(
+            'post_type'   => 'attachment',
+            'meta_query'  => array(
+                array(
+                    'key'     => '_wp_attached_file',
+                    'value'   => basename( $url ),
+                    'compare' => 'LIKE'
+                ),
+            ),
+            'fields'      => 'ids',
+            'numberposts' => 1,
+        );
+
+        $attachments = get_posts( $args );
+
+        if ( ! empty( $attachments ) ) {
+            $attachment_id = $attachments[0];
+            wp_cache_set( $cache_key, $attachment_id, 'foogallery', HOUR_IN_SECONDS );
+        } else {
+            $attachment_id = null;
+            wp_cache_set( $cache_key, $attachment_id, 'foogallery', HOUR_IN_SECONDS );
+        }
+    }
+
+    return $attachment_id;
 }
 
 /**

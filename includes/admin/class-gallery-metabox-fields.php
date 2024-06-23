@@ -35,12 +35,12 @@ if ( ! class_exists( 'FooGallery_Admin_Gallery_MetaBox_Fields' ) ) {
 			//allow for UI customization
 			do_action( 'foogallery_render_gallery_template_field_before', $field, $gallery );
 
-			echo '<div class="foogallery_metabox_field-' . $type . '">';
+			echo '<div class="foogallery_metabox_field-' . esc_attr( $type ) . '">';
 
 			switch ( $type ) {
 
 				case 'html':
-					echo $desc;
+					echo wp_kses_post( $desc );
 					$desc = '';
 					break;
 
@@ -54,19 +54,18 @@ if ( ! class_exists( 'FooGallery_Admin_Gallery_MetaBox_Fields' ) ) {
 					}
 
 					$checked = 'on' === $field['value'] ? ' checked="checked"' : '';
-					echo '<input' . $field_class . ' type="checkbox" id="FooGallerySettings_' . $id . '" name="' . FOOGALLERY_META_SETTINGS . '[' . $id . ']" value="on"' . $checked . ' />';
+					echo '<input' . esc_attr( $field_class ) . ' type="checkbox" id="FooGallerySettings_' . esc_attr( $id ) . '" name="' . esc_attr( FOOGALLERY_META_SETTINGS ) . '[' . esc_attr( $id ) . ']" value="on"' . esc_attr( $checked ) . ' />';
 					break;
 
 				case 'select':
-					echo '<select' . $field_class . ' id="FooGallerySettings_' . $id . '" name="' . FOOGALLERY_META_SETTINGS . '[' . $id . ']">';
+					echo '<select' . esc_attr( $field_class ) . ' id="FooGallerySettings_' . esc_attr( $id ) . '" name="' . esc_attr( FOOGALLERY_META_SETTINGS ) . '[' . esc_attr( $id ) . ']">';
 					foreach ( $choices as $value => $label ) {
 						$selected = '';
 						if ( $field['value'] == $value ) {
 							$selected = ' selected="selected"';
 						}
-						echo '<option ' . $selected . ' value="' . $value . '">' . $label . '</option>';
+						echo '<option ' . esc_attr( $selected ) . ' value="' . esc_attr( $value ) . '">' . esc_html( $label ) . '</option>';
 					}
-
 					echo '</select>';
 					break;
 
@@ -78,7 +77,7 @@ if ( ! class_exists( 'FooGallery_Admin_Gallery_MetaBox_Fields' ) ) {
 						if ( $field['value'] == $value ) {
 							$selected = ' checked="checked"';
 						}
-						echo '<input' . $field_class . $selected . ' type="radio" name="' . FOOGALLERY_META_SETTINGS . '[' . $id . ']"  id="FooGallerySettings_' . $id . $i . '" value="' . $value . '">';
+						echo '<input' . esc_attr( $field_class ) . esc_attr( $selected ) . ' type="radio" name="' . esc_attr( FOOGALLERY_META_SETTINGS ) . '[' . esc_attr( $id ) . ']" id="FooGallerySettings_' . esc_attr( $id ) . esc_attr( $i ) . '" value="' . esc_attr( $value ) . '">';
 						echo '&nbsp;';
 
 						$label_class = '';
@@ -88,96 +87,88 @@ if ( ! class_exists( 'FooGallery_Admin_Gallery_MetaBox_Fields' ) ) {
 
 						if ( is_array( $label ) ) {
 							if ( array_key_exists( 'class', $label ) ) {
-								$label_class = ' class="' . $label['class'] . '"';
+								$label_class = ' class="' . esc_attr( $label['class'] ) . '"';
 							}
 							if ( array_key_exists( 'icon', $label ) ) {
-								$label_icon = '<i class="dashicons ' . $label['icon'] . '"></i>';
+								$label_icon = '<i class="dashicons ' . esc_attr( $label['icon'] ) . '"></i>';
 							}
 							if ( array_key_exists( 'tooltip', $label ) ) {
-								$label_tooltip = '<span data-balloon-length="large" data-balloon-pos="right" data-balloon="' . $label['tooltip'] . '">';
+								$label_tooltip = '<span data-balloon-length="large" data-balloon-pos="right" data-balloon="' . esc_attr( $label['tooltip'] ) . '">';
 								$label_tooltip_end = '</span>';
 							}
 							$label = $label['label'];
 						}
 
-						echo '<label '.$label_class.' for="FooGallerySettings_' . $id . $i . '">' . $label_tooltip . $label . $label_icon . $label_tooltip_end . '</label>';
+						echo '<label ' . esc_attr( $label_class ) . ' for="FooGallerySettings_' . esc_attr( $id ) . esc_attr( $i ) . '">' . esc_html( $label_tooltip ) . esc_html( $label ) . wp_kses_post( $label_icon ) . esc_html( $label_tooltip_end ) . '</label>';
 						if ( $i < count( $choices ) - 1 ) {
-							echo $spacer;
+							echo esc_html( $spacer );
 						}
 						$i++;
 					}
 					break;
 
 				case 'textarea':
-					echo '<textarea' . $field_class . ' id="FooGallerySettings_' . $id . '" name="' . FOOGALLERY_META_SETTINGS . '[' . $id . ']" placeholder="' . $placeholder . '">' . esc_attr( $field['value'] ) . '</textarea>';
-
+					echo '<textarea' . esc_attr( $field_class ) . ' id="FooGallerySettings_' . esc_attr( $id ) . '" name="' . esc_attr( FOOGALLERY_META_SETTINGS ) . '[' . esc_attr( $id ) . ']" placeholder="' . esc_attr( $placeholder ) . '">' . esc_attr( $field['value'] ) . '</textarea>';
 					break;
 
 				case 'text':
-					echo '<input' . $field_class . ' type="text" id="FooGallerySettings_' . $id . '" name="' . FOOGALLERY_META_SETTINGS . '[' . $id . ']" value="' . esc_attr( $field['value'] ) . '" />';
-
+					echo '<input' . esc_attr( $field_class ) . ' type="text" id="FooGallerySettings_' . esc_attr( $id ) . '" name="' . esc_attr( FOOGALLERY_META_SETTINGS ) . '[' . esc_attr( $id ) . ']" value="' . esc_attr( $field['value'] ) . '" />';
 					break;
 
 				case 'colorpicker':
-
 					$opacity_attribute = empty($opacity) ? '' : ' data-show-alpha="true"';
-
-					echo '<input ' . $opacity_attribute . ' class="colorpicker" type="text" id="FooGallerySettings_' . $id . '" name="' . FOOGALLERY_META_SETTINGS . '[' . $id . ']" value="' . esc_attr( $field['value'] ) . '" />';
-
+					echo '<input ' . esc_attr( $opacity_attribute ) . ' class="colorpicker" type="text" id="FooGallerySettings_' . esc_attr( $id ) . '" name="' . esc_attr( FOOGALLERY_META_SETTINGS ) . '[' . esc_attr( $id ) . ']" value="' . esc_attr( $field['value'] ) . '" />';
 					break;
 
 				case 'number':
 					$min = isset($min) ? $min : 0;
 					$step = isset($step) ? $step : 1;
-					echo '<input class="small-text ' . $class . '" type="number" step="' . $step . '" min="' . $min .'" id="FooGallerySettings_' . $id . '" name="' . FOOGALLERY_META_SETTINGS . '[' . $id . ']" placeholder="' . $placeholder . '" value="' . esc_attr( $field['value'] ) . '" />';
-
+					echo '<input class="small-text ' . esc_attr( $class ) . '" type="number" step="' . esc_attr( $step ) . '" min="' . esc_attr( $min ) .'" id="FooGallerySettings_' . esc_attr( $id ) . '" name="' . esc_attr( FOOGALLERY_META_SETTINGS ) . '[' . esc_attr( $id ) . ']" placeholder="' . esc_attr( $placeholder ) . '" value="' . esc_attr( $field['value'] ) . '" />';
 					break;
 
 				case 'checkboxlist':
 					$i = 0;
 					foreach ( $choices as $value => $label ) {
-
 						$checked = '';
 						if ( isset($field['value'][$value]) && $field['value'][$value] == $value ) {
 							$checked = 'checked="checked"';
 						}
-
-						echo '<input' . $field_class . ' ' . $checked . ' type="checkbox" name="' . FOOGALLERY_META_SETTINGS . '[' . $id . '][' . $value . ']" id="FooGallerySettings_' . $id . $i . '" value="' . $value . '" data-value="' . $value . '"> <label for="FooGallerySettings_' . $id . $i . '">' . $label . '</label>';
+						echo '<input' . esc_attr( $field_class ) . ' ' . esc_attr( $checked ) . ' type="checkbox" name="' . esc_attr( FOOGALLERY_META_SETTINGS ) . '[' . esc_attr( $id ) . '][' . esc_attr( $value ) . ']" id="FooGallerySettings_' . esc_attr( $id ) . esc_attr( $i ) . '" value="' . esc_attr( $value ) . '" data-value="' . esc_attr( $value ) . '"> <label for="FooGallerySettings_' . esc_attr( $id ) . esc_attr( $i ) . '">' . esc_html( $label ) . '</label>';
 						if ( $i < count( $choices ) - 1 ) {
 							echo '<br />';
 						}
 						$i++;
 					}
-
 					break;
+
 				case 'icon':
 					$i = 0;
-					$input_name = FOOGALLERY_META_SETTINGS . '[' . $id . ']';
+					$input_name = esc_attr( FOOGALLERY_META_SETTINGS ) . '[' . esc_attr( $id ) . ']';
 					$icon_html = '';
 					foreach ( $choices as $value => $icon ) {
 						$selected = ( $field['value'] == $value ) ? ' checked="checked"' : '';
-						$icon_html .= '<input style="display:none" name="' . $input_name. '" id="FooGallerySettings_' . $id . $i . '" ' . $selected . ' type="radio" value="' . $value . '" tabindex="' . $i . '"/>';
-						$title = $icon['label'];
-						$img = $icon['img'];
-						$icon_html .= '<label for="FooGallerySettings_' . $id . $i . '" data-balloon-length="small" data-balloon-pos="down" data-balloon="' . $title . '"><img src="' . $img . '" /></label>';
+						$icon_html .= '<input style="display:none" name="' . $input_name . '" id="FooGallerySettings_' . esc_attr( $id ) . esc_attr( $i ) . '" ' . esc_attr( $selected ) . ' type="radio" value="' . esc_attr( $value ) . '" tabindex="' . esc_attr( $i ) . '"/>';
+						$title = esc_attr( $icon['label'] );
+						$img = esc_url( $icon['img'] );
+						$icon_html .= '<label for="FooGallerySettings_' . esc_attr( $id ) . esc_attr( $i ) . '" data-balloon-length="small" data-balloon-pos="down" data-balloon="' . esc_attr( $title ) . '"><img src="' . esc_url( $img ) . '" /></label>';
 						$i++;
 					}
-					echo $icon_html;
+					echo wp_kses_post( $icon_html );
 					break;
 
 				case 'htmlicon':
 					$i = 0;
-					$input_name = FOOGALLERY_META_SETTINGS . '[' . $id . ']';
+					$input_name = esc_attr( FOOGALLERY_META_SETTINGS ) . '[' . esc_attr( $id ) . ']';
 					$icon_html = '';
 					foreach ( $choices as $value => $icon ) {
 						$selected = ( $field['value'] == $value ) ? ' checked="checked"' : '';
-						$icon_html .= '<input style="display:none" name="' . $input_name. '" id="FooGallerySettings_' . $id . $i . '" ' . $selected . ' type="radio" value="' . $value . '" tabindex="' . $i . '"/>';
-						$title = $icon['label'];
-						$html = $icon['html'];
-						$icon_html .= '<label for="FooGallerySettings_' . $id . $i . '" data-balloon-length="small" data-balloon-pos="down" data-balloon="' . $title . '">' . $html . '</label>';
+						$icon_html .= '<input style="display:none" name="' . $input_name . '" id="FooGallerySettings_' . esc_attr( $id ) . esc_attr( $i ) . '" ' . esc_attr( $selected ) . ' type="radio" value="' . esc_attr( $value ) . '" tabindex="' . esc_attr( $i ) . '"/>';
+						$title = esc_attr( $icon['label'] );
+						$html = wp_kses_post( $icon['html'] );
+						$icon_html .= '<label for="FooGallerySettings_' . esc_attr( $id ) . esc_attr( $i ) . '" data-balloon-length="small" data-balloon-pos="down" data-balloon="' . esc_attr( $title ) . '">' . $html . '</label>';
 						$i++;
 					}
-					echo $icon_html;
+					echo wp_kses_post( $icon_html );
 					break;
 
 				case 'thumb_size':
@@ -185,22 +176,22 @@ if ( ! class_exists( 'FooGallery_Admin_Gallery_MetaBox_Fields' ) ) {
 					$height = is_array( $field['value'] ) ? $field['value']['height'] : 150;
 					$crop = is_array( $field['value'] ) && array_key_exists( 'crop', $field['value'] ) ? $field['value']['crop'] : 0;
 					$crop_checked = ( $crop == 1 ) ? ' checked="checked"' : '';
-					echo '<label for="FooGallerySettings_' . $id . '_width">' . __( 'Width', 'foogallery' ) . '</label>';
-					echo '<input class="small-text" type="number" step="1" min="0" id="FooGallerySettings_' . $id . '_width" name="' . FOOGALLERY_META_SETTINGS . '[' . $id . '][width]" value="' . esc_attr( $width ) . '" />';
-					echo '<label for="FooGallerySettings_' . $id . '_width">' . __( 'Height', 'foogallery' ) . '</label>';
-					echo '<input class="small-text" type="number" step="1" min="0" id="FooGallerySettings_' . $id . '_height" name="' . FOOGALLERY_META_SETTINGS . '[' . $id . '][height]" value="' . esc_attr( $height ) . '" />';
-					echo '<div class="foogallery-thumbsize-crop"><input name="' . FOOGALLERY_META_SETTINGS . '[' . $id . '][crop]" type="hidden" id="FooGallerySettings_' . $id . '_nocrop" value="0" />';
-					echo '<input name="' . FOOGALLERY_META_SETTINGS . '[' . $id . '][crop]" type="checkbox" id="FooGallerySettings_' . $id . '_crop" value="1"' . $crop_checked . '>';
-					echo '<label for="FooGallerySettings_' . $id . '_crop">' . __( 'Crop thumbnail to exact dimensions', 'foogallery' ) . '</label></div>';
+					echo '<label for="FooGallerySettings_' . esc_attr( $id ) . '_width">' . esc_html__( 'Width', 'foogallery' ) . '</label>';
+					echo '<input class="small-text" type="number" step="1" min="0" id="FooGallerySettings_' . esc_attr( $id ) . '_width" name="' . esc_attr( FOOGALLERY_META_SETTINGS ) . '[' . esc_attr( $id ) . '][width]" value="' . esc_attr( $width ) . '" />';
+					echo '<label for="FooGallerySettings_' . esc_attr( $id ) . '_height">' . esc_html__( 'Height', 'foogallery' ) . '</label>';
+					echo '<input class="small-text" type="number" step="1" min="0" id="FooGallerySettings_' . esc_attr( $id ) . '_height" name="' . esc_attr( FOOGALLERY_META_SETTINGS ) . '[' . esc_attr( $id ) . '][height]" value="' . esc_attr( $height ) . '" />';
+					echo '<div class="foogallery-thumbsize-crop"><input name="' . esc_attr( FOOGALLERY_META_SETTINGS ) . '[' . esc_attr( $id ) . '][crop]" type="hidden" id="FooGallerySettings_' . esc_attr( $id ) . '_nocrop" value="0" />';
+					echo '<input name="' . esc_attr( FOOGALLERY_META_SETTINGS ) . '[' . esc_attr( $id ) . '][crop]" type="checkbox" id="FooGallerySettings_' . esc_attr( $id ) . '_crop" value="1"' . esc_attr( $crop_checked ) . '>';
+					echo '<label for="FooGallerySettings_' . esc_attr( $id ) . '_crop">' . esc_html__( 'Crop thumbnail to exact dimensions', 'foogallery' ) . '</label></div>';
 					break;
 
 				case 'thumb_size_no_crop':
 					$width = is_array( $field['value'] ) ? $field['value']['width'] : 150;
 					$height = is_array( $field['value'] ) ? $field['value']['height'] : 150;
-					echo '<label for="FooGallerySettings_' . $id . '_width">' . __( 'Width', 'foogallery' ) . '</label>';
-					echo '<input class="small-text" type="number" step="1" min="0" id="FooGallerySettings_' . $id . '_width" name="' . FOOGALLERY_META_SETTINGS . '[' . $id . '][width]" value="' . esc_attr( $width ) . '" />';
-					echo '<label for="FooGallerySettings_' . $id . '_width">' . __( 'Height', 'foogallery' ) . '</label>';
-					echo '<input class="small-text" type="number" step="1" min="0" id="FooGallerySettings_' . $id . '_height" name="' . FOOGALLERY_META_SETTINGS . '[' . $id . '][height]" value="' . esc_attr( $height ) . '" />';
+					echo '<label for="FooGallerySettings_' . esc_attr( $id ) . '_width">' . esc_html__( 'Width', 'foogallery' ) . '</label>';
+					echo '<input class="small-text" type="number" step="1" min="0" id="FooGallerySettings_' . esc_attr( $id ) . '_width" name="' . esc_attr( FOOGALLERY_META_SETTINGS ) . '[' . esc_attr( $id ) . '][width]" value="' . esc_attr( $width ) . '" />';
+					echo '<label for="FooGallerySettings_' . esc_attr( $id ) . '_height">' . esc_html__( 'Height', 'foogallery' ) . '</label>';
+					echo '<input class="small-text" type="number" step="1" min="0" id="FooGallerySettings_' . esc_attr( $id ) . '_height" name="' . esc_attr( FOOGALLERY_META_SETTINGS ) . '[' . esc_attr( $id ) . '][height]" value="' . esc_attr( $height ) . '" />';
 					break;
 
 				default:
@@ -208,9 +199,9 @@ if ( ! class_exists( 'FooGallery_Admin_Gallery_MetaBox_Fields' ) ) {
 					break;
 			}
 
-			if (!empty($suffix)) {
-				echo $suffix;
-			}
+			if ( ! empty( $suffix ) ) {
+				echo esc_html( $suffix );
+			}			
 
 			echo '</div>';
 

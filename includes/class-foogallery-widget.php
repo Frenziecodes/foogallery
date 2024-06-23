@@ -45,20 +45,19 @@ if ( ! class_exists( 'FooGallery_Widget' ) ) {
         public function widget($args, $instance)
         {
             // outputs the content of the widget
-            echo $args['before_widget'];
+            echo esc_html($args['before_widget']);
             if (!empty($instance['title'])) {
-                echo $args['before_title'] . apply_filters('widget_title', $instance['title']) . $args['after_title'];
+                echo esc_html($args['before_title']) . esc_html(apply_filters('widget_title', $instance['title'])) . esc_html($args['after_title']);
             }
             //output the gallery here
-            $foogallery_id = isset( $instance['foogallery_id'] ) ? intval( $instance['foogallery_id'] ) : 0;
-            if ( $foogallery_id > 0 ) {
-                foogallery_render_gallery( $foogallery_id );
+            $foogallery_id = isset($instance['foogallery_id']) ? intval($instance['foogallery_id']) : 0;
+            if ($foogallery_id > 0) {
+                foogallery_render_gallery($foogallery_id);
             }
-
-            echo $args['after_widget'];
+        
+            echo esc_html($args['after_widget']);
         }
-
-
+        
         /**
          * Outputs the options form on admin
          *
@@ -69,27 +68,28 @@ if ( ! class_exists( 'FooGallery_Widget' ) ) {
         {
             // outputs the options form on admin
             $title = !empty($instance['title']) ? $instance['title'] : __('New title', 'foogallery');
-            $foogallery_id = !empty($instance['foogallery_id'])  ? intval($instance['foogallery_id']) : 0;
+            $foogallery_id = !empty($instance['foogallery_id']) ? intval($instance['foogallery_id']) : 0;
             $galleries = foogallery_get_all_galleries();
             ?>
             <p>
-                <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label>
-                <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>"
-                       name="<?php echo $this->get_field_name('title'); ?>" type="text"
+                <label for="<?php echo esc_attr($this->get_field_id('title')); ?>"><?php esc_html_e('Title:'); ?></label>
+                <input class="widefat" id="<?php echo esc_attr($this->get_field_id('title')); ?>"
+                       name="<?php echo esc_attr($this->get_field_name('title')); ?>" type="text"
                        value="<?php echo esc_attr($title); ?>">
             </p>
             <p>
-                <label for="<?php echo $this->get_field_id('foogallery_id'); ?>"><?php _e('Select Gallery:', 'foogallery'); ?></label>
-                <select class="widefat" id="<?php echo $this->get_field_id('foogallery_id'); ?>"
-                       name="<?php echo $this->get_field_name('foogallery_id'); ?>"
-                       value="<?php echo esc_attr($title); ?>">
-                    <?php foreach ( $galleries as $gallery ) {?>
-                        <option <?php echo $gallery->ID == $foogallery_id ? 'selected="selected"' : ''; ?> value="<?php echo $gallery->ID; ?>"><?php echo $gallery->name . ' [' . $gallery->ID . ']'; ?></option>
+                <label for="<?php echo esc_attr($this->get_field_id('foogallery_id')); ?>"><?php esc_html_e('Select Gallery:', 'foogallery'); ?></label>
+                <select class="widefat" id="<?php echo esc_attr($this->get_field_id('foogallery_id')); ?>"
+                       name="<?php echo esc_attr($this->get_field_name('foogallery_id')); ?>">
+                    <?php foreach ($galleries as $gallery) { ?>
+                        <option <?php selected($gallery->ID, $foogallery_id); ?> value="<?php echo esc_attr($gallery->ID); ?>">
+                            <?php echo esc_html($gallery->name . ' [' . $gallery->ID . ']'); ?>
+                        </option>
                     <?php } ?>
                 </select>
             </p>
             <?php
-        }
+        }        
 
 
         /**

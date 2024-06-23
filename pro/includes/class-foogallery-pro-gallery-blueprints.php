@@ -154,9 +154,9 @@ if ( ! class_exists( 'FooGallery_Pro_Gallery_Blueprints' ) ) {
 			    <div class="foogallery-rating-notice notice notice-success is-dismissible">
 				    <p>
 					    <span class="dashicons dashicons-warning"></span>
-					    <strong><?php _e( 'Editing Gallery Blueprint!' ) ?></strong>
+					    <strong><?php esc_html_e( 'Editing Gallery Blueprint!' ) ?></strong>
 					    <br/>
-					    <?php printf( __( 'PLEASE NOTE : you are editing a Gallery Blueprint. Editing settings for this Gallery Blueprint will affect %s galleries. To see which galleries, scroll down to the Gallery Blueprint Settings metabox.', 'foogallery' ), $gallery_usage_count ); ?>
+						<?php printf( esc_html__( 'PLEASE NOTE: you are editing a Gallery Blueprint. Editing settings for this Gallery Blueprint will affect %s galleries. To see which galleries, scroll down to the Gallery Blueprint Settings metabox.', 'foogallery' ), esc_html( $gallery_usage_count ) ); ?>
 				    </p>
 			    </div>
 			    <?php
@@ -174,12 +174,12 @@ if ( ! class_exists( 'FooGallery_Pro_Gallery_Blueprints' ) ) {
 			$gallery_blueprint = $this->get_gallery_blueprint( $gallery->ID );
 			if ( false !== $gallery_blueprint ) {
 				echo '<div style="margin: 6px 0 0; padding: 0 12px 12px;"><p>';
-				echo __( 'All settings for this gallery are currently inherited from the Gallery Blueprint', 'foogallery' );
-				echo ' <strong>' . $gallery_blueprint->name . '</strong>.</p><p>';
-				echo __( 'To edit any settings for this gallery, you will need to edit the settings of the Gallery Blueprint directly.', 'foogallery' );
-				echo '</p><p><a target="_blank" href="' . get_edit_post_link( $gallery_blueprint->ID ) . '">' . __( 'Edit the Gallery Blueprint', 'foogallery');
+				echo esc_html__( 'All settings for this gallery are currently inherited from the Gallery Blueprint', 'foogallery' );
+				echo ' <strong>' . esc_html( $gallery_blueprint->name ) . '</strong>.</p><p>';
+				echo esc_html__( 'To edit any settings for this gallery, you will need to edit the settings of the Gallery Blueprint directly.', 'foogallery' );
+				echo '</p><p><a target="_blank" href="' . esc_url( get_edit_post_link( $gallery_blueprint->ID ) ) . '">' . esc_html__( 'Edit the Gallery Blueprint', 'foogallery' );
 				echo '</a></p></div>';
-			}
+			}			
 		}
 
 	    /**
@@ -332,8 +332,8 @@ if ( ! class_exists( 'FooGallery_Pro_Gallery_Blueprints' ) ) {
 
 		                $('.foogallery_gallery_blueprint_spinner').addClass('is-active');
 		                var data = 'action=foogallery_gallery_blueprint_toggle' +
-		                           '&foogallery=<?php echo $post->ID; ?>' +
-		                           '&foogallery_gallery_blueprint_toggle_nonce=' + $('#foogallery_gallery_blueprint_toggle_nonce').val() +
+									'&foogallery=' + <?php echo esc_js( $post->ID ); ?> +
+									'&foogallery_gallery_blueprint_toggle_nonce=' + $('#foogallery_gallery_blueprint_toggle_nonce').val() +
 		                           '&_wp_http_referer=' + encodeURIComponent($('input[name="_wp_http_referer"]').val());
 
 		                $.ajax({
@@ -351,7 +351,7 @@ if ( ! class_exists( 'FooGallery_Pro_Gallery_Blueprints' ) ) {
 
 		                $('.foogallery_gallery_blueprint_set_spinner').addClass('is-active');
 		                var data = 'action=foogallery_gallery_blueprint_set' +
-		                           '&foogallery=<?php echo $post->ID; ?>' +
+		                           '&foogallery=<?php echo esc_js( $post->ID ); ?>' +
 		                           '&blueprint=' + $('#foogallery_gallery_blueprint_select').val() +
 		                           '&foogallery_gallery_blueprint_set_nonce=' + $('#foogallery_gallery_blueprint_set_nonce').val() +
 		                           '&_wp_http_referer=' + encodeURIComponent($('input[name="_wp_http_referer"]').val());
@@ -368,7 +368,7 @@ if ( ! class_exists( 'FooGallery_Pro_Gallery_Blueprints' ) ) {
                 });
             </script>
             <div>
-                <p class="foogallery-help"><?php _e('Gallery Blueprints allow you to setup a blueprint for multiple galleries, so that when you update the single blueprint, all the galleries change at the same time. Think of a blueprint as a "template". Any gallery using a blueprint will not be able to set its own settings, as everything is inherited from the blueprint. This allows you to update settings once, and affect multiple galleries.', 'foogallery'); ?></p>
+                <p class="foogallery-help"><?php esc_html_e('Gallery Blueprints allow you to setup a blueprint for multiple galleries, so that when you update the single blueprint, all the galleries change at the same time. Think of a blueprint as a "template". Any gallery using a blueprint will not be able to set its own settings, as everything is inherited from the blueprint. This allows you to update settings once, and affect multiple galleries.', 'foogallery'); ?></p>
             </div>
             <br/>
             <div id="foogallery_gallery_blueprint_container">
@@ -399,29 +399,31 @@ if ( ! class_exists( 'FooGallery_Pro_Gallery_Blueprints' ) ) {
 		function render_gallery_blueprint_container( $foogallery_id, $message = null ) {
 			$selected_gallery_blueprint_id = $this->get_gallery_blueprint_id( $foogallery_id );
 			if ( $selected_gallery_blueprint_id === 0 ) { ?>
-				<button class="button button-primary button-large" id="foogallery_gallery_blueprint_toggle"><?php echo $this->get_toggle_button_text( $foogallery_id ); ?></button>
+				<button class="button button-primary button-large" id="foogallery_gallery_blueprint_toggle">
+					<?php echo esc_html( $this->get_toggle_button_text( $foogallery_id ) ); ?>
+				</button>
 				<?php wp_nonce_field( 'foogallery_gallery_blueprint_toggle', 'foogallery_gallery_blueprint_toggle_nonce', false ); ?>
-			<?php
-				if ( isset( $message ) ) {
-					echo $message;
-				}
-			?>
-			<span class="foogallery_gallery_blueprint_spinner spinner"></span>
-			<br />
-			<br />
-			<?php
+				<?php
+					if ( isset( $message ) ) {
+						echo esc_html( $message );
+					}
+				?>
+				<span class="foogallery_gallery_blueprint_spinner spinner"></span>
+				<br />
+				<br />
+				<?php
 			}
 			if ( $this->is_gallery_blueprint( $foogallery_id ) ) {
 				$galleries_using_blueprint = $this->get_gallery_blueprint_usage( $foogallery_id );
 				if ( count ( $galleries_using_blueprint ) === 0 ) {
-					echo __( 'To use this Gallery Blueprint, edit another gallery and set the Gallery Blueprint in the Gallery Blueprint Settings metabox.', 'foogallery' );
+					echo esc_html__( 'To use this Gallery Blueprint, edit another gallery and set the Gallery Blueprint in the Gallery Blueprint Settings metabox.', 'foogallery' );
 				} else { ?>
 					<p>
-						<?php _e( 'This Gallery Blueprint is being used by the following galleries:', 'foogallery' ); ?>
+						<?php esc_html_e( 'This Gallery Blueprint is being used by the following galleries:', 'foogallery' ); ?>
 					</p>
 					<ul class="ul-disc">
 						<?php foreach ( $galleries_using_blueprint as $gallery ) {
-							echo '<li><a href="' . esc_url( get_edit_post_link( $gallery->ID ) ) . '" target="_blank">' . $gallery->name . '</a></li>';
+						echo '<li><a href="' . esc_url( get_edit_post_link( $gallery->ID ) ) . '" target="_blank">' . esc_html( $gallery->name ) . '</a></li>';
 						} ?>
 					</ul>
 				<?php }
@@ -429,24 +431,24 @@ if ( ! class_exists( 'FooGallery_Pro_Gallery_Blueprints' ) ) {
 				$gallery_blueprints = $this->get_all_gallery_blueprints();
 
 				if ( count( $gallery_blueprints ) === 0 ) {
-					echo __( 'There are no gallery blueprints available at the moment!', 'foogallery' );
+					echo esc_html__( 'There are no gallery blueprints available at the moment!', 'foogallery' );
 				} else {
 					if ( $selected_gallery_blueprint_id === 0 ) {
-						_e( 'or', 'foogallery' );
+						esc_html_e( 'or', 'foogallery' );
 						echo '<br /><br />';
 					}
-					echo __( 'Choose a Gallery Blueprint : ', 'foogallery' ); ?>
-					<select id="foogallery_gallery_blueprint_select"><option><?php _e('None', 'foogallery' ); ?></option>
+					echo esc_html__( 'Choose a Gallery Blueprint : ', 'foogallery' ); ?>
+					<select id="foogallery_gallery_blueprint_select"><option><?php esc_html_e('None', 'foogallery' ); ?></option>
 					<?php foreach ( $this->get_all_gallery_blueprints() as $gallery ) {
 						$selected = ( $selected_gallery_blueprint_id === $gallery->ID ) ? ' selected="selected"' : '';
-						echo '<option ' . $selected . ' value="' . $gallery->ID . '">' . $gallery->name . ' [' . $gallery->ID . ']</option>';
+						echo '<option ' . esc_attr( $selected ) . ' value="' . esc_attr( $gallery->ID ) . '">' . esc_html( $gallery->name ) . ' [' . esc_attr( $gallery->ID ) . ']</option>';
 					} ?>
 					</select>
-					<button class="button button-primary" id="foogallery_gallery_blueprint_set"><?php _e( 'Set', 'foogallery'); ?></button>
+					<button class="button button-primary" id="foogallery_gallery_blueprint_set"><?php esc_html_e( 'Set', 'foogallery'); ?></button>
 					<?php wp_nonce_field( 'foogallery_gallery_blueprint_set', 'foogallery_gallery_blueprint_set_nonce', false ); ?>
 					<span class="foogallery_gallery_blueprint_set_spinner spinner"></span>
 					<p>
-						<?php _e( 'PLEASE NOTE : If you set a Gallery Blueprint, the following features will be hidden for the gallery : Bulk Copy, Custom CSS, Retina Support, Gallery Sorting. Instead, these settings will be inherited from the Gallery Blueprint.', 'foogallery' ); ?>
+						<?php esc_html_e( 'PLEASE NOTE : If you set a Gallery Blueprint, the following features will be hidden for the gallery : Bulk Copy, Custom CSS, Retina Support, Gallery Sorting. Instead, these settings will be inherited from the Gallery Blueprint.', 'foogallery' ); ?>
 					</p>
 					<?php
 				}
@@ -468,7 +470,7 @@ if ( ! class_exists( 'FooGallery_Pro_Gallery_Blueprints' ) ) {
 					    $this->unset_as_gallery_blueprint( $foogallery_id );
 				    } else {
 						//do nothing!
-					    $message = __( 'The Gallery Blueprint cannot be unset, as it is being used by other galleries!', 'foogallery' );
+					    $message = esc_html__( 'The Gallery Blueprint cannot be unset, as it is being used by other galleries!', 'foogallery' );
 				    }
 			    } else {
 					$this->set_as_gallery_blueprint( $foogallery_id );
@@ -490,16 +492,16 @@ if ( ! class_exists( 'FooGallery_Pro_Gallery_Blueprints' ) ) {
 			    $blueprint_foogallery_id = intval( sanitize_key( $_POST['blueprint'] ) );
 			    $this->set_gallery_blueprint( $foogallery_id, $blueprint_foogallery_id );
 				if ( $blueprint_foogallery_id > 0 ) {
-					echo __( 'The Gallery Blueprint has been set.', 'foogallery' );
+					echo esc_html__( 'The Gallery Blueprint has been set.', 'foogallery' );
 				} else {
-					echo __( 'The Gallery Blueprint has been cleared.', 'foogallery' );
+					echo esc_html__( 'The Gallery Blueprint has been cleared.', 'foogallery' );
 				}
 
 				$foogallery = FooGallery::get_by_id( $foogallery_id );
 				if ( $foogallery->is_new() ) {
-					echo __(' Update the gallery first, to reflect the changes.', 'foogallery');
+					echo esc_html__(' Update the gallery first, to reflect the changes.', 'foogallery');
 				} else {
-					echo __(' Refreshing...', 'foogallery');
+					echo esc_html__(' Refreshing...', 'foogallery');
 					echo '<script>location.reload();</script>';
 				}
 		    }

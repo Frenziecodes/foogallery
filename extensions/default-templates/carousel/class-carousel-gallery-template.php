@@ -42,34 +42,35 @@ if ( ! class_exists( 'FooGallery_Carousel_Gallery_Template' ) ) {
 		 */
 		function admin_custom_fields( $field, $gallery, $template ) {
 			if ( isset( $field ) && is_array( $field ) && isset( $field['type'] ) && 'carousel_gutter' === $field['type'] ) {
-				$id = $template['slug'] . '_' . $field['id'];
-		        $min  = is_array( $field['value'] ) ? intval( $field['value']['min'] ) : -40;
-				$max = is_array( $field['value'] ) ? intval( $field['value']['max'] ): -20;
-				$units = is_array( $field['value'] ) ? $field['value']['units'] : '%';
-				echo '<label for="FooGallerySettings_' . $id . '_min">' . __( 'Min', 'foogallery' ) . '</label>&nbsp;';
-				echo '<input class="small-text" type="number" step="1" min="-1000" id="FooGallerySettings_' . $id . '_min" name="' . FOOGALLERY_META_SETTINGS . '[' . $id . '][min]" value="' . esc_attr( $min ) . '" />';
-				echo '&nbsp;&nbsp;<label for="FooGallerySettings_' . $id . '_max">' . __( 'Max', 'foogallery' ) . '</label>&nbsp;';
-				echo '<input class="small-text" type="number" step="1" min="-1000" id="FooGallerySettings_' . $id . '_max" name="' . FOOGALLERY_META_SETTINGS . '[' . $id . '][max]" value="' . esc_attr( $max ) . '" />';
-				echo '&nbsp;&nbsp;<label for="FooGallerySettings_' . $id . '_units">' . __( 'Units', 'foogallery' ) . '</label>&nbsp;';
-				echo '<select id="FooGallerySettings_' . $id . '_units" name="' . FOOGALLERY_META_SETTINGS . '[' . $id . '][units]">';
-				echo '<option ' . ( $units === '%' ? 'selected="selected" ' : '' ) . 'value="%">' . __( '%', 'foogallery' ) . '</option>';
-				echo '<option ' . ( $units === 'px' ? 'selected="selected" ' : '' ) . 'value="px">' . __( 'px', 'foogallery' ) . '</option>';
+				$id = esc_attr( $template['slug'] . '_' . $field['id'] );
+				$min  = is_array( $field['value'] ) ? intval( $field['value']['min'] ) : -40;
+				$max = is_array( $field['value'] ) ? intval( $field['value']['max'] ) : -20;
+				$units = is_array( $field['value'] ) ? esc_attr( $field['value']['units'] ) : '%';
+
+				echo '<label for="FooGallerySettings_' . esc_attr( $id ) . '_min">' . esc_html__( 'Min', 'foogallery' ) . '</label>&nbsp;';
+				echo '<input class="small-text" type="number" step="1" min="-1000" id="FooGallerySettings_' . esc_attr( $id ) . '_min" name="' . esc_attr( FOOGALLERY_META_SETTINGS ) . '[' . esc_attr( $id ) . '][min]" value="' . esc_attr( $min ) . '" />';
+				echo '&nbsp;&nbsp;<label for="FooGallerySettings_' . esc_attr( $id ) . '_max">' . esc_html__( 'Max', 'foogallery' ) . '</label>&nbsp;';
+				echo '<input class="small-text" type="number" step="1" min="-1000" id="FooGallerySettings_' . esc_attr( $id ) . '_max" name="' . esc_attr( FOOGALLERY_META_SETTINGS ) . '[' . esc_attr( $id ) . '][max]" value="' . esc_attr( $max ) . '" />';
+				echo '&nbsp;&nbsp;<label for="FooGallerySettings_' . esc_attr( $id ) . '_units">' . esc_html__( 'Units', 'foogallery' ) . '</label>&nbsp;';
+				echo '<select id="FooGallerySettings_' . esc_attr( $id ) . '_units" name="' . esc_attr( FOOGALLERY_META_SETTINGS ) . '[' . esc_attr( $id ) . '][units]">';
+				echo '<option ' . selected( $units === '%', true, false ) . 'value="%">' . esc_html__( '%', 'foogallery' ) . '</option>';
+				echo '<option ' . selected( $units === 'px', true, false ) . 'value="px">' . esc_html__( 'px', 'foogallery' ) . '</option>';
 				echo '</select>';
 				?>
 				<script type="text/javascript">
 					jQuery(function ($) {
 						$('.foogallery-field-carousel-gutter-preset').on('click', function(e) {
 							e.preventDefault();
-
-							$('#FooGallerySettings_<?php echo $id; ?>_min').val( $(this).data('min') );
-							$('#FooGallerySettings_<?php echo $id; ?>_max').val( $(this).data('max') );
-							$('#FooGallerySettings_<?php echo $id; ?>_units').val( $(this).data('units') ).trigger("change");
+		
+							$('#FooGallerySettings_<?php echo esc_js( $id ); ?>_min').val( $(this).data('min') );
+							$('#FooGallerySettings_<?php echo esc_js( $id ); ?>_max').val( $(this).data('max') );
+							$('#FooGallerySettings_<?php echo esc_js( $id ); ?>_units').val( $(this).data('units') ).trigger("change");
 						});
 					});
 				</script>
 				<?php
-				echo '&nbsp;&nbsp;<a data-min="-40" data-max="-20" data-units="%" class="foogallery-field-carousel-gutter-preset" href="#" >' . __( 'Preset 1', 'foogallery' ) . '</a>';
-				echo '&nbsp;&nbsp;<a data-min="5" data-max="10" data-units="px" class="foogallery-field-carousel-gutter-preset" href="#" >' . __( 'Preset 2', 'foogallery' ) . '</a>';
+				echo '&nbsp;&nbsp;<a data-min="-40" data-max="-20" data-units="%" class="foogallery-field-carousel-gutter-preset" href="#">' . esc_html__( 'Preset 1', 'foogallery' ) . '</a>';
+				echo '&nbsp;&nbsp;<a data-min="5" data-max="10" data-units="px" class="foogallery-field-carousel-gutter-preset" href="#">' . esc_html__( 'Preset 2', 'foogallery' ) . '</a>';
 			}
 		}
 
@@ -261,54 +262,54 @@ if ( ! class_exists( 'FooGallery_Carousel_Gallery_Template' ) ) {
 							'data-foogallery-preview'         => 'shortcode'
 						)
 					),
-                    array(
-                        'id'       => 'show_nav_arrows',
-                        'title'    => __( 'Show Nav. Arrows', 'foogallery' ),
-                        'section'  => __( 'General', 'foogallery' ),
-                        'default'  => '',
-                        'type'     => 'radio',
-                        'spacer'   => '<span class="spacer"></span>',
-                        'choices' => array(
-                            '' => __( 'Shown', 'foogallery' ),
-                            'fg-carousel-hide-nav-arrows' => __( 'Hidden', 'foogallery' ),
-                        ),
-                        'row_data' => array(
-                            'data-foogallery-change-selector' => 'input',
-                            'data-foogallery-preview'         => 'shortcode'
-                        )
-                    ),
-                    array(
-                        'id'       => 'show_pagination',
-                        'title'    => __( 'Show Pagination', 'foogallery' ),
-                        'section'  => __( 'General', 'foogallery' ),
-                        'default'  => '',
-                        'type'     => 'radio',
-                        'spacer'   => '<span class="spacer"></span>',
-                        'choices' => array(
-                            '' => __( 'Shown', 'foogallery' ),
-                            'fg-carousel-hide-pagination' => __( 'Hidden', 'foogallery' ),
-                        ),
-                        'row_data' => array(
-                            'data-foogallery-change-selector' => 'input',
-                            'data-foogallery-preview'         => 'shortcode'
-                        )
-                    ),
-                    array(
-                        'id'       => 'show_progress',
-                        'title'    => __( 'Show Progress Bar', 'foogallery' ),
-                        'section'  => __( 'General', 'foogallery' ),
-                        'default'  => '',
-                        'type'     => 'radio',
-                        'spacer'   => '<span class="spacer"></span>',
-                        'choices' => array(
-                            '' => __( 'Shown', 'foogallery' ),
-                            'fg-carousel-hide-progress-bar' => __( 'Hidden', 'foogallery' ),
-                        ),
-                        'row_data' => array(
-                            'data-foogallery-change-selector' => 'input',
-                            'data-foogallery-preview'         => 'shortcode'
-                        )
-                    ),
+					array(
+						'id'       => 'show_nav_arrows',
+						'title'    => __( 'Show Nav. Arrows', 'foogallery' ),
+						'section'  => __( 'General', 'foogallery' ),
+						'default'  => '',
+						'type'     => 'radio',
+						'spacer'   => '<span class="spacer"></span>',
+						'choices' => array(
+							'' => __( 'Shown', 'foogallery' ),
+							'fg-carousel-hide-nav-arrows' => __( 'Hidden', 'foogallery' ),
+						),
+						'row_data' => array(
+							'data-foogallery-change-selector' => 'input',
+							'data-foogallery-preview'         => 'shortcode'
+						)
+					),
+					array(
+						'id'       => 'show_pagination',
+						'title'    => __( 'Show Pagination', 'foogallery' ),
+						'section'  => __( 'General', 'foogallery' ),
+						'default'  => '',
+						'type'     => 'radio',
+						'spacer'   => '<span class="spacer"></span>',
+						'choices' => array(
+							'' => __( 'Shown', 'foogallery' ),
+							'fg-carousel-hide-pagination' => __( 'Hidden', 'foogallery' ),
+						),
+						'row_data' => array(
+							'data-foogallery-change-selector' => 'input',
+							'data-foogallery-preview'         => 'shortcode'
+						)
+					),
+					array(
+						'id'       => 'show_progress',
+						'title'    => __( 'Show Progress Bar', 'foogallery' ),
+						'section'  => __( 'General', 'foogallery' ),
+						'default'  => '',
+						'type'     => 'radio',
+						'spacer'   => '<span class="spacer"></span>',
+						'choices' => array(
+							'' => __( 'Shown', 'foogallery' ),
+							'fg-carousel-hide-progress-bar' => __( 'Hidden', 'foogallery' ),
+						),
+						'row_data' => array(
+							'data-foogallery-change-selector' => 'input',
+							'data-foogallery-preview'         => 'shortcode'
+						)
+					),
 					array(
 						'id'      => 'thumbnail_link',
 						'title'   => __( 'Thumbnail Link', 'foogallery' ),

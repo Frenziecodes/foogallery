@@ -116,18 +116,18 @@ $premium_count = count( array_filter( $extensions, function ( $extension ) {
 </style>
 <div class="wrap foogallery-features">
 	<h2>
-		<?php printf( __( '%s Features', 'foogallery' ), foogallery_plugin_name() ); ?>
+		<?php printf( esc_html__( '%s Features', 'foogallery' ), esc_html( foogallery_plugin_name() ) ); ?>
 		<span class="spinner"></span>
 	</h2>
 
-	<?php
-	if ( isset( $result ) ) { ?>
-		<div class="foogallery-message-<?php echo $result['type']; ?>">
-			<p><?php echo $result['message']; ?></p>
+	<?php if ( isset( $result ) ) { ?>
+		<div class="foogallery-message-<?php echo esc_attr( $result['type'] ); ?>">
+			<p><?php echo esc_html( $result['message'] ); ?></p>
 		</div>
 	<?php } ?>
 	<hr />
 </div>
+
 
 <div style="display: flex; justify-content: space-between; align-items: center;">
 	<div class="foogallery-status-tabs">
@@ -142,17 +142,17 @@ $premium_count = count( array_filter( $extensions, function ( $extension ) {
 		foreach ( $status_tabs as $status_key => $status_label ) {
 			$is_current = $status_filter === $status_key ? 'current' : '';
 			$text_color = $is_current ? 'color: black;' : 'color: blue;';
-			$status_url = add_query_arg( array( 'status' => $status_key ), foogallery_admin_features_url() );
+			$status_url = esc_url( add_query_arg( array( 'status' => $status_key ), foogallery_admin_features_url() ) );
 
-			echo "<a href='{$status_url}' class='foogallery-status-tab {$is_current}' style='text-decoration: none; {$text_color}'>{$status_label} (";
+			echo "<a href='" . esc_url( $status_url ) . "' class='foogallery-status-tab " . esc_attr( $is_current ) . "' style='text-decoration: none; " . esc_attr( $text_color ) . "'>" . esc_html( $status_label ) . " (";
 			if ( $status_key === 'all' ) {
-				echo $total_count;
+				echo esc_html( $total_count );
 			} elseif ( $status_key === 'active' ) {
-				echo $active_count;
+				echo esc_html( $active_count );
 			} elseif ( $status_key === 'inactive' ) {
-				echo $inactive_count;
+				echo esc_html( $inactive_count );
 			} elseif ( $status_key === 'premium' ) {
-				echo $premium_count;
+				echo esc_html( $premium_count );
 			}
 			echo ")</a>";
 			if ( $status_key !== 'premium' ) {
@@ -168,9 +168,9 @@ $premium_count = count( array_filter( $extensions, function ( $extension ) {
 		<div style="display:flex; justify-content:space-evenly; align-items:center;">
 
 			<p>
-				<label for="tag-filter"><?php _e( 'Filter by Tag:', 'foogallery' ); ?></label>
+				<label for="tag-filter"><?php esc_html_e( 'Filter by Tag:', 'foogallery' ); ?></label>
 				<select id="tag-filter" name="tag">
-					<option value="all"><?php _e( 'All Tags', 'foogallery' ); ?></option>
+					<option value="all"><?php esc_html_e( 'All Tags', 'foogallery' ); ?></option>
 					<?php
 					// Get all unique tags from extensions data.
 					$all_tags = array();
@@ -187,7 +187,7 @@ $premium_count = count( array_filter( $extensions, function ( $extension ) {
 					// Output options for each tag.
 					foreach ( $all_tags as $tag ) {
 						$selected = isset( $_GET['tag'] ) && $_GET['tag'] === $tag ? 'selected' : '';
-						echo '<option value="' . esc_attr( $tag ) . '" ' . $selected . '>' . esc_html( $tag ) . '</option>';
+						echo '<option value="' . esc_attr( $tag ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $tag ) . '</option>';
 					}
 					?>
 				</select>
@@ -195,14 +195,12 @@ $premium_count = count( array_filter( $extensions, function ( $extension ) {
 
 			<p class="search-box">
 				<label class="screen-reader-text" for="extension-search-input">
-					<?php _e( 'Search Extensions', 'foogallery' ); ?>:</label>
-				<input type="search" id="extension-search-input" placeholder="Search features..."
+					<?php esc_html_e( 'Search Extensions', 'foogallery' ); ?>:</label>
+				<input type="search" id="extension-search-input" placeholder="<?php esc_attr_e( 'Search features...', 'foogallery' ); ?>"
 					name="s" value="<?php echo esc_attr( isset( $_REQUEST['s'] ) ? $_REQUEST['s'] : '' ); ?>" />
 			</p>
 		</div>
-
 	</form>
-
 </div>
 
 <?php

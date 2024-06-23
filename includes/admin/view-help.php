@@ -9,17 +9,17 @@ $fooplugins_url = foogallery_admin_url( 'https://fooplugins.com/', 'help' );
 $plugin_url = foogallery_admin_url( 'https://fooplugins.com/foogallery-wordpress-gallery-plugin/', 'help' );
 $support_url = foogallery_admin_url( 'https://fooplugins.link/support/', 'help' );
 $plans_url = foogallery_admin_url( 'https://fooplugins.com/foogallery-wordpress-gallery-plugin/pricing/#plans', 'help' );
-$support_link = sprintf( '<a href="%s" target="_blank">%s</a>', $support_url, __( 'open a support ticket', 'foogallery' ) );
-$support_text = sprintf( __('Still stuck? Please %s and we will help!', 'foogallery'), $support_link );
+$support_link = sprintf( '<a href="%s" target="_blank">%s</a>', esc_url( $support_url ), esc_html__( 'open a support ticket', 'foogallery' ) );
+$support_text = sprintf( esc_html__( 'Still stuck? Please %s and we will help!', 'foogallery' ), $support_link );
 
-$fooplugins_link = sprintf( '<a href="%s" target="_blank">%s</a>', $fooplugins_url, __( 'FooPlugins', 'foogallery' ) );
-$link = sprintf('<a href="%s" target="_blank">%s</a>', $plugin_url, sprintf( __( 'Visit the %s Homepage', 'foogallery' ), $plugin_name ) );
-$tagline = sprintf( __( 'Thank you for choosing %s!<br />Better galleries for WordPress, that are faster, more flexible and beautiful!', 'foogallery' ), $plugin_name );
+$fooplugins_link = sprintf( '<a href="%s" target="_blank">%s</a>', esc_url( $fooplugins_url ), esc_html__( 'FooPlugins', 'foogallery' ) );
+$link = sprintf( '<a href="%s" target="_blank">%s</a>', esc_url( $plugin_url ), sprintf( esc_html__( 'Visit the %s Homepage', 'foogallery' ), esc_html( $plugin_name ) ) );
+$tagline = sprintf( esc_html__( 'Thank you for choosing %s!<br />Better galleries for WordPress, that are faster, more flexible and beautiful!', 'foogallery' ), esc_html( $plugin_name ) );
 
-$made_by = __( 'Made with ❤️ by %s', 'foogallery' );
+$made_by = esc_html__( 'Made with ❤️ by %s', 'foogallery' );
 $footer_text = sprintf( $made_by, $fooplugins_link );
 
-//allow the variables to be overwritten by other things!
+// Allow the variables to be overwritten by other things!
 $logo = apply_filters( 'foogallery_admin_help_logo_url', $logo );
 
 $demos_created = foogallery_get_setting( 'demo_content' ) === 'on';
@@ -31,14 +31,14 @@ $is_trial = $fs_instance->is_trial();
 $show_trial_message = !$is_trial && $is_free && !$fs_instance->is_trial_utilized();
 $show_thanks_for_pro = foogallery_is_pro();
 
-$upgrade_tab_text = __( 'Upgrade to PRO', 'foogallery' );
-$upgrade_button_text = __( 'Upgrade to PRO!', 'foogallery' );
+$upgrade_tab_text = esc_html__( 'Upgrade to PRO', 'foogallery' );
+$upgrade_button_text = esc_html__( 'Upgrade to PRO!', 'foogallery' );
 
 if ( $show_thanks_for_pro ) {
-	$upgrade_tab_text = __( 'PRO Features', 'foogallery' );
+	$upgrade_tab_text = esc_html__( 'PRO Features', 'foogallery' );
 } else if ( $show_trial_message ) {
-	$upgrade_tab_text = __( 'Free Trial', 'foogallery' );
-	$upgrade_button_text = __( 'Already convinced? Upgrade to PRO!', 'foogallery' );
+	$upgrade_tab_text = esc_html__( 'Free Trial', 'foogallery' );
+	$upgrade_button_text = esc_html__( 'Already convinced? Upgrade to PRO!', 'foogallery' );
 }
 
 $show_demos = apply_filters( 'foogallery_admin_help_show_demos', true );
@@ -131,33 +131,33 @@ $show_demos = apply_filters( 'foogallery_admin_help_show_demos', true );
 	});
 </script>
 <style>
-    <?php if ( $demos_created ) { ?>
-    .fgah-create-demos {
-	    display: none;
-    }
+	<?php if ( $demos_created ) { ?>
+	.fgah-create-demos {
+		display: none;
+	}
 	<?php } else { ?>
-    .fgah-created-demos {
-        display: none;
-    }
+	.fgah-created-demos {
+		display: none;
+	}
 	<?php } ?>
 </style>
 <div class="foogallery-admin-help">
 	<div class="foogallery-admin-help-header">
-		<div class="foogallery-admin-help-ribbon"><span><?php echo FOOGALLERY_VERSION; ?></span></div>
-		<img src="<?php echo $logo; ?>" width="200">
+		<div class="foogallery-admin-help-ribbon"><span><?php echo esc_html( FOOGALLERY_VERSION ); ?></span></div>
+		<img src="<?php echo esc_url( $logo ); ?>" width="200">
 	</div>
 	<nav>
 		<a class="foogallery-admin-help-tab-active" href="#help">
-			<?php _e( 'Welcome', 'foogallery' ); ?>
+			<?php esc_html_e( 'Welcome', 'foogallery' ); ?>
 		</a>
 		<a href="#pro">
-			<?php _e( $upgrade_tab_text, 'foogallery' ); ?>
+			<?php echo esc_html( $upgrade_tab_text ); ?>
 		</a>
 		<a href="#demos">
-			<?php _e( 'Demo', 'foogallery' ); ?>
+			<?php esc_html_e( 'Demo', 'foogallery' ); ?>
 		</a>
 		<a href="#support">
-			<?php _e( 'Support', 'foogallery' ); ?>
+			<?php esc_html_e( 'Support', 'foogallery' ); ?>
 		</a>
 	</nav>
 	<div class="foogallery-admin-help-content">
@@ -169,31 +169,31 @@ $show_demos = apply_filters( 'foogallery_admin_help_show_demos', true );
 		<?php include FOOGALLERY_PATH . 'includes/admin/view-help-demos.php'; ?>
 
 		<div id="support_section" class="foogallery-admin-help-section" style="display: none">
-            <section class="fgah-feature">
-                <header>
-                    <h3><?php _e( '🚑 Need help? We\'re here for you...' , 'foogallery' );?></h3>
-                </header>
-                <ul class="fgah-help-list">
-                    <li>
-                        <a href="<? echo esc_url( foogallery_admin_url( 'https://fooplugins.com/documentation/foogallery/', 'help') ); ?>" target="_blank"><?php _e('FooGallery Documentation','foogallery'); ?></a>
-                        - <?php _e('Our documentation covers everything you need to know, from install instructions and account management, to troubleshooting common issues and extending the functionality.', 'foogallery'); ?>
-                    </li>
-	                <?php if ( $is_free ) { ?>
-                    <li>
-                        <a href="https://wordpress.org/support/plugin/foogallery/" target="_blank"><?php _e('FooGallery WordPress.org Support','foogallery'); ?></a>
-                        - <?php _e('We actively monitor and answer all questions posted on WordPress.org for FooGallery.', 'foogallery'); ?>
-                    </li>
-	                <?php } else { ?>
-		                <li>
-			                <a href="<?php echo esc_url( $support_url ); ?>" target="_blank"><?php _e('Premium Support','foogallery'); ?></a>
-			                - <?php _e('Open a support ticket and our dedicated support team will assist. This is the fasted way to get help!', 'foogallery'); ?>
-		                </li>
-	                <?php } ?>
-                </ul>
-            </section>
+			<section class="fgah-feature">
+				<header>
+					<h3><?php esc_html_e( '🚑 Need help? We\'re here for you...' , 'foogallery' );?></h3>
+				</header>
+				<ul class="fgah-help-list">
+					<li>
+						<a href="<?php echo esc_url( foogallery_admin_url( 'https://fooplugins.com/documentation/foogallery/', 'help') ); ?>" target="_blank"><?php esc_html_e('FooGallery Documentation','foogallery'); ?></a>
+						- <?php esc_html_e('Our documentation covers everything you need to know, from install instructions and account management, to troubleshooting common issues and extending the functionality.', 'foogallery'); ?>
+					</li>
+					<?php if ( $is_free ) { ?>
+					<li>
+						<a href="https://wordpress.org/support/plugin/foogallery/" target="_blank"><?php esc_html_e('FooGallery WordPress.org Support','foogallery'); ?></a>
+						- <?php esc_html_e('We actively monitor and answer all questions posted on WordPress.org for FooGallery.', 'foogallery'); ?>
+					</li>
+					<?php } else { ?>
+						<li>
+							<a href="<?php echo esc_url( $support_url ); ?>" target="_blank"><?php esc_html_e('Premium Support','foogallery'); ?></a>
+							- <?php esc_html_e('Open a support ticket and our dedicated support team will assist. This is the fastest way to get help!', 'foogallery'); ?>
+						</li>
+					<?php } ?>
+				</ul>
+			</section>
 		</div>
 	</div>
 	<div class="foogallery-admin-help-footer">
-		<?php echo $footer_text; ?>
+		<?php echo wp_kses_post( $footer_text ); ?>
 	</div>
 </div>
