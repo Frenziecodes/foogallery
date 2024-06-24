@@ -190,7 +190,7 @@
 			self::$LOG[] = $log;
 
 			if ( $this->is_echo_on() && ! Freemius::is_ajax() ) {
-				echo self::format_html( $log ) . "\n";
+				echo esc_html( self::format_html( $log ) ) . "\n";
 			}
 		}
 
@@ -271,7 +271,7 @@
 			<script type="text/javascript">
 				<?php
 				foreach ( self::$LOG as $log ) {
-					echo 'console.' . $log['log_type'] . '(' . json_encode( self::format( $log, false ) ) . ')' . "\n";
+					echo 'console.' . esc_js( $log['log_type'] ) . '(' . json_encode( self::format( $log, false ) ) . ');' . "\n";
 				}
 				?>
 			</script>
@@ -317,50 +317,74 @@
 		 */
 		public static function _set_storage_logging( $is_on = true ) {
 			global $wpdb;
-
+		
 			$table = "{$wpdb->prefix}fs_logger";
-
-			if ( $is_on ) {
-				/**
-				 * Create logging table.
-				 *
-				 * NOTE:
-				 *  dbDelta must use KEY and not INDEX for indexes.
-				 *
-				 * @link https://core.trac.wordpress.org/ticket/2695
-				 */
-				$result = $wpdb->query( "CREATE TABLE {$table} (
-`id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-`process_id` INT UNSIGNED NOT NULL,
-`user_name` VARCHAR(64) NOT NULL,
-`logger` VARCHAR(128) NOT NULL,
-`log_order` INT UNSIGNED NOT NULL,
-`type` ENUM('log','info','warn','error') NOT NULL DEFAULT 'log',
-`message` TEXT NOT NULL,
-`file` VARCHAR(256) NOT NULL,
-`line` INT UNSIGNED NOT NULL,
-`function` VARCHAR(256) NOT NULL,
-`request_type` ENUM('call','ajax','cron') NOT NULL DEFAULT 'call',
-`request_url` VARCHAR(1024) NOT NULL,
-`created` DECIMAL(16, 6) NOT NULL,
-PRIMARY KEY (`id`),
-KEY `process_id` (`process_id` ASC),
-KEY `process_logger` (`process_id` ASC, `logger` ASC),
-KEY `function` (`function` ASC),
-KEY `type` (`type` ASC))" );
-			} else {
-				/**
-				 * Drop logging table.
-				 */
-				$result = $wpdb->query( "DROP TABLE IF EXISTS $table;" );
+		
+			// Check if table exists using caching
+			$table_exists = wp_cache_get( 'fs_logger_table_exists', 'freemius' );
+		
+			if ( false === $table_exists ) {
+				$table_exists = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $table ) );
+				wp_cache_set( 'fs_logger_table_exists', $table_exists, 'freemius' );
 			}
-
+		
+			if ( $is_on ) {
+				if ( ! $table_exists ) {
+					/**
+					 * Create logging table.
+					 *
+					 * NOTE:
+					 *  dbDelta must use KEY and not INDEX for indexes.
+					 *
+					 * @link https://core.trac.wordpress.org/ticket/2695
+					 */
+					$charset_collate = $wpdb->get_charset_collate();
+		
+					$sql = "CREATE TABLE $table (
+						`id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+						`process_id` INT UNSIGNED NOT NULL,
+						`user_name` VARCHAR(64) NOT NULL,
+						`logger` VARCHAR(128) NOT NULL,
+						`log_order` INT UNSIGNED NOT NULL,
+						`type` ENUM('log','info','warn','error') NOT NULL DEFAULT 'log',
+						`message` TEXT NOT NULL,
+						`file` VARCHAR(256) NOT NULL,
+						`line` INT UNSIGNED NOT NULL,
+						`function` VARCHAR(256) NOT NULL,
+						`request_type` ENUM('call','ajax','cron') NOT NULL DEFAULT 'call',
+						`request_url` VARCHAR(1024) NOT NULL,
+						`created` DECIMAL(16, 6) NOT NULL,
+						PRIMARY KEY (`id`),
+						KEY `process_id` (`process_id` ASC),
+						KEY `process_logger` (`process_id` ASC, `logger` ASC),
+						KEY `function` (`function` ASC),
+						KEY `type` (`type` ASC)
+					) $charset_collate;";
+		
+					require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+					dbDelta( $sql );
+		
+					// Update cache
+					wp_cache_set( 'fs_logger_table_exists', true, 'freemius' );
+				}
+			} else {
+				if ( $table_exists ) {
+					/**
+					 * Drop logging table.
+					 */
+					$wpdb->query( "DROP TABLE IF EXISTS $table;" );
+		
+					// Update cache
+					wp_cache_set( 'fs_logger_table_exists', false, 'freemius' );
+				}
+			}
+		
 			if ( false !== $result ) {
 				update_option( 'fs_storage_logger', ( $is_on ? 1 : 0 ) );
 			}
-
+		
 			return ( false !== $result );
-		}
+		}		
 
 		/**
 		 * @author Vova Feldman (@svovaf)
@@ -601,15 +625,30 @@ KEY `type` (`type` ASC))" );
 			$order = false
 		) {
 			global $wpdb;
+		
+			// Generate a unique cache key based on the function arguments
+			$cache_key = 'db_logs_' . md5(serialize(func_get_args()));
+		
+			// Try to get cached results
+			$logs = wp_cache_get($cache_key);
+		
+			if (false === $logs) {
+				// Build the query
+				$query = self::build_db_logs_query(
+					$filters,
+					$limit,
+					$offset,
+					$order
+				);
+		
+				// Perform the query
+				$logs = $wpdb->get_results($query);
+		
+				// Cache the results for future use
+				wp_cache_set($cache_key, $logs, '', 12 * HOUR_IN_SECONDS);
+			}
 
-			$query = self::build_db_logs_query(
-				$filters,
-				$limit,
-				$offset,
-				$order
-			);
-
-			return $wpdb->get_results( $query );
+			return $logs;
 		}
 
 		/**
@@ -635,6 +674,19 @@ KEY `type` (`type` ASC))" );
 		) {
 			global $wpdb;
 
+			// Generate a unique cache key based on the function arguments.
+			$cache_key = 'db_logs_download_' . md5( serialize( func_get_args() ) );
+
+			// Try to get cached file path.
+			$cached_filepath = wp_cache_get( $cache_key );
+
+			if (false !== $cached_filepath && file_exists( $cached_filepath ) ) {
+				// Return the cached file path if it exists.
+				$upload_dir = wp_upload_dir();
+				return rtrim( $upload_dir['url'], '/') . '/' . basename( $cached_filepath );
+			}
+
+			// Build the query.
 			$query = self::build_db_logs_query(
 				$filters,
 				$limit,
@@ -643,33 +695,42 @@ KEY `type` (`type` ASC))" );
 				true
 			);
 
+			// Get upload directory information
 			$upload_dir = wp_upload_dir();
-			if ( empty( $filename ) ) {
-				$filename = 'fs-logs-' . date( 'Y-m-d_H-i-s', WP_FS__SCRIPT_START_TIME ) . '.csv';
+			if (empty($filename)) {
+				$filename = 'fs-logs-' . date('Y-m-d_H-i-s', WP_FS__SCRIPT_START_TIME) . '.csv';
 			}
-			$filepath = rtrim( $upload_dir['path'], '/' ) . "/{$filename}";
-
+			$filepath = rtrim($upload_dir['path'], '/') . "/{$filename}";
+		
+			// Append INTO OUTFILE clause to the query
 			$query .= " INTO OUTFILE '{$filepath}' FIELDS TERMINATED BY '\t' ESCAPED BY '\\\\' OPTIONALLY ENCLOSED BY '\"' LINES TERMINATED BY '\\n'";
-
+		
+			// Prepare columns for the SELECT statement
 			$columns = '';
-			for ( $i = 0, $len = count( self::$_log_columns ); $i < $len; $i ++ ) {
-				if ( $i > 0 ) {
+			for ($i = 0, $len = count(self::$_log_columns); $i < $len; $i++) {
+				if ($i > 0) {
 					$columns .= ', ';
 				}
-
-				$columns .= "'" . self::$_log_columns[ $i ] . "'";
+				$columns .= "'" . self::$_log_columns[$i] . "'";
 			}
-
+		
+			// Complete the query
 			$query = "SELECT {$columns} UNION ALL " . $query;
-
-			$result = $wpdb->query( $query );
-
-			if ( false === $result ) {
+		
+			// Execute the query
+			$result = $wpdb->query($query);
+		
+			if (false === $result) {
 				return false;
 			}
-
-			return rtrim( $upload_dir['url'], '/' ) . '/' . $filename;
+		
+			// Cache the file path
+			wp_cache_set($cache_key, $filepath, '', 12 * HOUR_IN_SECONDS);
+		
+			// Return the URL of the generated file
+			return rtrim($upload_dir['url'], '/') . '/' . $filename;
 		}
+		
 
 		/**
 		 * @author Vova Feldman (@svovaf)

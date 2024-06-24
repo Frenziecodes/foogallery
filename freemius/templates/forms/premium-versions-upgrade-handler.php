@@ -78,7 +78,7 @@
                 + '         <div class="fs-modal-panel active">' + modalContentHtml + '</div>'
                 + '     </div>'
                 + '     <div class="fs-modal-footer">'
-                + '         <a class="button button-primary button-renew-license" tabindex="3" href="<?php echo $purchase_url ?>"><?php echo esc_js( $renew_license_button_text ) ?></a>'
+                + '         <a class="button button-primary button-renew-license" tabindex="3" href="<?php echo esc_url( $purchase_url ); ?>"><?php echo esc_js( $renew_license_button_text ); ?></a>'
                 + '         <button class="button button-secondary button-close" tabindex="4"><?php fs_esc_js_echo_inline( 'Cancel', 'cancel', $slug ) ?></button>'
                 + '     </div>'
                 + ' </div>'

@@ -127,14 +127,14 @@
                         $permissionsContainer = $( '#fs_opt_out_' + pluginID );
 
                     $.ajax( {
-                        url     : <?php echo Freemius::ajax_url() ?>,
+                        url     : '<?php echo esc_url( Freemius::ajax_url() ); ?>',
                         method  : 'POST',
                         data    : {
-                            action          : $permissionsContainer.data( 'action' ),
-                            security        : $permissionsContainer.data( 'security' ),
+                            action          : $permissionsContainer.data('action'),
+                            security        : $permissionsContainer.data('security'),
                             module_id       : pluginID,
-                            _wp_http_referer: '<?php echo Freemius::current_page_url() ?>',
-                            permissions     : permissions.join( ',' ),
+                            _wp_http_referer: '<?php echo esc_url( Freemius::current_page_url() ); ?>',
+                            permissions     : permissions.join(','),
                             is_enabled      : isEnabled
                         },
                         success : function ( resultObj ) {

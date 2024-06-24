@@ -94,8 +94,8 @@
 					var
 					// Keep track of the i-frame height.
 					frame_height = 800,
-					base_url = '<?php echo WP_FS__ADDRESS ?>',
-					src = base_url + '/contact/?<?php echo http_build_query($query_params) ?>#' + encodeURIComponent(document.location.href),
+					base_url = '<?php echo esc_js( WP_FS__ADDRESS ); ?>',
+					src = base_url + '/contact/?<?php echo esc_js( http_build_query( $query_params ) ); ?>#' + encodeURIComponent( document.location.href ),
 
 					// Append the i-frame into the DOM.
 					frame = $('<i' + 'frame " src="' + src + '" width="100%" height="' + frame_height + 'px" scrolling="no" frameborder="0" style="background: transparent; width: 1px; min-width: 100%;"><\/i' + 'frame>')

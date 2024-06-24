@@ -237,11 +237,9 @@
 					var
 						// Keep track of the i-frame height.
 						frame_height = 800,
-						base_url     = '<?php echo FS_CHECKOUT__ADDRESS ?>',
-						// Pass the parent page URL into the i-frame in a meaningful way (this URL could be
+						base_url = '<?php echo esc_url_raw( FS_CHECKOUT__ADDRESS ); ?>',						// Pass the parent page URL into the i-frame in a meaningful way (this URL could be
 						// passed via query string or hard coded into the child page, it depends on your needs).
-						src          = base_url + '/?<?php echo http_build_query( $query_params ) ?>#' + encodeURIComponent(document.location.href),
-						// Append the i-frame into the DOM.
+						src = base_url + '/?' + '<?php echo esc_js( http_build_query( $query_params ) ); ?>#' + encodeURIComponent(document.location.href);						// Append the i-frame into the DOM.
 						frame        = $('<i' + 'frame " src="' + src + '" width="100%" height="' + frame_height + 'px" scrolling="no" frameborder="0" style="background: transparent; width: 1px; min-width: 100%;"><\/i' + 'frame>')
 							.appendTo('#fs_frame');
 
@@ -270,10 +268,10 @@
 							requestData.auto_install = true;
 
 						// Post data to activation URL.
-						$.form('<?php echo fs_nonce_url( $fs->_get_admin_page_url( 'account', array(
+						$.form('<?php echo esc_url( fs_nonce_url( $fs->_get_admin_page_url( 'account', array(
 							'fs_action' => $fs->get_unique_affix() . '_activate_new',
 							'plugin_id' => $plugin_id
-						) ), $fs->get_unique_affix() . '_activate_new' ) ?>', requestData).submit();
+						) ), $fs->get_unique_affix() . '_activate_new' ) ); ?>', requestData).submit();
 					});
 
 					FS.PostMessage.receiveOnce('pending_activation', function (data) {
@@ -285,12 +283,12 @@
 						if (true === data.auto_install)
 							requestData.auto_install = true;
 
-						$.form('<?php echo fs_nonce_url( $fs->_get_admin_page_url( 'account', array(
-							'fs_action'           => $fs->get_unique_affix() . '_activate_new',
-							'plugin_id'           => $plugin_id,
-							'pending_activation'  => true,
-                            'has_upgrade_context' => true,
-						) ), $fs->get_unique_affix() . '_activate_new' ) ?>', requestData).submit();
+							$.form('<?php echo esc_url( fs_nonce_url( $fs->_get_admin_page_url( 'account', array(
+								'fs_action'           => $fs->get_unique_affix() . '_activate_new',
+								'plugin_id'           => $plugin_id,
+								'pending_activation'  => true,
+								'has_upgrade_context' => true,
+							) ), $fs->get_unique_affix() . '_activate_new' ) ); ?>', requestData).submit();
 					});
 
 					FS.PostMessage.receiveOnce('get_context', function () {
@@ -314,9 +312,9 @@
 						FS.PostMessage.post('context', <?php echo json_encode( $install_data ) ?>, frame[0]);
 					});
 
-					FS.PostMessage.receiveOnce('purchaseCompleted', <?php echo $fs->apply_filters('checkout/purchaseCompleted', 'function (data) {
+					FS.PostMessage.receiveOnce('purchaseCompleted', <?php echo esc_js( $fs->apply_filters( 'checkout/purchaseCompleted', 'function (data) {
 						console.log("checkout", "purchaseCompleted");
-					}') ?>);
+					}' ) ); ?>);
 
 					FS.PostMessage.receiveOnce('get_dimensions', function (data) {
 						console.debug('receiveOnce', 'get_dimensions');

@@ -74,7 +74,7 @@ HTML;
     $( document ).ready(function() {
         var modalContentHtml            = <?php echo json_encode( $modal_content_html ) ?>,
             modalHtml                   =
-                '<div class="fs-modal fs-modal-change-user fs-modal-change-user-<?php echo $fs->get_unique_affix() ?>">'
+                '<div class="fs-modal fs-modal-change-user fs-modal-change-user-<?php echo esc_attr( $fs->get_unique_affix() ) ?>">'
                 + '	<div class="fs-modal-dialog">'
                 + '		<div class="fs-modal-header">'
                 + '		    <h4><?php echo esc_js( $header_title ) ?></h4>'
@@ -194,14 +194,14 @@ HTML;
                 disableUserChangeButton();
 
                 $.ajax( {
-                    url       : <?php echo Freemius::ajax_url() ?>,
+                    url       : <?php echo esc_url( Freemius::ajax_url() ) ?>,
                     method    : 'POST',
-                    data      : {
-                        action       : '<?php echo $fs->get_ajax_action( 'change_user' ) ?>',
-                        security     : '<?php echo $fs->get_ajax_security( 'change_user' ) ?>',
+                    data: {
+                        action       : '<?php echo esc_js( $fs->get_ajax_action( 'change_user' ) ); ?>',
+                        security     : '<?php echo esc_js( $fs->get_ajax_security( 'change_user' ) ); ?>',
                         email_address: emailAddress,
                         user_id      : licenseOwnerID,
-                        module_id    : '<?php echo $fs->get_id() ?>'
+                        module_id    : '<?php echo esc_js( $fs->get_id() ); ?>'
                     },
                     beforeSend: function () {
                         $userChangeButton

@@ -46,11 +46,11 @@
                     // Get the parent options container from the child as `$cloneResolutionNotice` can have different AJAX URLs if both the manual clone resolution options and temporary duplicate notices are shown (for different subsites in a multisite network).
                     url       : $optionsContainer.data( 'ajax-url' ),
                     method    : 'POST',
-                    data      : {
-                        action      : '<?php echo $VARS['ajax_action'] ?>',
-                        security    : '<?php echo wp_create_nonce( $VARS['ajax_action'] ) ?>',
-                        clone_action: $this.data( 'clone-action' ),
-                        blog_id     : $optionsContainer.data( 'blog-id' )
+                    data: {
+                        action      : '<?php echo esc_js( $VARS['ajax_action'] ); ?>',
+                        security    : '<?php echo esc_js( wp_create_nonce( $VARS['ajax_action'] ) ); ?>',
+                        clone_action: $this.data('clone-action'),
+                        blog_id     : $optionsContainer.data('blog-id')
                     },
                     beforeSend: function() {
                         $body.css( { cursor: 'wait' } );

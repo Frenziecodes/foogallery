@@ -150,19 +150,19 @@
 } ?>>
     <td>
         <!-- Title -->
-        <?php echo $addon_info['title'] ?>
+        <?php echo esc_html( $addon_info['title'] ) ?>
     </td>
     <?php if ( $is_addon_connected ) : ?>
         <!-- ID -->
-        <td><?php echo $site->id ?></td>
+        <td><?php echo esc_html( $site->id ); ?></td>
         <!--/ ID -->
 
         <!-- Version -->
-        <td><?php echo $version ?></td>
+        <td><?php echo esc_html( $version ); ?></td>
         <!--/ Version -->
 
         <!-- Plan Title -->
-        <td><?php echo strtoupper( is_string( $plan_name ) ? $plan_title : $free_text ) ?></td>
+        <td><?php echo esc_html( strtoupper( is_string( $plan_name ) ? $plan_title : $free_text ) ); ?></td>
         <!--/ Plan Title -->
 
         <!-- Expiration -->
@@ -215,8 +215,8 @@
                 }
 
                 foreach ( $tags as $t ) {
-                    printf( '<label class="fs-tag fs-%s">%s</label>' . "\n", $t['type'], $t['label'] );
-                }
+                    printf( '<label class="fs-tag fs-%s">%s</label>' . "\n", esc_attr( $t['type'] ), esc_html( $t['label'] ) );
+                }                
             ?>
         <?php endif ?>
         </td>
@@ -395,12 +395,18 @@
         ?>
 
         <!-- Actions -->
-        <td><?php if ( $buttons_count > 1 ) : ?>
-            <div class="button-group"><?php endif ?>
-                <?php foreach ( $buttons as $button ) {
-                        echo $button;
-                    } ?>
-                <?php if ( $buttons_count > 1 ) : ?></div><?php endif ?></td>
+        <td>
+            <?php if ( $buttons_count > 1 ) : ?>
+                <div class="button-group">
+            <?php endif ?>
+            <?php foreach ( $buttons as $button ) {
+                echo esc_html( $button );
+            } ?>
+            <?php if ( $buttons_count > 1 ) : ?>
+                </div>
+            <?php endif ?>
+        </td>
+
         <!--/ Actions -->
 
     <?php else : ?>
@@ -408,24 +414,24 @@
             $is_addon_installed_by_filesystem = $fs->is_addon_installed( $addon_id );
         ?>
         <!-- Action -->
-        <td colspan="<?php echo ( $is_addon_installed_by_filesystem || $show_delete_install_button ) ? '5' : '4' ?>">
+        <td colspan="<?php echo esc_attr( ( $is_addon_installed_by_filesystem || $show_delete_install_button ) ? '5' : '4' ); ?>">
             <?php if ( $is_addon_installed_by_filesystem ) : ?>
-                <?php $addon_file = $fs->get_addon_basename( $addon_id ) ?>
+                <?php $addon_file = $fs->get_addon_basename( $addon_id ); ?>
                 <?php if ( ! isset( $active_plugins_directories_map[ dirname( $addon_file ) ] ) ) : ?>
-                <a class="button button-primary"
-                   href="<?php echo wp_nonce_url( 'plugins.php?action=activate&amp;plugin=' . $addon_file, 'activate-plugin_' . $addon_file ) ?>"
-                   title="<?php fs_esc_attr_echo_inline( 'Activate this add-on', 'activate-this-addon', $slug ) ?>"
-                   class="edit"><?php echo esc_html( $activate_text ) ?></a>
-                <?php endif ?>
+                    <a class="button button-primary"
+                    href="<?php echo esc_url( wp_nonce_url( 'plugins.php?action=activate&amp;plugin=' . $addon_file, 'activate-plugin_' . $addon_file ) ); ?>"
+                    title="<?php fs_esc_attr_echo_inline( 'Activate this add-on', 'activate-this-addon', $slug ); ?>"
+                    class="edit"><?php echo esc_html( $activate_text ); ?></a>
+                <?php endif; ?>
             <?php else : ?>
                 <?php if ( $fs->is_allowed_to_install() ) : ?>
                     <a class="button button-primary"
-                       href="<?php echo wp_nonce_url( self_admin_url( 'update.php?' . ( ( isset( $addon_info['has_paid_plan'] ) && $addon_info['has_paid_plan'] ) ? 'fs_allow_updater_and_dialog=true&' : '' ) . 'action=install-plugin&plugin=' . $addon_info['slug'] ), 'install-plugin_' . $addon_info['slug'] ) ?>"><?php fs_esc_html_echo_inline( 'Install Now', 'install-now', $slug ) ?></a>
+                    href="<?php echo esc_url( wp_nonce_url( self_admin_url( 'update.php?' . ( ( isset( $addon_info['has_paid_plan'] ) && $addon_info['has_paid_plan'] ) ? 'fs_allow_updater_and_dialog=true&' : '' ) . 'action=install-plugin&plugin=' . $addon_info['slug'] ), 'install-plugin_' . $addon_info['slug'] ) ); ?>"><?php fs_esc_html_echo_inline( 'Install Now', 'install-now', $slug ); ?></a>
                 <?php else : ?>
                     <a target="_blank" rel="noopener" class="button button-primary"
-                       href="<?php echo $fs->_get_latest_download_local_url( $addon_id ) ?>"><?php echo esc_html( $download_latest_text ) ?></a>
-                <?php endif ?>
-            <?php endif ?>
+                    href="<?php echo esc_url( $fs->_get_latest_download_local_url( $addon_id ) ); ?>"><?php echo esc_html( $download_latest_text ); ?></a>
+                <?php endif; ?>
+            <?php endif; ?>
         </td>
         <!--/ Action -->
     <?php endif ?>

@@ -130,7 +130,7 @@ fs_enqueue_local_style( 'fs_dialog_boxes', '/admin/dialog-boxes.css' );
 <script type="text/javascript">
     (function( $ ) {
         var modalHtml =
-            '<div class="fs-modal fs-modal-subscription-cancellation fs-modal-subscription-cancellation-<?php echo $fs->get_id() ?>">'
+            '<div class="fs-modal fs-modal-subscription-cancellation fs-modal-subscription-cancellation-<?php echo esc_attr( $fs->get_id() )?>">'
             + '	<div class="fs-modal-dialog">'
             + '		<div class="fs-modal-header">'
             + '		    <h4><?php echo esc_html( sprintf( fs_text_inline( 'Cancel %s?', 'cancel-x', $slug ), ucfirst( $subscription_cancellation_context ) ) ) ?></h4>'
@@ -194,7 +194,7 @@ fs_enqueue_local_style( 'fs_dialog_boxes', '/admin/dialog-boxes.css' );
 
                     $modal.find('.fs-price-increase-warning').show();
                 } else {
-                    $primaryButton.html( <?php echo fs_json_encode_echo_inline( 'Proceed', 'proceed', $slug ) ?> );
+                    $primaryButton.html( <?php echo wp_json_encode( fs_text_inline( 'Proceed', 'proceed', $slug ) ); ?> );
                     $modal.find('.fs-price-increase-warning').hide();
                 }
 

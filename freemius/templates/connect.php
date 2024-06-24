@@ -168,30 +168,28 @@
             <?php $fs->do_action( 'connect/before_message', $activation_state ) ?>
 
 			<?php if ( ! empty( $error ) ) : ?>
-				<div class="fs-error"><?php echo $fs->apply_filters( 'connect_error_esc_html', esc_html( $error ) ) ?></div>
-			<?php endif ?>
-            <?php
-                if ( ! $is_pending_activation && ! $require_license_key ) {
-                    if ( ! $fs->is_plugin_update() ) {
-                        echo $fs->apply_filters( 'connect-header', sprintf(
-                            '<h2 style="text-align: center">%s</h2>',
-                            esc_html( fs_text_inline( 'Never miss an important update', 'connect-header' ) )
-                        ) );
-                    } else {
-                        echo $fs->apply_filters( 'connect-header_on-update', sprintf(
-                            '<h2>%s</h2>',
-                            sprintf(
-                                esc_html(
-                                /* translators: %1$s: plugin name (e.g., "Awesome Plugin"); %2$s: version (e.g., "1.2.3") */
-                                    fs_text_inline('Thank you for updating to %1$s v%2$s!', 'connect-header_on-update' )
-                                ),
-                                esc_html( $fs->get_plugin_name() ),
-                                $fs->get_plugin_version()
-                            )
-                        ) );
-                    }
-                }
-            ?>
+				<div class="fs-error"><?php echo esc_html( $fs->apply_filters( 'connect_error_esc_html', $error ) ); ?></div>
+			<?php endif; ?>
+			<?php
+				if ( ! $is_pending_activation && ! $require_license_key ) {
+					if ( ! $fs->is_plugin_update() ) {
+						echo wp_kses_post( $fs->apply_filters( 'connect-header', sprintf(
+							'<h2 style="text-align: center">%s</h2>',
+							esc_html( fs_text_inline( 'Never miss an important update', 'connect-header' ) )
+						) ) );						
+					} else {
+						echo wp_kses_post( $fs->apply_filters( 'connect-header_on-update', sprintf(
+							'<h2>%s</h2>',
+							sprintf(
+								/* translators: %1$s: plugin name (e.g., "Awesome Plugin"); %2$s: version (e.g., "1.2.3") */
+								esc_html( fs_text_inline( 'Thank you for updating to %1$s v%2$s!', 'connect-header_on-update' ) ),
+								esc_html( $fs->get_plugin_name() ),
+								esc_html( $fs->get_plugin_version() )
+							)
+						) ) );						
+					}
+				}
+			?>
 			<p><?php
 					$button_label = fs_text_inline( 'Allow & Continue', 'opt-in-connect', $slug );
 					$message = '';
@@ -286,15 +284,15 @@
                         }
                     }
 
-					echo $message;
+					echo esc_html( $message );
 				?></p>
 			<?php if ( $require_license_key ) : ?>
 				<div class="fs-license-key-container">
-					<input id="fs_license_key" name="fs_key" type="text" required maxlength="<?php echo $fs->apply_filters('license_key_maxlength', 32) ?>"
-					       placeholder="<?php fs_esc_attr_echo_inline( 'License key', 'license-key', $slug ) ?>" tabindex="1"/>
+					<input id="fs_license_key" name="fs_key" type="text" required maxlength="<?php echo esc_attr( $fs->apply_filters( 'license_key_maxlength', 32 ) ); ?>"
+						placeholder="<?php fs_esc_attr_echo_inline( 'License key', 'license-key', $slug ); ?>" tabindex="1"/>
 					<i class="dashicons dashicons-admin-network"></i>
-					<a class="show-license-resend-modal show-license-resend-modal-<?php echo $fs->get_unique_affix() ?>"
-					   href="#"><?php fs_esc_html_echo_inline( "Can't find your license key?", 'cant-find-license-key', $slug ); ?></a>
+					<a class="show-license-resend-modal show-license-resend-modal-<?php echo esc_attr( $fs->get_unique_affix() ); ?>"
+					href="#"><?php fs_esc_html_echo_inline( "Can't find your license key?", 'cant-find-license-key', $slug ); ?></a>
 				</div>
 
 				<?php
@@ -329,11 +327,11 @@
                     <div class="fs-input-container">
                         <label>
                             <input type="radio" name="allow-marketing" value="true" tabindex="1" />
-                            <span class="fs-input-label"><?php echo $send_updates_text ?></span>
+                            <span class="fs-input-label"><?php echo esc_html( $send_updates_text ) ?></span>
                         </label>
                         <label>
                             <input type="radio" name="allow-marketing" value="false" tabindex="1" />
-                            <span class="fs-input-label"><?php echo $do_not_send_updates_text ?></span>
+                            <span class="fs-input-label"><?php echo esc_html( $do_not_send_updates_text ) ?></span>
                         </label>
                     </div>
                 </div>
@@ -346,54 +344,56 @@
                     'require_license_key' => $require_license_key
                 );
 
-                echo fs_get_template( 'partials/network-activation.php', $vars );
+                echo wp_kses_post( fs_get_template( 'partials/network-activation.php', $vars ) );
             ?>
 			<?php endif ?>
 
             <?php $fs->do_action( 'connect/after_message', $activation_state ) ?>
 		</div>
 		<div class="fs-actions">
-            <?php $fs->do_action( 'connect/before_actions', $activation_state ) ?>
+			<?php $fs->do_action( 'connect/before_actions', $activation_state ) ?>
 
 			<?php if ( $fs->is_enable_anonymous() && ! $is_pending_activation && ( ! $require_license_key || $is_network_upgrade_mode ) ) : ?>
-				<a id="skip_activation" href="<?php echo fs_nonce_url( $fs->_get_admin_page_url( '', array( 'fs_action' => $fs->get_unique_affix() . '_skip_activation' ), $is_network_level_activation ), $fs->get_unique_affix() . '_skip_activation' ) ?>"
-				   class="button button-secondary" tabindex="2"><?php fs_esc_html_echo_x_inline( 'Skip', 'verb', 'skip', $slug ) ?></a>
+				<a id="skip_activation" href="<?php echo esc_url( fs_nonce_url( $fs->_get_admin_page_url( '', array( 'fs_action' => $fs->get_unique_affix() . '_skip_activation' ), $is_network_level_activation ), $fs->get_unique_affix() . '_skip_activation' ) ) ?>"
+				class="button button-secondary" tabindex="2"><?php fs_esc_html_echo_x_inline( 'Skip', 'verb', 'skip', $slug ) ?></a>
 			<?php endif ?>
 			<?php if ( $is_network_level_activation && $fs->apply_filters( 'show_delegation_option', true ) ) : ?>
-				<a id="delegate_to_site_admins" class="fs-tooltip-trigger <?php echo is_rtl() ? ' rtl' : '' ?>" href="<?php echo fs_nonce_url( $fs->_get_admin_page_url( '', array( 'fs_action' => $fs->get_unique_affix() . '_delegate_activation' ) ), $fs->get_unique_affix() . '_delegate_activation' ) ?>"><?php fs_esc_html_echo_inline( 'Delegate to Site Admins', 'delegate-to-site-admins', $slug ) ?><span class="fs-tooltip"><?php fs_esc_html_echo_inline( 'If you click it, this decision will be delegated to the sites administrators.', 'delegate-sites-tooltip', $slug ) ?></span></a>
+				<a id="delegate_to_site_admins" class="fs-tooltip-trigger <?php echo esc_attr( is_rtl() ? ' rtl' : '' ) ?>" href="<?php echo esc_url( fs_nonce_url( $fs->_get_admin_page_url( '', array( 'fs_action' => $fs->get_unique_affix() . '_delegate_activation' ) ), $fs->get_unique_affix() . '_delegate_activation' ) ) ?>"><?php fs_esc_html_echo_inline( 'Delegate to Site Admins', 'delegate-to-site-admins', $slug ) ?><span class="fs-tooltip"><?php fs_esc_html_echo_inline( 'If you click it, this decision will be delegated to the sites administrators.', 'delegate-sites-tooltip', $slug ) ?></span></a>
 			<?php endif ?>
 			<?php if ( $activate_with_current_user ) : ?>
 				<form action="" method="POST">
 					<input type="hidden" name="fs_action"
-					       value="<?php echo esc_attr( $fs->get_unique_affix() . '_activate_existing' ) ?>">
+						value="<?php echo esc_attr( $fs->get_unique_affix() . '_activate_existing' ) ?>">
 					<?php wp_nonce_field( $fs->get_unique_affix() . '_activate_existing' ) ?>
 					<input type="hidden" name="is_extensions_tracking_allowed" value="1">
 					<input type="hidden" name="is_diagnostic_tracking_allowed" value="1">
 					<button class="button button-primary" tabindex="1"
-					        type="submit"><?php echo esc_html( $button_label ) ?></button>
+							type="submit"><?php echo esc_html( $button_label ) ?></button>
 				</form>
 			<?php else : ?>
-				<form method="post" action="<?php echo WP_FS__ADDRESS ?>/action/service/user/install/">
-					<?php unset( $optin_params['sites']); ?>
+				<form method="post" action="<?php echo esc_url( WP_FS__ADDRESS . '/action/service/user/install/' ) ?>">
+					<?php unset( $optin_params['sites'] ); ?>
 					<?php foreach ( $optin_params as $name => $value ) : ?>
 						<input type="hidden" name="<?php echo esc_attr( $name ) ?>" value="<?php echo esc_attr( $value ) ?>">
 					<?php endforeach ?>
 					<input type="hidden" name="is_extensions_tracking_allowed" value="1">
-                    <input type="hidden" name="is_diagnostic_tracking_allowed" value="1">
+					<input type="hidden" name="is_diagnostic_tracking_allowed" value="1">
 					<button class="button button-primary" tabindex="1"
-					        type="submit"<?php if ( $require_license_key ) {
+							type="submit"<?php if ( $require_license_key ) {
 						echo ' disabled="disabled"';
 					} ?>><?php echo esc_html( $button_label ) ?></button>
 				</form>
 			<?php endif ?>
-            <?php if ( $require_license_key ) : ?>
-                <a id="license_issues_link"
-                   href="<?php echo esc_url( $fs->apply_filters( 'known_license_issues_url', 'https://freemius.com/help/documentation/wordpress-sdk/license-activation-issues/' ) ) ?>"
-                   target="_blank"><?php fs_esc_html_echo_inline( 'License issues?', 'license-issues', $slug ) ?></a>
-            <?php endif ?>
+			<?php if ( $require_license_key ) : ?>
+				<a id="license_issues_link"
+				href="<?php echo esc_url( $fs->apply_filters( 'known_license_issues_url', 'https://freemius.com/help/documentation/wordpress-sdk/license-activation-issues/' ) ) ?>"
+				target="_blank"><?php fs_esc_html_echo_inline( 'License issues?', 'license-issues', $slug ) ?></a>
+			<?php endif ?>
 
-            <?php $fs->do_action( 'connect/after_actions', $activation_state ) ?>
-		</div><?php
+			<?php $fs->do_action( 'connect/after_actions', $activation_state ) ?>
+		</div>
+
+		<?php
             $permission_manager = FS_Permission_Manager::instance( $fs );
 
 			// Set core permission list items.
@@ -411,23 +411,25 @@
 
 			if ( ! empty( $permissions ) ) : ?>
 				<div class="fs-permissions">
-                    <?php if ( $require_license_key ) : ?>
-                        <a class="fs-trigger wp-core-ui" href="#" tabindex="1" style="color: inherit;"><?php echo sprintf(
-                                fs_esc_html_inline( 'For delivery of security & feature updates, and license management, %s needs to', 'license-sync-disclaimer', $slug ) . '<b class="fs-arrow"></b>',
-                                sprintf( '<nobr class="button-link" style="color: inherit;">%s</nobr>', esc_html( $fs->get_plugin_title() ) )
-                            ) ?></a>
-                    <?php else : ?>
-                        <a class="fs-trigger wp-core-ui" href="#" tabindex="1" style="color: inherit;"><?php printf(
-                                fs_esc_html_inline( 'This will allow %s to', 'this-will-allow-x', $slug ) . '<b class="fs-arrow"></b>',
-                                sprintf( '<nobr class="button-link" style="color: inherit;">%s</nobr>', esc_html( $fs->get_plugin_title() ) )
-                            ) ?></a>
-                    <?php endif ?>
+					<?php if ( $require_license_key ) : ?>
+						<a class="fs-trigger wp-core-ui" href="#" tabindex="1" style="color: inherit;"><?php echo wp_kses_post( sprintf(
+							esc_html__( 'For delivery of security & feature updates, and license management, %s needs to', 'license-sync-disclaimer', $slug ) . '<b class="fs-arrow"></b>',
+							'<nobr class="button-link" style="color: inherit;">' . esc_html( $fs->get_plugin_title() ) . '</nobr>'
+						) ); ?></a>
+					<?php else : ?>
+						<a class="fs-trigger wp-core-ui" href="#" tabindex="1" style="color: inherit;"><?php echo wp_kses_post( sprintf(
+							esc_html__( 'This will allow %s to', 'this-will-allow-x', $slug ) . '<b class="fs-arrow"></b>',
+							'<nobr class="button-link" style="color: inherit;">' . esc_html( $fs->get_plugin_title() ) . '</nobr>'
+						) ); ?></a>
+					<?php endif; ?>
+
 					<ul><?php
-                            foreach ( $permissions as $permission ) {
-                                $permission_manager->render_permission( $permission );
-                            }
-                    ?></ul>
+						foreach ( $permissions as $permission ) {
+							$permission_manager->render_permission( $permission );
+						}
+					?></ul>
 				</div>
+
 			<?php endif ?>
 		<?php if ( $is_premium_code && $is_freemium ) : ?>
 			<div class="fs-freemium-licensing">
@@ -481,7 +483,7 @@
 
 		$themeConnectWrapper.find('button.close').on('click', function () {
 			<?php if ( ! empty( $previous_theme_activation_url ) ) { ?>
-			location.href = '<?php echo html_entity_decode( $previous_theme_activation_url ); ?>';
+				location.href = '<?php echo esc_js( html_entity_decode( $previous_theme_activation_url ) ); ?>';
 			<?php } else { ?>
 			$themeConnectWrapper.remove();
 			$html.css({overflow: $html.attr('fs-optin-overflow')});
@@ -728,11 +730,11 @@
                         security = null;
 
 				    if ( requireLicenseKey && ! isNetworkDelegating ) {
-                        action   = '<?php echo $fs->get_ajax_action( 'activate_license' ) ?>';
-                        security = '<?php echo $fs->get_ajax_security( 'activate_license' ) ?>';
+                        action   = '<?php echo esc_attr( $fs->get_ajax_action( 'activate_license' ) ) ?>';
+                        security = '<?php echo esc_attr( $fs->get_ajax_security( 'activate_license' ) ) ?>';
                     } else {
-                        action   = '<?php echo $fs->get_ajax_action( 'network_activate' ) ?>';
-                        security = '<?php echo $fs->get_ajax_security( 'network_activate' ) ?>';
+                        action   = '<?php echo esc_attr( $fs->get_ajax_action( 'network_activate' ) ) ?>';
+                        security = '<?php echo esc_attr( $fs->get_ajax_security( 'network_activate' ) ) ?>';
                     }
 
 					$('.fs-error').remove();
@@ -743,7 +745,7 @@
                             action     : action,
                             security   : security,
                             license_key: licenseKey,
-                            module_id  : '<?php echo $fs->get_id() ?>'
+                            module_id  : '<?php echo esc_attr( $fs->get_id() ) ?>'
                         };
 
 					if (
@@ -823,7 +825,7 @@
 					 * @since 1.2.1.5
 					 */
 					$.ajax({
-						url    : <?php echo Freemius::ajax_url() ?>,
+						url    : <?php echo esc_url( Freemius::ajax_url() ) ?>,
 						method : 'POST',
 						data   : data,
 						success: function (result) {
@@ -1009,13 +1011,13 @@
                         $primaryCta.html('<?php fs_esc_js_echo_inline( 'Please wait', 'please-wait', $slug ) ?>...');
 
                         $.ajax({
-                            url    : <?php echo Freemius::ajax_url() ?>,
+                            url    : <?php echo esc_url( Freemius::ajax_url() ) ?>,
                             method : 'POST',
                             data   : {
-                                action     : '<?php echo $fs->get_ajax_action( 'fetch_is_marketing_required_flag_value' ) ?>',
-                                security   : '<?php echo $fs->get_ajax_security( 'fetch_is_marketing_required_flag_value' ) ?>',
+                                action     : '<?php echo esc_attr( $fs->get_ajax_action( 'fetch_is_marketing_required_flag_value' ) ) ?>',
+                                security   : '<?php echo esc_attr( $fs->get_ajax_security( 'fetch_is_marketing_required_flag_value' ) ) ?>',
                                 license_key: licenseKey,
-                                module_id  : '<?php echo $fs->get_id() ?>'
+                                module_id  : '<?php echo esc_attr( $fs->get_id() ) ?>'
                             },
                             success: function (result) {
                                 resetLoadingMode();

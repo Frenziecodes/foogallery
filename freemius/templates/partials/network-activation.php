@@ -42,52 +42,52 @@
                 </label>
             </td>
             <?php if ( ! $require_license_key ) : ?>
-                <td><a class="action action-allow" data-action-type="allow" href="#"><?php fs_esc_html_echo_inline( 'allow', 'allow', $slug ) ?></a></td>
-                <?php echo $separator ?>
+                <td><a class="action action-allow" data-action-type="allow" href="#"><?php fs_esc_html_echo_inline( 'allow', 'allow', $slug ); ?></a></td>
+                <?php echo esc_html( $separator ); ?>
                 <?php if ( $show_delegation_option ) : ?>
-                <td><a class="action action-delegate" data-action-type="delegate" href="#"><?php fs_esc_html_echo_inline( 'delegate', 'delegate', $slug ) ?></a></td>
-                <?php endif ?>
+                    <td><a class="action action-delegate" data-action-type="delegate" href="#"><?php fs_esc_html_echo_inline( 'delegate', 'delegate', $slug ); ?></a></td>
+                <?php endif; ?>
                 <?php if ( $fs->is_enable_anonymous() ) : ?>
-                    <?php echo $separator ?>
-                    <td><a class="action action-skip" data-action-type="skip" href="#"><?php echo strtolower( fs_esc_html_inline( 'skip', 'skip', $slug ) ) ?></a></td>
-                <?php endif ?>
-            <?php endif ?>
+                    <?php echo esc_html( $separator ); ?>
+                    <td><a class="action action-skip" data-action-type="skip" href="#"><?php echo esc_html( strtolower( fs_esc_html_inline( 'skip', 'skip', $slug ) ) ); ?></a></td>
+                <?php endif; ?>
+            <?php endif; ?>
         </tr>
         </tbody>
     </table>
     <div class="fs-sites-list-container">
         <table cellspacing="0">
             <tbody>
-            <?php $site_props = array('uid', 'url', 'title', 'language') ?>
+            <?php $site_props = array('uid', 'url', 'title', 'language'); ?>
             <?php foreach ( $sites as $site ) : ?>
                 <tr<?php if ( ! empty( $site['license_id'] ) ) {
                     echo ' data-license-id="' . esc_attr( $site['license_id'] ) . '"';
                 } ?>>
                     <?php if ( $require_license_key ) : ?>
                         <td><input type="checkbox" value="true" /></td>
-                    <?php endif ?>
-                    <td class="blog-id"><span><?php echo esc_html( $site['blog_id'] ) ?></span>.</td>
+                    <?php endif; ?>
+                    <td class="blog-id"><span><?php echo esc_html( $site['blog_id'] ); ?></span>.</td>
                     <td width="600"><span><?php
                         $url = str_replace( 'http://', '', str_replace( 'https://', '', $site['url'] ) );
                         echo esc_html( $url );
                         ?></span>
                         <?php foreach ($site_props as $prop) : ?>
-                            <input class="<?php echo esc_attr( $prop ) ?>" type="hidden" value="<?php echo esc_attr($site[$prop]) ?>" />
-                        <?php endforeach ?>
+                            <input class="<?php echo esc_attr( $prop ); ?>" type="hidden" value="<?php echo esc_attr( $site[$prop] ); ?>" />
+                        <?php endforeach; ?>
                     </td>
                     <?php if ( ! $require_license_key ) : ?>
-                        <td><a class="action action-allow selected" data-action-type="allow" href="#"><?php fs_esc_html_echo_inline( 'allow', 'allow', $slug ) ?></a></td>
-                        <?php echo $separator ?>
+                        <td><a class="action action-allow selected" data-action-type="allow" href="#"><?php fs_esc_html_echo_inline( 'allow', 'allow', $slug ); ?></a></td>
+                        <?php echo esc_html( $separator ); ?>
                         <?php if ( $show_delegation_option ) : ?>
-                        <td><a class="action action-delegate" data-action-type="delegate" href="#"><?php fs_esc_html_echo_inline( 'delegate', 'delegate', $slug ) ?></a></td>
-                        <?php endif ?>
+                            <td><a class="action action-delegate" data-action-type="delegate" href="#"><?php fs_esc_html_echo_inline( 'delegate', 'delegate', $slug ); ?></a></td>
+                        <?php endif; ?>
                         <?php if ( $fs->is_enable_anonymous() ) : ?>
-                            <?php echo $separator ?>
-                            <td><a class="action action-skip" data-action-type="skip" href="#"><?php echo strtolower( fs_esc_html_inline( 'skip', 'skip', $slug ) ) ?></a></td>
-                        <?php endif ?>
-                    <?php endif ?>
+                            <?php echo esc_html( $separator ); ?>
+                            <td><a class="action action-skip" data-action-type="skip" href="#"><?php echo esc_html( strtolower( fs_esc_html_inline( 'skip', 'skip', $slug ) ) ); ?></a></td>
+                        <?php endif; ?>
+                    <?php endif; ?>
                 </tr>
-            <?php endforeach ?>
+            <?php endforeach; ?>
             </tbody>
         </table>
     </div>

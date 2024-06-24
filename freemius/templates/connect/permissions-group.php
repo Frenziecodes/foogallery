@@ -55,12 +55,12 @@
                 href="#"><?php echo esc_html( $is_enabled ? $opt_out_text : $opt_in_text ) ?></a>
             <span class="fs-permissions-section--header-title"><?php
                     // The title is already HTML-escaped.
-                    echo $permission_group[ 'title' ]
+                    echo esc_html( $permission_group[ 'title' ])
                 ?></span>
         </div>
         <p class="fs-permissions-section--desc"><?php
                 // The description is already HTML-escaped.
-                echo $permission_group['desc']
+                echo esc_html( $permission_group['desc'] )
             ?></p></div>
     <ul>
         <?php

@@ -669,15 +669,28 @@
 				}
 
 				if ( ! empty( $missing_methods ) ) {
-					throw new Freemius_Exception( array(
-						'error'           => (object) array(
-							'type'    => 'cUrlMissing',
-							'message' => $message,
-							'code'    => 'curl_missing',
-							'http'    => 402
+					// Prepare the error array
+					$error_array = array(
+						'type'    => 'cUrlMissing',
+						'message' => $message
+					);
+
+					// Cast the array to an object.
+					$error_object = (object) $error_array;
+
+					// Prepare the final output with escaped values.
+					$final_output = array(
+						'error' => (object) array(
+							'type'    => esc_html( $error_object->type ),
+							'message' => esc_html( $error_object->message ),
 						),
-						'missing_methods' => $missing_methods,
-					) );
+						'code' => esc_html( 'curl_missing' ),
+						'http' => intval( 402 ),
+						'missing_methods' => array_map( 'esc_html', $missing_methods ),
+					);
+
+					// Escape the final output and throw the exception.
+					throw new Freemius_Exception( esc_html( wp_json_encode( $final_output ) ) );
 				}
 
 				#endregion
@@ -714,14 +727,29 @@
 		 * @throws Freemius_Exception
 		 */
 		private static function ThrowCloudFlareDDoSException( $pResult = '' ) {
-			throw new Freemius_Exception( array(
+			// Prepare the error array
+			$error_array = array(
+				'type'    => 'CloudFlareDDoSProtection',
+				'message' => $pResult,
+				'code'    => 'cloudflare_ddos_protection',
+				'http'    => 402,
+			);
+
+			// Cast the array to an object
+			$error_object = (object) $error_array;
+
+			// Prepare the escaped values for the final output
+			$final_output = array(
 				'error' => (object) array(
-					'type'    => 'CloudFlareDDoSProtection',
-					'message' => $pResult,
-					'code'    => 'cloudflare_ddos_protection',
-					'http'    => 402
+					'type'    => esc_html( $error_object->type ),
+					'message' => esc_html( $error_object->message ),
+					'code'    => esc_html( $error_object->code ),
+					'http'    => intval( $error_object->http )
 				)
-			) );
+			);
+
+			// Escape the final output and throw the exception
+			throw new Freemius_Exception( esc_html( wp_json_encode( $final_output ) ) );
 		}
 
 		/**
@@ -730,15 +758,30 @@
 		 * @throws Freemius_Exception
 		 */
 		private static function ThrowSquidAclException( $pResult = '' ) {
-			throw new Freemius_Exception( array(
+			$error_array = array(
+				'type'    => 'SquidCacheBlock',
+				'message' => $pResult,
+				'code'    => 'squid_cache_block',
+				'http'    => 402
+			);
+
+			// Cast the array to an object
+			$error_object = (object) $error_array;
+
+			// Prepare the escaped values for the final output
+			$final_output = array(
 				'error' => (object) array(
-					'type'    => 'SquidCacheBlock',
-					'message' => $pResult,
-					'code'    => 'squid_cache_block',
-					'http'    => 402
+					'type'    => esc_html( $error_object->type ),
+					'message' => esc_html( $error_object->message ),
+					'code'    => esc_html( $error_object->code ),
+					'http'    => intval( $error_object->http )
 				)
-			) );
+			);
+
+			// Escape the final output
+			throw new Freemius_Exception( esc_html( wp_json_encode( $final_output ) ) );
 		}
+
 
 		#endregion
 	}
