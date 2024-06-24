@@ -28,7 +28,7 @@
 	</thead>
 	<tbody>
 
-	<?php $i = 0;
+		<?php $i = 0;
 		foreach ( $log_book as $log ) : ?>
 			<?php
 			/**
@@ -39,10 +39,10 @@
 			<tr<?php if ( $i % 2 ) {
 				echo ' class="alternate"';
 			} ?>>
-				<td><?php echo $log['cnt'] ?>.</td>
-				<td><?php echo $logger->get_id() ?></td>
-				<td><?php echo $log['log_type'] ?></td>
-				<td><b><code style="color: blue;"><?php echo ( ! empty( $log['class'] ) ? $log['class'] . $log['type'] : '' ) . $log['function'] ?></code></b></td>
+				<td><?php echo esc_html( $log['cnt'] ); ?>.</td>
+				<td><?php echo esc_html( $logger->get_id() ); ?></td>
+				<td><?php echo esc_html( $log['log_type'] ); ?></td>
+				<td><b><code style="color: blue;"><?php echo esc_html( ( ! empty( $log['class'] ) ? $log['class'] . $log['type'] : '' ) . $log['function'] ); ?></code></b></td>
 				<td>
 					<?php
 						printf(
@@ -51,16 +51,16 @@
 						);
 					?>
 					<div style="display: none;">
-						<b style="color: darkorange;"><?php echo esc_html( $log['msg'] ) ?></b>
+						<b style="color: darkorange;"><?php echo esc_html( $log['msg'] ); ?></b>
 					</div>
 				</td>
 				<td><?php
 						if ( isset( $log['file'] ) ) {
-							echo substr( $log['file'], $logger->get_file() ) . ':' . $log['line'];
+							echo esc_html( substr( $log['file'], $logger->get_file() ) . ':' . $log['line'] );
 						}
 					?></td>
-				<td><?php echo number_format( 100 * ( $log['timestamp'] - WP_FS__SCRIPT_START_TIME ), 2 ) . ' ' . fs_text_x_inline( 'ms', 'milliseconds' ) ?></td>
+				<td><?php echo esc_html( number_format( 100 * ( $log['timestamp'] - WP_FS__SCRIPT_START_TIME ), 2 ) . ' ' . fs_text_x_inline( 'ms', 'milliseconds' ) ); ?></td>
 			</tr>
-			<?php $i ++; endforeach ?>
+			<?php $i ++; endforeach; ?>
 	</tbody>
 </table>

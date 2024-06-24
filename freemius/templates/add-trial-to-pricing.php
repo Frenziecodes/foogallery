@@ -21,7 +21,7 @@
 <script type="text/javascript">
 	(function ($) {
 		$(document).ready(function () {
-			var $pricingMenu = $('.fs-submenu-item.<?php echo $fs->get_unique_affix() ?>.pricing'),
+			var $pricingMenu = $('.fs-submenu-item.<?php echo esc_attr( $fs->get_unique_affix() ) ?>.pricing'),
 				$pricingMenuLink = $pricingMenu.parents('a');
 
 			// Add trial querystring param.

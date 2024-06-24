@@ -88,7 +88,7 @@
 		$classes[] = "fs-type-{$type}";
 	}
 ?>
-<div class="<?php echo fs_html_get_classname( $classes ); ?>" <?php echo fs_html_get_attributes( $attributes ); ?>>
+<div class="<?php echo esc_attr( fs_html_get_classname( $classes ) ); ?>" <?php echo esc_attr( fs_html_get_attributes( $attributes ) ); ?>>
 	<?php if ( ! empty( $VARS['plugin'] ) ) : ?>
 		<label class="fs-plugin-title">
 			<?php echo esc_html( $VARS['plugin'] ); ?>
@@ -97,16 +97,16 @@
 
 	<?php if ( ! empty( $VARS['sticky'] ) && ( ! isset( $VARS['dismissible'] ) || false !== $VARS['dismissible'] ) ) : ?>
 		<div class="fs-close">
-			<i class="dashicons dashicons-no" title="<?php echo esc_attr( $dismiss_text ) ?>"></i>
+			<i class="dashicons dashicons-no" title="<?php echo esc_attr( $dismiss_text ); ?>"></i>
 			<span><?php echo esc_html( $dismiss_text ); ?></span>
 		</div>
 	<?php endif ?>
 
 	<div class="fs-notice-body">
 		<?php if ( ! empty( $VARS['title'] ) ) : ?>
-			<strong><?php echo fs_html_get_sanitized_html( $VARS['title'] ); ?></strong>
+			<strong><?php echo esc_attr( fs_html_get_sanitized_html( $VARS['title'] ) ); ?></strong>
 		<?php endif ?>
 
-		<?php echo fs_html_get_sanitized_html( $VARS['message'] ); ?>
+		<?php echo esc_attr( fs_html_get_sanitized_html( $VARS['message'] ) ); ?>
 	</div>
 </div>

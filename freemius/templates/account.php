@@ -514,18 +514,17 @@
 												</td>
 												<td<?php if ( 'plan' === $p['id'] || 'bundle_plan' === $p['id'] ) { echo ' colspan="2"'; }?>>
 													<?php if ( in_array( $p['id'], array( 'license_key', 'site_secret_key' ) ) ) : ?>
-														<code><?php echo FS_Plugin_License::mask_secret_key_for_html( $p['value'] ) ?></code>
-														<?php if ( ! $is_whitelabeled ) : ?>
-                                                        <input type="text" value="<?php echo htmlspecialchars( $p['value'] ) ?>" style="display: none"
-														       readonly/>
-                                                        <?php endif ?>
+                                                    <code><?php echo esc_html( FS_Plugin_License::mask_secret_key_for_html( $p['value'] ) ); ?></code>
+                                                    <?php if ( ! $is_whitelabeled ) : ?>
+                                                        <input type="text" value="<?php echo esc_attr( htmlspecialchars( $p['value'], ENT_QUOTES, 'UTF-8' ) ); ?>" style="display: none" readonly/>
+                                                    <?php endif; ?>
                                                     <?php elseif ( 'beta_program' === $p['id'] ) : ?>
                                                         <label>
                                                             <input type="checkbox" class="fs-toggle-beta-mode" <?php checked( true, $p['value'] ) ?>/><span><?php
                                                                 fs_esc_html_echo_inline( 'Join the Beta program', 'join-beta', $slug )
                                                         ?></span></label>
 													<?php else : ?>
-														<code><?php echo htmlspecialchars( $p['value'] ) ?></code>
+														<code><?php echo esc_attr( htmlspecialchars( $p['value'] ) ) ?></code>
 													<?php endif ?>
 													<?php if ( 'email' === $p['id'] && ! $user->is_verified() ) : ?>
 														<label class="fs-tag fs-warn"><?php fs_esc_html_echo_inline( 'not verified', 'not-verified', $slug ) ?></label>
@@ -603,28 +602,28 @@
 													<?php endif ?>
 												</td>
                                                 <?php if ( 'plan' !== $p['id'] && 'bundle_plan' !== $p['id'] ) : ?>
-													<td class="fs-right">
-														<?php if ( 'email' === $p['id'] && ! $user->is_verified() ) : ?>
-															<form action="<?php echo $fs->_get_admin_page_url( 'account' ) ?>" method="POST">
-																<input type="hidden" name="fs_action" value="verify_email">
-																<?php wp_nonce_field( 'verify_email' ) ?>
-																<input type="submit" class="button button-small"
-																       value="<?php fs_esc_attr_echo_inline( 'Verify Email', 'verify-email', $slug ) ?>">
-															</form>
-														<?php endif ?>
-														<?php if ( 'version' === $p['id'] ) : ?>
-															<?php if ( $fs->has_release_on_freemius() ) : ?>
-																<div class="button-group">
-																	<?php if ( $is_paying || $fs->is_trial() ) : ?>
-																		<?php if ( ! $fs->is_allowed_to_install() ) : ?>
+                                                    <td class="fs-right">
+                                                        <?php if ( 'email' === $p['id'] && ! $user->is_verified() ) : ?>
+                                                            <form action="<?php echo esc_url( $fs->_get_admin_page_url( 'account' ) ); ?>" method="POST">
+                                                                <input type="hidden" name="fs_action" value="verify_email">
+                                                                <?php wp_nonce_field( 'verify_email' ); ?>
+                                                                <input type="submit" class="button button-small"
+                                                                    value="<?php fs_esc_attr_echo_inline( 'Verify Email', 'verify-email', $slug ); ?>">
+                                                            </form>
+                                                        <?php endif; ?>
+                                                        <?php if ( 'version' === $p['id'] ) : ?>
+                                                            <?php if ( $fs->has_release_on_freemius() ) : ?>
+                                                                <div class="button-group">
+                                                                    <?php if ( $is_paying || $fs->is_trial() ) : ?>
+                                                                        <?php if ( ! $fs->is_allowed_to_install() ) : ?>
                                                                             <a target="_blank" rel="noopener" class="button button-primary"
-                                                                                href="<?php echo $fs->_get_latest_download_local_url() ?>"><?php
-                                                                                $download_version_text_suffix = ( is_object( $update ) ? ' [' . $update->version . ']' : '' );
+                                                                            href="<?php echo esc_url( $fs->_get_latest_download_local_url() ); ?>"><?php
+                                                                                $download_version_text_suffix = ( is_object( $update ) ? ' [' . esc_html( $update->version ) . ']' : '' );
 
                                                                                 $download_version_text = sprintf(
                                                                                     /* translators: %s: plan name (e.g. Download "Professional" Version) */
                                                                                     fs_text_inline( 'Download %s Version', 'download-x-version', $slug ),
-                                                                                    ( $fs->is_trial() ? $trial_plan->title : $plan->title )
+                                                                                    ( $fs->is_trial() ? esc_html( $trial_plan->title ) : esc_html( $plan->title ) )
                                                                                 ) .
                                                                                 $download_version_text_suffix;
 
@@ -637,59 +636,59 @@
                                                                                      * Try to limit the number of characters to 31 for now.
                                                                                      *
                                                                                      * @author Leo Fajardo (@leorw)
-                                                                                     * @aince 2.3.2
+                                                                                     * @since 2.3.2
                                                                                      */
                                                                                     $download_version_text = fs_text_inline( 'Download Paid Version', 'download-paid-version', $slug ) . $download_version_text_suffix;
                                                                                 }
 
-                                                                                echo $download_version_text;
+                                                                                echo esc_html( $download_version_text );
                                                                             ?></a>
-																		<?php elseif ( is_object( $update ) ) : ?>
-																			<?php
-																			$module_type = $fs->get_module_type();
-																			?>
-																			<a class="button button-primary"
-																			   href="<?php echo wp_nonce_url( self_admin_url( "update.php?action=upgrade-{$module_type}&{$module_type}=" . $fs->get_plugin_basename() ), "upgrade-{$module_type}_" . $fs->get_plugin_basename() ) ?>"><?php echo fs_esc_html_inline( 'Install Update Now', 'install-update-now', $slug ) . ' [' . $update->version . ']' ?></a>
-																		<?php endif ?>
-																	<?php endif; ?>
-																</div>
-															<?php endif ?>
-															<?php
-														elseif ( in_array( $p['id'], array( 'license_key', 'site_secret_key' ) ) ) : ?>
+                                                                        <?php elseif ( is_object( $update ) ) : ?>
+                                                                            <?php
+                                                                            $module_type = esc_attr( $fs->get_module_type() );
+                                                                            ?>
+                                                                            <a class="button button-primary"
+                                                                            href="<?php echo esc_url( wp_nonce_url( self_admin_url( "update.php?action=upgrade-{$module_type}&{$module_type}=" . $fs->get_plugin_basename() ), "upgrade-{$module_type}_" . $fs->get_plugin_basename() ) ); ?>"><?php echo esc_html( fs_text_inline( 'Install Update Now', 'install-update-now', $slug ) . ' [' . $update->version . ']' ); ?></a>
+                                                                        <?php endif; ?>
+                                                                    <?php endif; ?>
+                                                                </div>
+                                                            <?php endif; ?>
+                                                            <?php
+                                                        elseif ( in_array( $p['id'], array( 'license_key', 'site_secret_key' ) ) ) : ?>
                                                             <?php if ( ! $is_whitelabeled && ( 'site_secret_key' === $p['id'] || ! $is_license_foreign ) ) : ?>
-                                                                <button class="button button-small fs-toggle-visibility"><?php fs_esc_html_echo_x_inline( 'Show', 'verb', 'show', $slug ) ?></button>
-                                                            <?php endif ?>
+                                                                <button class="button button-small fs-toggle-visibility"><?php fs_esc_html_echo_x_inline( 'Show', 'verb', 'show', $slug ); ?></button>
+                                                            <?php endif; ?>
                                                             <?php if ('license_key' === $p['id']) : ?>
-                                                                <button class="button button-small activate-license-trigger <?php echo $fs->get_unique_affix() ?>"><?php fs_esc_html_echo_inline( 'Change License', 'change-license', $slug ) ?></button>
-                                                            <?php endif ?>
-															<?php
-														elseif (/*in_array($p['id'], array('site_secret_key', 'site_id', 'site_public_key')) ||*/
-														( is_string( $user->secret_key ) && in_array( $p['id'], array(
-																'email',
-																'user_name'
-															) ) )
-														) : ?>
+                                                                <button class="button button-small activate-license-trigger <?php echo esc_attr( $fs->get_unique_affix() ); ?>"><?php fs_esc_html_echo_inline( 'Change License', 'change-license', $slug ); ?></button>
+                                                            <?php endif; ?>
+                                                            <?php
+                                                        elseif (/*in_array($p['id'], array('site_secret_key', 'site_id', 'site_public_key')) ||*/
+                                                        ( is_string( $user->secret_key ) && in_array( $p['id'], array(
+                                                                'email',
+                                                                'user_name'
+                                                            ) ) )
+                                                        ) : ?>
                                                             <?php if ( 'email' !== $p['id'] || ! fs_is_network_admin() ) : ?>
-															<form action="<?php echo $fs->_get_admin_page_url( 'account' ) ?>" method="POST"
-															      onsubmit="var val = prompt('<?php echo esc_attr( sprintf(
-                                                                      /* translators: %s: User's account property (e.g. name, email) */
-															          fs_text_inline( 'What is your %s?', 'what-is-your-x', $slug ),
-                                                                      $p['title']
-                                                                  ) ) ?>', '<?php echo $p['value'] ?>'); if (null == val || '' === val) return false; jQuery('input[name=fs_<?php echo $p['id'] ?>_<?php echo $fs->get_unique_affix() ?>]').val(val); return true;">
-																<input type="hidden" name="fs_action" value="update_<?php echo $p['id'] ?>">
-																<input type="hidden" name="fs_<?php echo $p['id'] ?>_<?php echo $fs->get_unique_affix() ?>"
-																       value="">
-																<?php wp_nonce_field( 'update_' . $p['id'] ) ?>
-																<input type="submit" class="button button-small <?php if ( 'email' === $p['id'] ) echo 'button-edit-email-address' ?>"
-																       value="<?php echo fs_esc_attr_x_inline( 'Edit', 'verb', 'edit', $slug ) ?>">
-															</form>
-                                                            <?php endif ?>
+                                                            <form action="<?php echo esc_url( $fs->_get_admin_page_url( 'account' ) ); ?>" method="POST"
+                                                                onsubmit="var val = prompt('<?php echo esc_attr( sprintf(
+                                                                    /* translators: %s: User's account property (e.g. name, email) */
+                                                                    fs_text_inline( 'What is your %s?', 'what-is-your-x', $slug ),
+                                                                    $p['title']
+                                                                ) ); ?>', '<?php echo esc_attr( $p['value'] ); ?>'); if (null == val || '' === val) return false; jQuery('input[name=fs_<?php echo esc_attr( $p['id'] ); ?>_<?php echo esc_attr( $fs->get_unique_affix() ); ?>]').val(val); return true;">
+                                                                <input type="hidden" name="fs_action" value="update_<?php echo esc_attr( $p['id'] ); ?>">
+                                                                <input type="hidden" name="fs_<?php echo esc_attr( $p['id'] ); ?>_<?php echo esc_attr( $fs->get_unique_affix() ); ?>"
+                                                                    value="">
+                                                                <?php wp_nonce_field( 'update_' . $p['id'] ); ?>
+                                                                <input type="submit" class="button button-small <?php if ( 'email' === $p['id'] ) echo 'button-edit-email-address'; ?>"
+                                                                    value="<?php echo esc_attr( fs_esc_attr_x_inline( 'Edit', 'verb', 'edit', $slug ) ); ?>">
+                                                            </form>
+                                                            <?php endif; ?>
                                                         <?php elseif ( 'user_id' === $p['id'] && ! empty( $ids_of_installs_activated_with_foreign_licenses ) ) : ?>
                                                                 <input id="fs_change_user" type="submit" class="button button-small"
-                                                                       value="<?php echo fs_esc_attr_inline( 'Change User', 'change-user', $slug ) ?>">
-														<?php endif ?>
-													</td>
-												<?php endif ?>
+                                                                    value="<?php echo esc_attr( fs_esc_attr_inline( 'Change User', 'change-user', $slug ) ); ?>">
+                                                        <?php endif; ?>
+                                                    </td>
+                                                <?php endif; ?>
 											</tr>
 											<?php
                                                 if ( 'version' === $p['id'] && $is_premium ) {
@@ -720,7 +719,7 @@
                                                 fs_esc_html_inline( 'Change License', 'change-license', $slug ) :
                                                 fs_esc_html_inline( 'Activate License', 'activate-license', $slug );
                                         ?>
-                                        <a class="button<?php echo ( ! $has_license ? ' button-primary' : '' ) ?> activate-license-trigger <?php echo $fs->get_unique_affix() ?>" href="#"><?php echo $activate_license_button_text ?></a>
+                                        <a class="button<?php echo ( ! $has_license ? ' button-primary' : '' ); ?> activate-license-trigger <?php echo esc_attr( $fs->get_unique_affix() ); ?>" href="#"><?php echo esc_html( $activate_license_button_text ); ?></a>
                                     <?php endif ?>
                                 <?php endif ?>
 								<input class="fs-search" type="text" placeholder="<?php fs_esc_attr_echo_inline( 'Search by address', 'search-by-address', $slug ) ?>..."><span class="dashicons dashicons-search"></span>
@@ -948,25 +947,25 @@
                 var $checkbox = $( this ),
                     isChecked = $checkbox.is( ':checked' );
 
-                if ( ! isChecked || confirm( '<?php echo $confirmation_message ?>' ) ) {
-                    $.ajax( {
-                        url   : <?php echo Freemius::ajax_url() ?>,
+                if ( ! isChecked || confirm( '<?php echo esc_js( $confirmation_message ); ?>' ) ) {
+                    $.ajax({
+                        url: '<?php echo esc_url( Freemius::ajax_url() ); ?>',
                         method: 'POST',
-                        data  : {
-                            action   : '<?php echo $fs->get_ajax_action( 'set_beta_mode' ) ?>',
-                            security : '<?php echo $fs->get_ajax_security( 'set_beta_mode' ) ?>',
-                            is_beta  : isChecked,
-                            module_id: <?php echo $fs->get_id() ?>
+                        data: {
+                            action: '<?php echo esc_js( $fs->get_ajax_action( 'set_beta_mode' ) ); ?>',
+                            security: '<?php echo esc_js( $fs->get_ajax_security( 'set_beta_mode' ) ); ?>',
+                            is_beta: isChecked,
+                            module_id: '<?php echo esc_js( $fs->get_id() ); ?>'
                         },
                         beforeSend: function () {
-                            $checkbox.prop( 'disabled', true );
-                            $checkbox.parent().find( 'span' ).text( '<?php echo $processing_text ?>' + '...' );
+                            $checkbox.prop('disabled', true);
+                            $checkbox.parent().find('span').text('<?php echo esc_js( $processing_text ); ?>' + '...');
                         },
                         complete: function () {
-                            $checkbox.prop( 'disabled', false );
-                            $checkbox.parent().find( 'span' ).text( '<?php fs_esc_js_echo_inline( 'Join the Beta Program', 'join-beta', $slug ) ?>' );
+                            $checkbox.prop('disabled', false);
+                            $checkbox.parent().find('span').text('<?php fs_esc_js_echo_inline( 'Join the Beta Program', 'join-beta', $slug ); ?>');
                         }
-                    } );
+                    });
 
                     return true;
                 }
@@ -989,39 +988,38 @@
             });
 
             var $deactivateLicenseOrCancelTrial = $( '.fs-deactivate-license, .fs-cancel-trial' ),
-                $subscriptionCancellationModal  = $( '.fs-modal-subscription-cancellation-<?php echo $fs->get_id() ?>' );
+                $subscriptionCancellationModal  = $( '.fs-modal-subscription-cancellation-<?php echo esc_attr( $fs->get_id() ) ?>' );
 
-            if ( 0 !== $subscriptionCancellationModal.length ) {
-                $subscriptionCancellationModal.on( '<?php echo $fs->get_action_tag( 'subscription_cancellation_action' ) ?>', function( evt, cancelSubscription ) {
-                    setLoading(
-                        $deactivateLicenseOrCancelTrial,
-                        ( ! $deactivateLicenseOrCancelTrial.hasClass( 'fs-cancel-trial' ) ?
-                            '<?php fs_esc_js_echo_inline( 'Deactivating', 'deactivating', $slug ) ?>' :
-                            '<?php echo esc_html( sprintf( fs_text_inline( 'Cancelling %s', 'cancelling-x', $slug ), fs_text_inline( 'trial', 'trial', $slug ) ) ) ?>' ) + '...'
-                    );
+                if ( 0 !== $subscriptionCancellationModal.length ) {
+                    $subscriptionCancellationModal.on('<?php echo esc_js( $fs->get_action_tag( 'subscription_cancellation_action' ) ); ?>', function(evt, cancelSubscription) {
+                        setLoading(
+                            $deactivateLicenseOrCancelTrial,
+                            (! $deactivateLicenseOrCancelTrial.hasClass('fs-cancel-trial') ?
+                                '<?php fs_esc_js_echo_inline( 'Deactivating', 'deactivating', $slug ); ?>' :
+                                '<?php echo esc_js( sprintf( fs_text_inline( 'Cancelling %s', 'cancelling-x', $slug ), fs_text_inline( 'trial', 'trial', $slug ) ) ); ?>'
+                            ) + '...'
+                        );
 
-                    $subscriptionCancellationModal.find( '.fs-modal-footer .button' ).addClass( 'disabled' );
-                    $deactivateLicenseOrCancelTrial.unbind( 'click' );
+                        $subscriptionCancellationModal.find('.fs-modal-footer .button').addClass('disabled');
+                        $deactivateLicenseOrCancelTrial.unbind('click');
 
-                    if ( false === cancelSubscription || $deactivateLicenseOrCancelTrial.hasClass( 'fs-cancel-trial' ) ) {
-                        $subscriptionCancellationModal.find( '.fs-modal-footer .button-primary' ).text( $deactivateLicenseOrCancelTrial.text() );
+                        if (false === cancelSubscription || $deactivateLicenseOrCancelTrial.hasClass('fs-cancel-trial')) {
+                            $subscriptionCancellationModal.find('.fs-modal-footer .button-primary').text($deactivateLicenseOrCancelTrial.text());
 
-                        $deactivateLicenseOrCancelTrial[0].parentNode.submit();
-                    } else {
-                        var $form = $( 'input[value="downgrade_account"],input[value="cancel_trial"]' ).parent();
-                        $form.prepend( '<input type="hidden" name="deactivate_license" value="true" />' );
+                            $deactivateLicenseOrCancelTrial[0].parentNode.submit();
+                        } else {
+                            var $form = $('input[value="downgrade_account"],input[value="cancel_trial"]').parent();
+                            $form.prepend('<input type="hidden" name="deactivate_license" value="true" />');
 
-                        $subscriptionCancellationModal.find( '.fs-modal-footer .button-primary' ).text( '<?php echo esc_js( sprintf(
-                            fs_text_inline( 'Cancelling %s...', 'cancelling-x' , $slug ),
-                            $is_paid_trial ?
-                                fs_text_inline( 'trial', 'trial', $slug ) :
-                                fs_text_inline( 'subscription', 'subscription', $slug )
-                        ) ) ?>' );
+                            $subscriptionCancellationModal.find('.fs-modal-footer .button-primary').text('<?php echo esc_js( sprintf(
+                                fs_text_inline( 'Cancelling %s...', 'cancelling-x', $slug ),
+                                $is_paid_trial ? fs_text_inline( 'trial', 'trial', $slug ) : fs_text_inline( 'subscription', 'subscription', $slug )
+                            ) ); ?>');
 
-                        $form.submit();
-                    }
-                });
-            }
+                            $form.submit(),
+                        }
+                    });
+                }
 
             $deactivateLicenseOrCancelTrial.click(function() {
                 var $this = $( this );
@@ -1093,12 +1091,12 @@
                 var $toggleLink = $( this );
 
                 $.ajax( {
-                    url   : <?php echo Freemius::ajax_url() ?>,
+                    url   : <?php echo esc_url( Freemius::ajax_url() ) ?>,
                     method: 'POST',
                     data  : {
-                        action   : '<?php echo $fs->get_ajax_action( 'toggle_whitelabel_mode' ) ?>',
-                        security : '<?php echo $fs->get_ajax_security( 'toggle_whitelabel_mode' ) ?>',
-                        module_id: <?php echo $fs->get_id() ?>
+                        action   : '<?php echo esc_js( $fs->get_ajax_action( 'toggle_whitelabel_mode' ) ) ?>',
+                        security : '<?php echo esc_js( $fs->get_ajax_security( 'toggle_whitelabel_mode' ) ) ?>',
+                        module_id: <?php echo esc_js( $fs->get_id() ) ?>
                     },
                     beforeSend: function () {
                         $toggleLink.parent().text( '<?php

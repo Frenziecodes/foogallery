@@ -124,40 +124,40 @@ HTML;
 (function ($) {
 	var reasonsHtml                    = <?php echo json_encode( $reasons_list_items_html ) ?>,
 	    modalHtml                      =
-		    '<div class="fs-modal fs-modal-deactivation-feedback<?php echo empty( $confirmation_message ) ? ' no-confirmation-message' : ''; ?>">'
-		    + '	<div class="fs-modal-dialog">'
-		    + '		<div class="fs-modal-header">'
-		    + '		    <h4><?php fs_esc_attr_echo_inline( 'Quick Feedback', 'quick-feedback' , $slug ) ?></h4>'
-		    + '		</div>'
-		    + '		<div class="fs-modal-body">'
-		    + '			<div class="fs-modal-panel" data-panel-id="confirm"><p><?php echo $confirmation_message; ?></p></div>'
-		    + '			<div class="fs-modal-panel active" data-panel-id="reasons"><h3><strong><?php echo esc_js( sprintf( fs_text_inline( 'If you have a moment, please let us know why you are %s', 'deactivation-share-reason' , $slug ), ( $fs->is_plugin() ? fs_text_inline( 'deactivating', 'deactivating', $slug ) : fs_text_inline( 'switching', 'switching', $slug ) ) ) ) ?>:</strong></h3><ul id="reasons-list">' + reasonsHtml + '</ul></div>'
-		    + '		</div>'
-		    + '		<div class="fs-modal-footer">'
-			+ '         <?php echo $anonymous_feedback_checkbox_html ?>'
-			+ '         <label style="display: none" class="feedback-from-snooze-label"><input type="checkbox" class="feedback-from-snooze-checkbox"> <span><?php fs_esc_js_echo_inline( 'Snooze this panel during troubleshooting', 'snooze-panel-during-troubleshooting', $slug ) ?></span><span style="display: none"><?php fs_esc_js_echo_inline( 'Snooze this panel for', 'snooze-panel-for', $slug ) ?> <?php echo $snooze_select_html ?></span></label>'
-		    + '			<a href="#" class="button button-secondary button-deactivate"></a>'
-		    + '			<a href="#" class="button button-secondary button-close"><?php fs_esc_js_echo_inline( 'Cancel', 'cancel', $slug ) ?></a>'
-		    + '		</div>'
-		    + '	</div>'
-		    + '</div>',
+        '<div class="fs-modal fs-modal-deactivation-feedback' . ( empty( $confirmation_message ) ? ' no-confirmation-message' : '' ) . '">'
+        . ' <div class="fs-modal-dialog">'
+        . '     <div class="fs-modal-header">'
+        . '         <h4>' . esc_html( fs_esc_attr_echo_inline( 'Quick Feedback', 'quick-feedback' , $slug ) ) . '</h4>'
+        . '     </div>'
+        . '     <div class="fs-modal-body">'
+        . '         <div class="fs-modal-panel" data-panel-id="confirm"><p>' . esc_html( $confirmation_message ) . '</p></div>'
+        . '         <div class="fs-modal-panel active" data-panel-id="reasons"><h3><strong>' . esc_js( sprintf( fs_text_inline( 'If you have a moment, please let us know why you are %s', 'deactivation-share-reason' , $slug ), ( $fs->is_plugin() ? fs_text_inline( 'deactivating', 'deactivating', $slug ) : fs_text_inline( 'switching', 'switching', $slug ) ) ) ) . ':</strong></h3><ul id="reasons-list">' . esc_html( $reasonsHtml ) . '</ul></div>'
+        . '     </div>'
+        . '     <div class="fs-modal-footer">'
+        . '         ' . esc_html( $anonymous_feedback_checkbox_html ) . ''
+        . '         <label style="display: none" class="feedback-from-snooze-label"><input type="checkbox" class="feedback-from-snooze-checkbox"> <span>' . esc_js( fs_esc_js_echo_inline( 'Snooze this panel during troubleshooting', 'snooze-panel-during-troubleshooting', $slug ) ) . '</span><span style="display: none">' . esc_js( fs_esc_js_echo_inline( 'Snooze this panel for', 'snooze-panel-for', $slug ) ) . ' ' . esc_html( $snooze_select_html ) . '</span></label>'
+        . '         <a href="#" class="button button-secondary button-deactivate"></a>'
+        . '         <a href="#" class="button button-secondary button-close">' . esc_js( fs_esc_js_echo_inline( 'Cancel', 'cancel', $slug ) ) . '</a>'
+        . '     </div>'
+        . ' </div>'
+        . '</div>',
 	    $modal                         = $(modalHtml),
 	    selectedReasonID               = false,
 	    redirectLink                   = '',
 		$anonymousFeedback             = $modal.find( '.anonymous-feedback-label' ),
 		$feedbackSnooze                = $modal.find( '.feedback-from-snooze-label' ),
-		isAnonymous                    = <?php echo ( $is_anonymous ? 'true' : 'false' ); ?>,
-		otherReasonID                  = <?php echo Freemius::REASON_OTHER; ?>,
-		dontShareDataReasonID          = <?php echo Freemius::REASON_DONT_LIKE_TO_SHARE_MY_INFORMATION; ?>,
-        deleteThemeUpdateData          = <?php echo $fs->is_theme() && $fs->is_premium() && ! $fs->has_any_active_valid_license() ? 'true' : 'false' ?>,
-        $subscriptionCancellationModal = $( '.fs-modal-subscription-cancellation-<?php echo $fs->get_id() ?>' ),
-        showDeactivationFeedbackForm   = <?php echo ( $show_deactivation_feedback_form ? 'true' : 'false' ) ?>,
+		isAnonymous                    = <?php echo $is_anonymous ? 'true' : 'false'; ?>,
+        otherReasonID                  = <?php echo (int) Freemius::REASON_OTHER; ?>,
+        dontShareDataReasonID          = <?php echo (int) Freemius::REASON_DONT_LIKE_TO_SHARE_MY_INFORMATION; ?>,
+        deleteThemeUpdateData          = <?php echo ( $fs->is_theme() && $fs->is_premium() && ! $fs->has_any_active_valid_license() ) ? 'true' : 'false'; ?>,
+        $subscriptionCancellationModal = $( '.fs-modal-subscription-cancellation-<?php echo esc_attr( $fs->get_id() ); ?>' ),
+        showDeactivationFeedbackForm   = <?php echo $show_deactivation_feedback_form ? 'true' : 'false'; ?>,
         $body                          = $( 'body' );
 
 	$modal.appendTo( $body );
 
 	if ( 0 !== $subscriptionCancellationModal.length ) {
-        $subscriptionCancellationModal.on( '<?php echo $fs->get_action_tag( 'subscription_cancellation_action' ) ?>', function( evt, cancelSubscription ) {
+        $subscriptionCancellationModal.on( '<?php echo esc_js( $fs->get_action_tag( 'subscription_cancellation_action' ) ); ?>', function( evt, cancelSubscription ) {
             var shouldDeactivateModule = ( $modal.hasClass( 'no-confirmation-message' ) && ! showDeactivationFeedbackForm );
 
             if ( false === cancelSubscription ) {
@@ -180,12 +180,12 @@ HTML;
                 ?>
 
                 $.ajax({
-                    url       : <?php echo Freemius::ajax_url() ?>,
+                    url       : '<?php echo esc_url( Freemius::ajax_url() ); ?>',
                     method    : 'POST',
                     data      : {
-                        action   : '<?php echo $fs->get_ajax_action( 'cancel_subscription_or_trial' ) ?>',
-                        security : '<?php echo $fs->get_ajax_security( 'cancel_subscription_or_trial' ) ?>',
-                        module_id: '<?php echo $fs->get_id() ?>'
+                        action   : '<?php echo esc_js( $fs->get_ajax_action( 'cancel_subscription_or_trial' ) ); ?>',
+                        security : '<?php echo esc_js( $fs->get_ajax_security( 'cancel_subscription_or_trial' ) ); ?>',
+                        module_id: '<?php echo esc_js( $fs->get_id() ); ?>'
                     },
                     beforeSend: function() {
                         $errorMessage.hide();
@@ -227,8 +227,8 @@ HTML;
 
 	function registerEventHandlers() {
 		$body.on( 'click', '#the-list .deactivate > a', function ( evt ) {
-		    if ( 0 === $( this ).next( '[data-module-id=<?php echo $fs->get_id() ?>].fs-module-id' ).length ) {
-		        return true;
+		    if ( 0 === $( this ).next( '[data-module-id=<?php echo esc_js( $fs->get_id() ); ?>].fs-module-id' ).length ) {
+                return true;
             }
 
 			evt.preventDefault();
@@ -256,7 +256,7 @@ HTML;
 		 * @since 1.2.2.7 Don't trigger the deactivation feedback form if activating the premium version of the theme.
 		 */
 		?>
-		$('body').on('click', '.theme-browser .theme:not([data-slug=<?php echo $fs->get_premium_slug() ?>]) .theme-actions .button.activate', function (evt) {
+        $('body').on('click', '.theme-browser .theme:not([data-slug=<?php echo esc_js( $fs->get_premium_slug() ); ?>]) .theme-actions .button.activate', function (evt) {
 			evt.preventDefault();
 
 			redirectLink = $(this).attr('href');
@@ -347,12 +347,12 @@ HTML;
                         window.location.href = redirectLink;
                     } else {
                         $.ajax({
-                            url       : <?php echo Freemius::ajax_url() ?>,
+                            url       : <?php echo esc_url( Freemius::ajax_url() ) ?>,
                             method    : 'POST',
                             data      : {
-                                action   : '<?php echo $fs->get_ajax_action( 'delete_theme_update_data' ) ?>',
-                                security : '<?php echo $fs->get_ajax_security( 'delete_theme_update_data' ) ?>',
-                                module_id: '<?php echo $fs->get_id() ?>'
+                                action   : '<?php echo esc_js( $fs->get_ajax_action( 'delete_theme_update_data' ) ) ?>',
+                                security : '<?php echo esc_js( $fs->get_ajax_security( 'delete_theme_update_data' ) ) ?>',
+                                module_id: '<?php echo esc_js( $fs->get_id() ) ?>'
                             },
                             beforeSend: function() {
                                 _parent.find( '.fs-modal-footer .button-deactivate' ).text( '<?php echo esc_js( fs_text_inline( 'Processing', 'processing', $slug ) ) ?>...' );
@@ -369,17 +369,18 @@ HTML;
                 var snoozePeriod = 0,
                     shouldSnooze = $feedbackSnooze.find( '.feedback-from-snooze-checkbox' ).is( ':checked' );
 
-                if ( shouldSnooze && <?php echo Freemius::REASON_TEMPORARY_DEACTIVATION ?> == selectedReasonID ) {
-                    snoozePeriod = parseInt($feedbackSnooze.find('select').val(), 10);
-                }
+                    if (shouldSnooze && <?php echo esc_js(Freemius::REASON_TEMPORARY_DEACTIVATION); ?> == selectedReasonID) {
+                        snoozePeriod = parseInt($feedbackSnooze.find('select').val(), 10);
+                    }
+
 
 				$.ajax({
-					url       : <?php echo Freemius::ajax_url() ?>,
+					url       : <?php echo esc_url( Freemius::ajax_url() ) ?>,
 					method    : 'POST',
 					data      : {
-						action       : '<?php echo $fs->get_ajax_action( 'submit_uninstall_reason' ) ?>',
-						security     : '<?php echo $fs->get_ajax_security( 'submit_uninstall_reason' ) ?>',
-						module_id    : '<?php echo $fs->get_id() ?>',
+						action       : '<?php echo esc_js( $fs->get_ajax_action( 'submit_uninstall_reason' ) ) ?>',
+						security     : '<?php echo esc_js( $fs->get_ajax_security( 'submit_uninstall_reason' ) ) ?>',
+						module_id    : '<?php echo esc_js( $fs->get_id() ) ?>',
 						reason_id    : $radio.val(),
 						reason_info  : userReason,
 						is_anonymous : isAnonymousFeedback(),
@@ -450,10 +451,10 @@ HTML;
                 }
 			}
 
-            $anonymousFeedback.toggle( <?php echo Freemius::REASON_TEMPORARY_DEACTIVATION ?> != selectedReasonID );
-            $feedbackSnooze.toggle( <?php echo Freemius::REASON_TEMPORARY_DEACTIVATION ?> == selectedReasonID );
+            $anonymousFeedback.toggle( <?php echo esc_js(Freemius::REASON_TEMPORARY_DEACTIVATION); ?> != selectedReasonID );
+            $feedbackSnooze.toggle( <?php echo esc_js(Freemius::REASON_TEMPORARY_DEACTIVATION); ?> == selectedReasonID );
 
-            if ( <?php echo Freemius::REASON_TEMPORARY_DEACTIVATION ?> == selectedReasonID ) {
+            if ( <?php echo esc_js(Freemius::REASON_TEMPORARY_DEACTIVATION); ?> == selectedReasonID ) {
                 updateDeactivationButtonOnTrouble();
             }
 		});
@@ -610,16 +611,16 @@ HTML;
             $userReason       = $modal.find('.reason-input input'),
             $deactivateButton = $modal.find('.button-deactivate');
 
-	    if (0 === $userReason.val().trim().length) {
-	        // If the reason is empty, just change the text to 'Deactivate' (plugin) or 'Activate themeX' (theme).
-            $deactivateButton.html('<?php echo
-                $fs->is_plugin() ?
-                    $deactivate_text :
-                    sprintf( $activate_x_text, $theme_text )
-            ?>');
-        } else {
-            $deactivateButton.html('<?php echo esc_js( $submit_deactivate_text ) ?>');
-        }
+            if (0 === $userReason.val().trim().length) {
+                // If the reason is empty, just change the text to 'Deactivate' (plugin) or 'Activate themeX' (theme).
+                $deactivateButton.html('<?php echo esc_js(
+                    $fs->is_plugin() ?
+                        $deactivate_text :
+                        sprintf($activate_x_text, $theme_text)
+                ); ?>');
+            } else {
+                $deactivateButton.html('<?php echo esc_js($submit_deactivate_text); ?>');
+            }
     }
 
 	function showPanel(panelType) {

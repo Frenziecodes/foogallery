@@ -80,12 +80,12 @@ HTML;
 					var $button = $(this);
 
 					$.ajax({
-						url       : <?php echo Freemius::ajax_url() ?>,
+						url       : '<?php echo esc_url( Freemius::ajax_url() ); ?>',
 						method    : 'POST',
 						data      : {
-							action   : '<?php echo $fs->get_ajax_action( 'start_trial' ) ?>',
-							security : '<?php echo $fs->get_ajax_security( 'start_trial' ) ?>',
-							module_id: '<?php echo $fs->get_id() ?>',
+							action   : '<?php echo esc_js( $fs->get_ajax_action( 'start_trial' ) ); ?>',
+							security : '<?php echo esc_js( $fs->get_ajax_security( 'start_trial' ) ); ?>',
+							module_id: '<?php echo esc_js( $fs->get_id() ); ?>',
 							trial    : trialData
 						},
 						beforeSend: function () {

@@ -41,13 +41,13 @@
 				<tbody>
 				<?php $odd = true ?>
 				<?php foreach ( $payments as $payment ) : ?>
-					<tr<?php echo $odd ? ' class="alternate"' : '' ?>>
-						<td><?php echo $payment->id ?></td>
-						<td><?php echo date( 'M j, Y', strtotime( $payment->created ) ) ?></td>
-						<td><?php echo $payment->formatted_gross() ?></td>
-						<td><?php if (! $payment->is_migrated() ) : ?><a href="<?php echo $fs->_get_invoice_api_url( $payment->id ) ?>"
-						       class="button button-small"
-						       target="_blank" rel="noopener"><?php fs_esc_html_echo_inline( 'Invoice', 'invoice', $slug ) ?></a><?php endif ?></td>
+					<tr<?php echo $odd ? ' class="alternate"' : ''; ?>>
+						<td><?php echo esc_html( $payment->id ); ?></td>
+						<td><?php echo esc_html( date( 'M j, Y', strtotime( $payment->created ) ) ); ?></td>
+						<td><?php echo esc_html( $payment->formatted_gross() ); ?></td>
+						<td><?php if ( ! $payment->is_migrated() ) : ?><a href="<?php echo esc_url( $fs->_get_invoice_api_url( $payment->id ) ); ?>"
+						class="button button-small"
+						target="_blank" rel="noopener"><?php fs_esc_html_echo_inline( 'Invoice', 'invoice', $slug ); ?></a><?php endif; ?></td>
 					</tr>
 					<?php $odd = ! $odd; endforeach ?>
 				</tbody>

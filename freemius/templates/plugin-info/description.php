@@ -55,19 +55,19 @@
 		<h3><?php fs_esc_html_echo_inline( 'Screenshots', 'screenshots', $plugin->slug ) ?></h3>
 		<ul>
 			<?php $i = 0;
-				foreach ( $screenshots as $s => $url ) : ?>
-					<li class="<?php echo ( 0 === $i % 2 ) ? 'odd' : 'even' ?>">
-						<style>
-							#section-description .fs-screenshots <?php echo ".fs-screenshot-{$i}" ?>
-							{
-								background-image: url('<?php echo $url ?>');
-							}
-						</style>
-						<a href="<?php echo $url ?>"
-						   title="<?php echo esc_attr( sprintf( fs_text_inline( 'Click to view full-size screenshot %d', 'view-full-size-x', $plugin->slug ), $i ) ) ?>"
-						   class="fs-screenshot-<?php echo $i ?>"></a>
-					</li>
-					<?php $i ++; endforeach ?>
+			foreach ( $screenshots as $s => $url ) : ?>
+			<li class="<?php echo ( 0 === $i % 2 ) ? 'odd' : 'even'; ?>">
+				<style>
+					#section-description .fs-screenshots <?php echo ".fs-screenshot-" . esc_attr( $i ); ?>
+					{
+						background-image: url('<?php echo esc_url( $url ); ?>');
+					}
+				</style>
+				<a href="<?php echo esc_url( $url ); ?>"
+				title="<?php echo esc_attr( sprintf( fs_text_inline( 'Click to view full-size screenshot %d', 'view-full-size-x', $plugin->slug ), $i ) ); ?>"
+				class="fs-screenshot-<?php echo esc_attr( $i ); ?>"></a>
+			</li>
+			<?php $i ++; endforeach ?>
 		</ul>
 	</div>
 <?php endif ?>

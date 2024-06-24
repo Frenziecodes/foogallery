@@ -80,35 +80,35 @@
 <div class="fs-modal fs-modal-auto-install">
 	<div class="fs-modal-dialog">
 		<div class="fs-modal-header">
-			<h4><?php echo esc_js( fs_text_inline( 'Automatic Installation', 'auto-installation', $slug ) ) ?></h4>
+			<h4><?php echo esc_html( fs_text_inline( 'Automatic Installation', 'auto-installation', $slug ) ); ?></h4>
 		</div>
 		<div class="fs-modal-body">
 			<div class="fs-notice-error" style="display: none"><p></p></div>
 			<?php if ( $require_credentials ) : ?>
 				<div id="request-filesystem-credentials-dialog">
-					<?php echo $credentials_form ?>
+					<?php echo wp_kses_post( $credentials_form ); ?>
 				</div>
 			<?php else : ?>
 				<p class="fs-installation-notice"><?php echo sprintf(
-						fs_esc_html_inline( 'An automated download and installation of %s (paid version) from %s will start in %s. If you would like to do it manually - click the cancellation button now.', 'installing-in-n', $slug ),
-						$plugin_title,
+						esc_html( fs_esc_html_inline( 'An automated download and installation of %s (paid version) from %s will start in %s. If you would like to do it manually - click the cancellation button now.', 'installing-in-n', $slug ) ),
+						esc_html( $plugin_title ),
 						sprintf(
 							'<a href="%s" target="_blank" rel="noopener">%s</a>',
-							'https://freemius.com',
-							'freemius.com'
+							esc_url( 'https://freemius.com' ),
+							esc_html( 'freemius.com' )
 						),
-						$countdown_html
-					) ?></p>
-			<?php endif ?>
+						esc_html( $countdown_html )
+					); ?></p>
+			<?php endif; ?>
 			<p class="fs-installing"
-			   style="display: none"><?php echo sprintf( fs_esc_html_inline( 'The installation process has started and may take a few minutes to complete. Please wait until it is done - do not refresh this page.', 'installing-module-x', $slug ), $plugin_title ) ?></p>
+			   style="display: none"><?php echo sprintf( esc_html( fs_esc_html_inline( 'The installation process has started and may take a few minutes to complete. Please wait until it is done - do not refresh this page.', 'installing-module-x', $slug ) ), esc_html( $plugin_title ) ); ?></p>
 		</div>
 		<div class="fs-modal-footer">
-			<?php echo $loader_html ?>
+			<?php echo wp_kses_post( $loader_html ); ?>
 			<button
-				class="button button-secondary button-cancel"><?php fs_esc_html_echo_inline( 'Cancel Installation', 'cancel-installation', $slug ) ?><?php if ( ! $require_credentials ) : ?> (<?php echo $countdown_html ?>)<?php endif ?></button>
+				class="button button-secondary button-cancel"><?php fs_esc_html_echo_inline( 'Cancel Installation', 'cancel-installation', $slug ); ?><?php if ( ! $require_credentials ) : ?> (<?php echo esc_html( $countdown_html ); ?>)<?php endif; ?></button>
 			<button
-				class="button button-primary"><?php fs_esc_html_echo_inline( 'Install Now', 'install-now', $slug ) ?></button>
+				class="button button-primary"><?php fs_esc_html_echo_inline( 'Install Now', 'install-now', $slug ); ?></button>
 		</div>
 	</div>
 </div>'
@@ -119,7 +119,7 @@
 			var $modal             = $('.fs-modal-auto-install'),
 			    $body              = $('body'),
 			    $countdown         = $modal.find('.fs-countdown'),
-			    requireCredentials = <?php echo json_encode( $require_credentials ) ?>,
+			    requireCredentials = <?php echo json_encode( $require_credentials ); ?>,
 			    $credentialsForm   = $('#request-filesystem-credentials-dialog'),
 			    $errorNotice       = $modal.find('.fs-notice-error'),
 			    installing         = false;
@@ -146,11 +146,11 @@
 				$modal.find('.fs-ajax-loader').show();
 
 				var data = {
-					action          : '<?php echo $fs->get_ajax_action( 'install_premium_version' ) ?>',
-					security        : '<?php echo $fs->get_ajax_security( 'install_premium_version' ) ?>',
-					slug            : '<?php echo $slug ?>',
-					module_id       : '<?php echo $fs->get_id() ?>',
-                    target_module_id: '<?php echo $plugin_id ?>'
+					action          : '<?php echo esc_js( $fs->get_ajax_action( 'install_premium_version' ) ); ?>',
+					security        : '<?php echo esc_js( $fs->get_ajax_security( 'install_premium_version' ) ); ?>',
+					slug            : '<?php echo esc_js( $slug ); ?>',
+					module_id       : '<?php echo esc_js( $fs->get_id() ); ?>',
+                    target_module_id: '<?php echo esc_js( $plugin_id ); ?>'
 				};
 
 				if (requireCredentials) {
@@ -164,7 +164,7 @@
 				}
 
 				$.ajax({
-					url    : <?php echo Freemius::ajax_url() ?>,
+					url    : '<?php echo esc_js( Freemius::ajax_url() ); ?>',
 					method : 'POST',
 					data   : data,
 					success: function (resultObj) {
@@ -186,7 +186,7 @@
 									$modal.removeClass('fs-warn');
 									$modal.find('.fs-installing').hide();
 									$modal.find('.fs-ajax-loader').hide();
-									$modal.find('.button-cancel').html(<?php fs_json_encode_echo_inline( 'Cancel Installation', 'cancel-installation', $slug ) ?>);
+									$modal.find('.button-cancel').html('<?php fs_esc_js_echo_inline( 'Cancel Installation', 'cancel-installation', $slug ); ?>');
 									$modal.find('button').show();
 
 									$errorNotice.find('p').text(resultObj.error.message);
@@ -199,7 +199,7 @@
 						}
 
 						if (reloadAccount) {
-							window.location = '<?php echo $fs->get_account_url() ?>';
+							window.location = '<?php echo esc_js( $fs->get_account_url() ); ?>';
 						}
 
 						installing = false;
@@ -219,7 +219,7 @@
 				});
 			};
 
-			var countdown         = <?php echo $sec_countdown ?>,
+			var countdown         = <?php echo esc_js( $sec_countdown ); ?>,
 			    countdownInterval = requireCredentials ? null : setInterval(function () {
 				    $countdown.html(--countdown);
 				    if (0 == countdown) {

@@ -473,13 +473,14 @@
                 <div class="button-group">
                     <?php
                         // This should NOT be sanitized as the $actions are HTML buttons already.
-                        echo $actions[0] ?>
+                        echo $actions[0];
+                    ?>
                     <div class="button button-primary fs-dropdown-arrow-button">
                         <span class="fs-dropdown-arrow"></span>
                         <ul class="fs-dropdown-list" style="display: none">
                             <?php for ( $i = 1; $i < $total_actions; $i ++ ) : ?>
-                                <li><?php echo str_replace( 'button button-primary', '', $actions[ $i ] ) ?></li>
-                            <?php endfor ?>
+                            <li><?php echo wp_kses_post( str_replace( 'button button-primary', '', $actions[ $i ] ) ); ?></li>
+                            <?php endfor; ?>
                         </ul>
                     </div>
                 </div>
@@ -955,8 +956,8 @@
             $api = apply_filters( 'fs_plugins_api', false, 'plugin_information', $args );
 
             if ( is_wp_error( $api ) ) {
-                wp_die( $api );
-            }
+                wp_die( sprintf( esc_html__( 'Error: %s', 'freemius' ), esc_html( $api->get_error_message() ) ) );
+            }            
 
             $plugins_allowedtags = array(
                 'a'       => array(
@@ -1055,8 +1056,8 @@
             }
 
             echo '<div id="plugin-information-scrollable">';
-            echo "<div id='{$_tab}-title' class='{$_with_banner}'><div class='vignette'></div><h2>{$api->name}</h2></div>";
-            echo "<div id='{$_tab}-tabs' class='{$_with_banner}'>\n";
+            echo "<div id='" . esc_attr($_tab) . "-title' class='" . esc_attr($_with_banner) . "'><div class='vignette'></div><h2>" . esc_html($api->name) . "</h2></div>";
+            echo "<div id='" . esc_attr($_tab) . "-tabs' class='" . esc_attr($_with_banner) . "'>\n";            
 
             foreach ( (array) $api->sections as $section_name => $content ) {
                 if ( 'reviews' === $section_name && ( empty( $api->ratings ) || 0 === array_sum( (array) $api->ratings ) ) ) {
@@ -1073,13 +1074,13 @@
                 $href        = add_query_arg( array( 'tab' => $tab, 'section' => $section_name ) );
                 $href        = esc_url( $href );
                 $san_section = esc_attr( $section_name );
-                echo "\t<a name='$san_section' href='$href' $class>" . esc_html( $title ) . "</a>\n";
+                echo "\t<a name='" . esc_attr($san_section) . "' href='" . esc_attr($href) . "' " . esc_attr($class) . ">" . esc_html($title) . "</a>\n";
             }
 
             echo "</div>\n";
 
             ?>
-        <div id="<?php echo $_tab; ?>-content" class='<?php echo $_with_banner; ?>'>
+        <div id="<?php echo esc_attr($_tab); ?>-content" class="<?php echo esc_attr($_with_banner); ?>">
             <div class="fyi">
                 <?php if ( $api->is_paid ) : ?>
                     <?php if ( isset( $api->plans ) ) : ?>
@@ -1098,8 +1099,8 @@
                             <?php $is_multi_cycle = $first_pricing->is_multi_cycle() ?>
                             <div class="fs-plan<?php if ( ! $is_multi_cycle ) {
                                 echo ' fs-single-cycle';
-                            } ?>" data-plan-id="<?php echo $plan->id ?>">
-                                <h3 data-plan="<?php echo $plan->id ?>"><?php echo esc_html( sprintf( fs_text_x_inline( '%s Plan', 'e.g. Professional Plan', 'x-plan', $api->slug ), $plan->title ) ) ?></h3>
+                            } ?>" data-plan-id="<?php echo esc_attr($plan->id) ?>">
+                                <h3 data-plan="<?php echo esc_attr($plan->id) ?>"><?php echo esc_html( sprintf( fs_text_x_inline( '%s Plan', 'e.g. Professional Plan', 'x-plan', $api->slug ), $plan->title ) ) ?></h3>
                                 <?php $has_annual = $first_pricing->has_annual() ?>
                                 <?php $has_monthly = $first_pricing->has_monthly() ?>
                                 <div class="nav-tab-wrapper">
@@ -1121,8 +1122,8 @@
                                                     }
                                                 }
                                                 ?>
-                                                <a class="nav-tab" data-billing-cycle="<?php echo $cycle ?>"
-                                                   data-pricing="<?php echo esc_attr( json_encode( $prices ) ) ?>">
+                                                <a class="nav-tab" data-billing-cycle="<?php echo esc_attr($cycle) ?>"
+                                                data-pricing="<?php echo esc_attr( json_encode( $prices ) ) ?>">
                                                     <?php if ( $is_featured ) : ?>
                                                         <label>
                                                             &#9733; <?php fs_esc_html_echo_x_inline( 'Best', 'e.g. the best product', 'best', $api->slug ) ?>
@@ -1151,38 +1152,38 @@
                                                 _formatBillingFrequency = function (cycle) {
                                                     switch (cycle) {
                                                         case 'monthly':
-                                                            return '<?php printf( fs_text_x_inline( 'Billed %s', 'e.g. billed monthly', 'billed-x', $api->slug ), fs_text_x_inline( 'Monthly', 'as every month', 'monthly', $api->slug ) ) ?>';
+                                                            return '<?php echo esc_js( sprintf( fs_text_x_inline( 'Billed %s', 'e.g. billed monthly', 'billed-x', $api->slug ), fs_text_x_inline( 'Monthly', 'as every month', 'monthly', $api->slug ) ) ); ?>';
                                                         case 'annual':
-                                                            return '<?php printf( fs_text_x_inline( 'Billed %s', 'e.g. billed monthly', 'billed-x', $api->slug ), fs_text_x_inline( 'Annually', 'as once a year', 'annually', $api->slug ) ) ?>';
+                                                            return '<?php echo esc_js( sprintf( fs_text_x_inline( 'Billed %s', 'e.g. billed monthly', 'billed-x', $api->slug ), fs_text_x_inline( 'Annually', 'as once a year', 'annually', $api->slug ) ) ); ?>';
                                                         case 'lifetime':
-                                                            return '<?php printf( fs_text_x_inline( 'Billed %s', 'e.g. billed monthly', 'billed-x', $api->slug ), fs_text_x_inline( 'Once', 'as once a year', 'once', $api->slug ) ) ?>';
+                                                            return '<?php echo esc_js( sprintf( fs_text_x_inline( 'Billed %s', 'e.g. billed monthly', 'billed-x', $api->slug ), fs_text_x_inline( 'Once', 'as once a year', 'once', $api->slug ) ) ); ?>';
                                                     }
                                                 },
-                                                _formatLicensesTitle    = function (pricing) {
+                                                _formatLicensesTitle = function (pricing) {
                                                     switch (pricing.licenses) {
                                                         case 1:
-                                                            return '<?php fs_esc_attr_echo_inline( 'Single Site License', 'license-single-site', $api->slug ) ?>';
+                                                            return '<?php echo esc_js( fs_esc_attr_echo_inline( 'Single Site License', 'license-single-site', $api->slug ) ); ?>';
                                                         case null:
-                                                            return '<?php fs_esc_attr_echo_inline( 'Unlimited Licenses', 'license-unlimited', $api->slug ) ?>';
+                                                            return '<?php echo esc_js( fs_esc_attr_echo_inline( 'Unlimited Licenses', 'license-unlimited', $api->slug ) ); ?>';
                                                         default:
-                                                            return '<?php fs_esc_attr_echo_inline( 'Up to %s Sites', 'license-x-sites', $api->slug ) ?>'.replace('%s', pricing.licenses);
+                                                            return '<?php echo esc_js( fs_esc_attr_echo_inline( 'Up to %s Sites', 'license-x-sites', $api->slug ) ); ?>'.replace('%s', pricing.licenses);
                                                     }
                                                 },
-                                                _formatPrice            = function (pricing, cycle, multipleLicenses) {
+                                                _formatPrice = function (pricing, cycle, multipleLicenses) {
                                                     if (undef === multipleLicenses)
                                                         multipleLicenses = true;
 
                                                     var priceCycle;
                                                     switch (cycle) {
                                                         case 'monthly':
-                                                            priceCycle = ' / <?php fs_echo_x_inline( 'mo', 'as monthly period', 'mo', $api->slug ) ?>';
+                                                            priceCycle = ' / <?php echo esc_js( fs_echo_x_inline( 'mo', 'as monthly period', 'mo', $api->slug ) ); ?>';
                                                             break;
                                                         case 'lifetime':
                                                             priceCycle = '';
                                                             break;
                                                         case 'annual':
                                                         default:
-                                                            priceCycle = ' / <?php fs_echo_x_inline( 'year', 'as annual period', 'year', $api->slug ) ?>';
+                                                            priceCycle = ' / <?php echo esc_js( fs_echo_x_inline( 'year', 'as annual period', 'year', $api->slug ) ); ?>';
                                                             break;
                                                     }
 
@@ -1192,20 +1193,20 @@
 
                                                     return _formatLicensesTitle(pricing) + ' - <var class="fs-price">$' + pricing.price + priceCycle + '</var>';
                                                 },
-                                                _checkoutUrl            = function (plan, pricing, cycle) {
-                                                    return '<?php echo esc_url_raw( remove_query_arg( 'billing_cycle', add_query_arg( array( 'plugin_id' => $plan->plugin_id ), $api->checkout_link ) ) ) ?>' +
+                                                _checkoutUrl = function (plan, pricing, cycle) {
+                                                    return '<?php echo esc_url_raw( remove_query_arg( 'billing_cycle', add_query_arg( array( 'plugin_id' => $plan->plugin_id ), $api->checkout_link ) ) ); ?>' +
                                                         '&plan_id=' + plan +
                                                         '&pricing_id=' + pricing +
                                                         '&billing_cycle=' + cycle<?php if ( $plan->has_trial() ) {
                                                         echo " + '&trial=true'";
-                                                    }?>;
+                                                    } ?>;
                                                 },
-                                                _updateCtaUrl           = function (plan, pricing, cycle) {
+                                                _updateCtaUrl = function (plan, pricing, cycle) {
                                                     $('.plugin-information-pricing .fs-checkout-button, #plugin-information-footer .fs-checkout-button').attr('href', _checkoutUrl(plan, pricing, cycle));
                                                 };
 
                                             $(document).ready(function () {
-                                                var $plan = $('.plugin-information-pricing .fs-plan[data-plan-id=<?php echo $plan->id ?>]');
+                                                var $plan = $('.plugin-information-pricing .fs-plan[data-plan-id=<?php echo esc_js($plan->id); ?>]');
                                                 $plan.find('input[type=radio]').on('click', function () {
                                                     _updateCtaUrl(
                                                         $plan.attr('data-plan-id'),
@@ -1222,11 +1223,11 @@
                                                     if ($(this).hasClass('nav-tab-active'))
                                                         return;
 
-                                                    var $this        = $(this),
+                                                    var $this = $(this),
                                                         billingCycle = $this.attr('data-billing-cycle'),
-                                                        pricing      = JSON.parse($this.attr('data-pricing')),
-                                                        $pricesList  = $this.parents('.fs-plan').find('.fs-pricing-body .fs-licenses'),
-                                                        html         = '';
+                                                        pricing = JSON.parse($this.attr('data-pricing')),
+                                                        $pricesList = $this.parents('.fs-plan').find('.fs-pricing-body .fs-licenses'),
+                                                        html = '';
 
                                                     // Un-select previously selected tab.
                                                     $plan.find('.nav-tab').removeClass('nav-tab-active');
@@ -1236,10 +1237,10 @@
 
                                                     // Render licenses prices.
                                                     if (1 == pricing.length) {
-                                                        html = '<li><label><?php echo fs_esc_attr_x_inline( 'Price', 'noun', 'price', $api->slug ) ?>: ' + _formatPrice(pricing[0], billingCycle, false) + '</label></li>';
+                                                        html = '<li><label><?php echo esc_js( fs_esc_attr_x_inline( 'Price', 'noun', 'price', $api->slug ) ); ?>: ' + _formatPrice(pricing[0], billingCycle, false) + '</label></li>';
                                                     } else {
                                                         for (var i = 0; i < pricing.length; i++) {
-                                                            html += '<li><label><input name="pricing-<?php echo $plan->id ?>" type="radio" value="' + pricing[i].id + '">' + _formatPrice(pricing[i], billingCycle) + '</label></li>';
+                                                            html += '<li><label><input name="pricing-<?php echo esc_attr($plan->id); ?>" type="radio" value="' + pricing[i].id + '">' + _formatPrice(pricing[i], billingCycle) + '</label></li>';
                                                         }
                                                     }
                                                     $pricesList.html(html);
@@ -1247,8 +1248,7 @@
                                                     if (1 < pricing.length) {
                                                         // Select first license option.
                                                         $pricesList.find('li:first input').click();
-                                                    }
-                                                    else {
+                                                    } else {
                                                         _updateCtaUrl(
                                                             $plan.attr('data-plan-id'),
                                                             pricing[0].id,
@@ -1276,141 +1276,123 @@
                                             });
                                         }(jQuery));
                                     </script>
+
                                 </div>
                                 <div class="fs-pricing-body">
                                     <span class="fs-billing-frequency"></span>
-                                    <?php $annual_discount = ( $has_annual && $has_monthly ) ? $plan->pricing[0]->annual_discount_percentage() : 0 ?>
-                                    <?php if ( $annual_discount > 0 ) : ?>
-                                        <span
-                                            class="fs-annual-discount"><?php printf(
+                                    <?php 
+                                    $annual_discount = ( $has_annual && $has_monthly ) ? $plan->pricing[0]->annual_discount_percentage() : 0;
+                                    if ( $annual_discount > 0 ) : ?>
+                                        <span class="fs-annual-discount"><?php echo esc_html( sprintf(
                                             /* translators: %s: Discount (e.g. discount of $5 or 10%) */
-                                                fs_esc_html_inline( 'Save %s', 'save-x', $api->slug ), $annual_discount . '%' ) ?></span>
-                                    <?php endif ?>
+                                            fs_esc_html_inline( 'Save %s', 'save-x', $api->slug ),
+                                            esc_html( $annual_discount ) . '%'
+                                        )); ?></span>
+                                    <?php endif; ?>
                                     <ul class="fs-licenses">
                                     </ul>
-                                    <?php echo $this->get_actions_dropdown( $api, $plan ) ?>
+                                    <?php echo wp_kses_post( $this->get_actions_dropdown( $api, $plan ) ); ?>
                                     <div style="clear:both"></div>
-                                    <?php if ( $plan->has_trial() ) : ?>
-                                        <?php $trial_period = $this->get_trial_period( $plan ) ?>
+                                    <?php if ( $plan->has_trial() ) : 
+                                        $trial_period = $this->get_trial_period( $plan ); ?>
                                         <ul class="fs-trial-terms">
                                             <li>
-                                                <i class="dashicons dashicons-yes"></i><?php echo esc_html( sprintf( fs_text_inline( 'No commitment for %s - cancel anytime', 'no-commitment-x', $api->slug ), $trial_period ) ) ?>
+                                                <i class="dashicons dashicons-yes"></i><?php echo esc_html( sprintf( fs_text_inline( 'No commitment for %s - cancel anytime', 'no-commitment-x', $api->slug ), esc_html( $trial_period ) ) ); ?>
                                             </li>
                                             <li>
-                                                <i class="dashicons dashicons-yes"></i><?php printf( esc_html( fs_text_inline( 'After your free %s, pay as little as %s', 'after-x-pay-as-little-y', $api->slug ) ), $trial_period, '<var class="fs-price">' . $this->get_price_tag( $plan, $plan->pricing[0] ) . '</var>' ) ?>
+                                                <i class="dashicons dashicons-yes"></i><?php echo sprintf(
+                                                    esc_html( fs_text_inline( 'After your free %s, pay as little as %s', 'after-x-pay-as-little-y', $api->slug ) ),
+                                                    esc_html( $trial_period ),
+                                                    '<var class="fs-price">' . wp_kses_post( $this->get_price_tag( $plan, $plan->pricing[0] ) ) . '</var>'
+                                                ); ?>
                                             </li>
                                         </ul>
-                                    <?php endif ?>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         <?php endforeach ?>
-                      </div>
+                    </div>
                     <?php endif ?>
                 <?php endif ?>
                 <div>
-                    <h3><?php fs_echo_inline( 'Details', 'details', $api->slug ) ?></h3>
+                    <h3><?php fs_echo_inline('Details', 'details', $api->slug) ?></h3>
                     <ul>
-                        <?php if ( ! empty( $api->version ) ) { ?>
+                        <?php if (!empty($api->version)) { ?>
                             <li>
-                                <strong><?php fs_esc_html_echo_x_inline( 'Version', 'product version', 'version', $api->slug ); ?>
-                                    :</strong> <?php echo $api->version; ?></li>
-                            <?php
-                        }
-                            if ( ! empty( $api->author ) ) {
-                                ?>
-                                <li>
-                                    <strong><?php fs_echo_x_inline( 'Author', 'as the plugin author', 'author', $api->slug ); ?>
-                                        :</strong> <?php echo links_add_target( $api->author, '_blank' ); ?>
-                                </li>
-                                <?php
-                            }
-                            if ( ! empty( $api->last_updated ) ) {
-                                ?>
-                                <li><strong><?php fs_echo_inline( 'Last Updated', 'last-updated', $api->slug ); ?>
-                                        :</strong> <span
-                                        title="<?php echo $api->last_updated; ?>">
-				<?php echo esc_html( sprintf(
-                /* translators: %s: time period (e.g. "2 hours" ago) */
-                    fs_text_x_inline( '%s ago', 'x-ago', $api->slug ),
-                    human_time_diff( strtotime( $api->last_updated ) )
-                ) ) ?>
-			</span></li>
-                                <?php
-                            }
-                            if ( ! empty( $api->requires ) ) {
-                                ?>
-                                <li>
-                                    <strong><?php fs_esc_html_echo_inline( 'Requires WordPress Version', 'requires-wordpress-version', $api->slug ) ?>
-                                        :</strong> <?php echo esc_html( sprintf(
-                                            /* translators: %s: Version number. */
-                                            fs_text_inline( '%s or higher', 'x-or-higher', $api->slug ), $api->requires )
-                                    ) ?>
-                                </li>
-                                <?php
-                            }
-                            if ( ! empty( $api->tested ) ) {
-                                ?>
-                                <li>
-                                    <strong><?php fs_esc_html_echo_inline( 'Compatible up to', 'compatible-up-to', $api->slug ); ?>
-                                        :</strong> <?php echo $api->tested; ?>
-                                </li>
-                                <?php
-                            }
-                            if ( ! empty( $api->requires_php ) ) {
-                                ?>
-                                <li>
-                                    <strong><?php fs_esc_html_echo_inline( 'Requires PHP Version', 'requires-php-version', $api->slug ); ?>:</strong>
-                                    <?php
-                                        echo esc_html( sprintf(
-                                            /* translators: %s: Version number. */
-                                            fs_text_inline( '%s or higher', 'x-or-higher', $api->slug ), $api->requires_php )
-                                        );
-                                    ?>
-                                </li>
-                                <?php
-                            }
-                            if ( ! empty( $api->downloaded ) ) {
-                                ?>
-                                <li>
-                                    <strong><?php fs_esc_html_echo_inline( 'Downloaded', 'downloaded', $api->slug ) ?>
-                                        :</strong> <?php echo esc_html( sprintf(
-                                        ( ( 1 == $api->downloaded ) ?
-                                            /* translators: %s: 1 or One (Number of times downloaded) */
-                                            fs_text_inline( '%s time', 'x-time', $api->slug ) :
-                                            /* translators: %s: Number of times downloaded */
-                                            fs_text_inline( '%s times', 'x-times', $api->slug )
-                                        ),
-                                        number_format_i18n( $api->downloaded )
-                                    ) ); ?>
-                                </li>
-                                <?php
-                            }
-                            if ( ! empty( $api->slug ) && true == $api->is_wp_org_compliant ) {
-                                ?>
-                                <li><a target="_blank"
-                                       rel="noopener noreferrer"
-                                       href="https://wordpress.org/plugins/<?php echo $api->slug; ?>/"><?php fs_esc_html_echo_inline( 'WordPress.org Plugin Page', 'wp-org-plugin-page', $api->slug ) ?>
-                                        &#187;</a>
-                                </li>
-                                <?php
-                            }
-                            if ( ! empty( $api->homepage ) ) {
-                                ?>
-                                <li><a target="_blank"
-                                       rel="noopener noreferrer"
-                                       href="<?php echo esc_url( $api->homepage ); ?>"><?php fs_esc_html_echo_inline( 'Plugin Homepage', 'plugin-homepage', $api->slug ) ?>
-                                        &#187;</a>
-                                </li>
-                                <?php
-                            }
-                            if ( ! empty( $api->donate_link ) && empty( $api->contributors ) ) {
-                                ?>
-                                <li><a target="_blank"
-                                       rel="noopener noreferrer"
-                                       href="<?php echo esc_url( $api->donate_link ); ?>"><?php fs_esc_html_echo_inline( 'Donate to this plugin', 'donate-to-plugin', $api->slug ) ?>
-                                        &#187;</a>
-                                </li>
-                            <?php } ?>
+                                <strong><?php fs_esc_html_echo_x_inline('Version', 'product version', 'version', $api->slug); ?>:</strong> <?php echo esc_html($api->version); ?>
+                            </li>
+                        <?php }
+                        if (!empty($api->author)) { ?>
+                            <li>
+                                <strong><?php fs_echo_x_inline('Author', 'as the plugin author', 'author', $api->slug); ?>:</strong> <?php echo wp_kses_post(links_add_target($api->author, '_blank')); ?>
+                            </li>
+                        <?php }
+                        if (!empty($api->last_updated)) { ?>
+                            <li>
+                                <strong><?php fs_echo_inline('Last Updated', 'last-updated', $api->slug); ?>:</strong>
+                                <span title="<?php echo esc_attr($api->last_updated); ?>">
+                                    <?php echo esc_html(sprintf(
+                                        /* translators: %s: time period (e.g. "2 hours" ago) */
+                                        fs_text_x_inline('%s ago', 'x-ago', $api->slug),
+                                        human_time_diff(strtotime($api->last_updated))
+                                    )); ?>
+                                </span>
+                            </li>
+                        <?php }
+                        if (!empty($api->requires)) { ?>
+                            <li>
+                                <strong><?php fs_esc_html_echo_inline('Requires WordPress Version', 'requires-wordpress-version', $api->slug) ?>:</strong> <?php echo esc_html(sprintf(
+                                    /* translators: %s: Version number. */
+                                    fs_text_inline('%s or higher', 'x-or-higher', $api->slug), $api->requires
+                                )); ?>
+                            </li>
+                        <?php }
+                        if (!empty($api->tested)) { ?>
+                            <li>
+                                <strong><?php fs_esc_html_echo_inline('Compatible up to', 'compatible-up-to', $api->slug); ?>:</strong> <?php echo esc_html($api->tested); ?>
+                            </li>
+                        <?php }
+                        if (!empty($api->requires_php)) { ?>
+                            <li>
+                                <strong><?php fs_esc_html_echo_inline('Requires PHP Version', 'requires-php-version', $api->slug); ?>:</strong> <?php echo esc_html(sprintf(
+                                    /* translators: %s: Version number. */
+                                    fs_text_inline('%s or higher', 'x-or-higher', $api->slug), $api->requires_php
+                                )); ?>
+                            </li>
+                        <?php }
+                        if (!empty($api->downloaded)) { ?>
+                            <li>
+                                <strong><?php fs_esc_html_echo_inline('Downloaded', 'downloaded', $api->slug) ?>:</strong> <?php echo esc_html(sprintf(
+                                    (1 == $api->downloaded) ?
+                                        /* translators: %s: 1 or One (Number of times downloaded) */
+                                        fs_text_inline('%s time', 'x-time', $api->slug) :
+                                        /* translators: %s: Number of times downloaded */
+                                        fs_text_inline('%s times', 'x-times', $api->slug),
+                                    number_format_i18n($api->downloaded)
+                                )); ?>
+                            </li>
+                        <?php }
+                        if (!empty($api->slug) && true == $api->is_wp_org_compliant) { ?>
+                            <li>
+                                <a target="_blank" rel="noopener noreferrer" href="https://wordpress.org/plugins/<?php echo esc_attr($api->slug); ?>/">
+                                    <?php fs_esc_html_echo_inline('WordPress.org Plugin Page', 'wp-org-plugin-page', $api->slug) ?> &#187;
+                                </a>
+                            </li>
+                        <?php }
+                        if (!empty($api->homepage)) { ?>
+                            <li>
+                                <a target="_blank" rel="noopener noreferrer" href="<?php echo esc_url($api->homepage); ?>">
+                                    <?php fs_esc_html_echo_inline('Plugin Homepage', 'plugin-homepage', $api->slug) ?> &#187;
+                                </a>
+                            </li>
+                        <?php }
+                        if (!empty($api->donate_link) && empty($api->contributors)) { ?>
+                            <li>
+                                <a target="_blank" rel="noopener noreferrer" href="<?php echo esc_url($api->donate_link); ?>">
+                                    <?php fs_esc_html_echo_inline('Donate to this plugin', 'donate-to-plugin', $api->slug) ?> &#187;
+                                </a>
+                            </li>
+                        <?php } ?>
                     </ul>
                 </div>
                 <?php if ( ! empty( $api->rating ) ) { ?>
@@ -1435,66 +1417,68 @@
                     <?php
                 }
 
-                    if ( ! empty( $api->ratings ) && array_sum( (array) $api->ratings ) > 0 ) {
-                        foreach ( $api->ratings as $key => $ratecount ) {
-                            // Avoid div-by-zero.
-                            $_rating     = $api->num_ratings ? ( $ratecount / $api->num_ratings ) : 0;
-                            $stars_label = sprintf(
-                                ( ( 1 == $key ) ?
-                                    /* translators: %s: 1 or One */
-                                    fs_text_inline( '%s star', 'x-star', $api->slug ) :
-                                    /* translators: %s: Number larger than 1 */
-                                    fs_text_inline( '%s stars', 'x-stars', $api->slug )
-                                ),
-                                number_format_i18n( $key )
-                            );
-                            ?>
-                            <div class="counter-container">
-                              <span class="counter-label"><a
-                                href="https://wordpress.org/support/view/plugin-reviews/<?php echo $api->slug; ?>?filter=<?php echo $key; ?>"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                title="<?php echo esc_attr( sprintf(
-                                  /* translators: %s: # of stars (e.g. 5 stars) */
-                                  fs_text_inline( 'Click to see reviews that provided a rating of %s', 'click-to-reviews', $api->slug ),
-                                  $stars_label
-                                ) ) ?>"><?php echo $stars_label ?></a></span>
-                                <span class="counter-back">
-                                <span class="counter-bar" style="width: <?php echo absint(92 * $_rating); ?>px;"></span>
-                              </span>
-                              <span class="counter-count"><?php echo number_format_i18n( $ratecount ); ?></span>
-                            </div>
-                            <?php
-                        }
-                    }
-                    if ( ! empty( $api->contributors ) ) {
+                if ( ! empty( $api->ratings ) && array_sum( (array) $api->ratings ) > 0 ) {
+                    foreach ( $api->ratings as $key => $ratecount ) {
+                        // Avoid div-by-zero.
+                        $_rating     = $api->num_ratings ? ( $ratecount / $api->num_ratings ) : 0;
+                        $stars_label = sprintf(
+                            ( ( 1 == $key ) ?
+                                /* translators: %s: 1 or One */
+                                fs_text_inline( '%s star', 'x-star', $api->slug ) :
+                                /* translators: %s: Number larger than 1 */
+                                fs_text_inline( '%s stars', 'x-stars', $api->slug )
+                            ),
+                            number_format_i18n( $key )
+                        );
                         ?>
-                        <h3><?php fs_echo_inline( 'Contributors', 'contributors', $api->slug ); ?></h3>
-                        <ul class="contributors">
-                            <?php
-                                foreach ( (array) $api->contributors as $contrib_username => $contrib_profile ) {
-                                    if ( empty( $contrib_username ) && empty( $contrib_profile ) ) {
-                                        continue;
-                                    }
-                                    if ( empty( $contrib_username ) ) {
-                                        $contrib_username = preg_replace( '/^.+\/(.+)\/?$/', '\1', $contrib_profile );
-                                    }
-                                    $contrib_username = sanitize_user( $contrib_username );
-                                    if ( empty( $contrib_profile ) ) {
-                                        echo "<li><img src='https://wordpress.org/grav-redirect.php?user={$contrib_username}&amp;s=36' width='18' height='18' />{$contrib_username}</li>";
-                                    } else {
-                                        echo "<li><a href='{$contrib_profile}' target='_blank' rel='noopener noreferrer'><img src='https://wordpress.org/grav-redirect.php?user={$contrib_username}&amp;s=36' width='18' height='18' />{$contrib_username}</a></li>";
-                                    }
+                        <div class="counter-container">
+                            <span class="counter-label"><a
+                            href="https://wordpress.org/support/view/plugin-reviews/<?php echo esc_attr( $api->slug ); ?>?filter=<?php echo esc_attr( $key ); ?>"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title="<?php echo esc_attr( sprintf(
+                                /* translators: %s: # of stars (e.g. 5 stars) */
+                                fs_text_inline( 'Click to see reviews that provided a rating of %s', 'click-to-reviews', $api->slug ),
+                                $stars_label
+                            ) ) ?>"><?php echo esc_html( $stars_label ); ?></a></span>
+                            <span class="counter-back">
+                            <span class="counter-bar" style="width: <?php echo absint( 92 * $_rating ); ?>px;"></span>
+                            </span>
+                            <span class="counter-count"><?php echo esc_html( number_format_i18n( $ratecount ) ); ?></span>
+                        </div>
+                        <?php
+                    }
+                }
+                if ( ! empty( $api->contributors ) ) {
+                    ?>
+                    <h3><?php fs_echo_inline( 'Contributors', 'contributors', $api->slug ); ?></h3>
+                    <ul class="contributors">
+                        <?php
+                            foreach ( (array) $api->contributors as $contrib_username => $contrib_profile ) {
+                                if ( empty( $contrib_username ) && empty( $contrib_profile ) ) {
+                                    continue;
                                 }
-                            ?>
-                        </ul>
-                        <?php if ( ! empty( $api->donate_link ) ) { ?>
-                            <a target="_blank"
-                               rel="noopener noreferrer"
-                               href="<?php echo esc_url( $api->donate_link ); ?>"><?php fs_echo_inline( 'Donate to this plugin', 'donate-to-plugin', $api->slug ) ?>
-                                &#187;</a>
-                        <?php } ?>
+                                if ( empty( $contrib_username ) ) {
+                                    $contrib_username = preg_replace( '/^.+\/(.+)\/?$/', '\1', $contrib_profile );
+                                }
+                                $contrib_username = sanitize_user( $contrib_username );
+                                $contrib_profile  = esc_url( $contrib_profile );
+                                $contrib_img_url  = "https://wordpress.org/grav-redirect.php?user={$contrib_username}&amp;s=36";
+                                if ( empty( $contrib_profile ) ) {
+                                    echo "<li><img src='" . esc_url( $contrib_img_url ) . "' width='18' height='18' />" . esc_html( $contrib_username ) . "</li>";
+                                } else {
+                                    echo "<li><a href='" . esc_url( $contrib_profile ) . "' target='_blank' rel='noopener noreferrer'><img src='" . esc_url( $contrib_img_url ) . "' width='18' height='18' />" . esc_html( $contrib_username ) . "</a></li>";
+                                }
+                            }
+                        ?>
+                    </ul>
+                    <?php if ( ! empty( $api->donate_link ) ) { ?>
+                        <a target="_blank"
+                           rel="noopener noreferrer"
+                           href="<?php echo esc_url( $api->donate_link ); ?>"><?php fs_echo_inline( 'Donate to this plugin', 'donate-to-plugin', $api->slug ); ?>
+                           &#187;</a>
                     <?php } ?>
+                <?php } ?>                
             </div>
             <div id="section-holder" class="wrap">
             <?php
@@ -1510,7 +1494,7 @@
             $tested_wp      = ( empty( $api->tested ) || version_compare( $wp_version, $api->tested, '<=' ) );
 
             if ( ! $compatible_php ) {
-                echo '<div class="notice notice-error notice-alt"><p><strong>' . fs_text_inline( 'Error', 'error', $api->slug ) . ':</strong> ' . fs_text_inline( 'This plugin requires a newer version of PHP.', 'newer-php-required-error', $api->slug );
+                echo '<div class="notice notice-error notice-alt"><p><strong>' . esc_html( fs_text_inline( 'Error', 'error', $api->slug ) ) . ':</strong> ' . esc_html( fs_text_inline( 'This plugin requires a newer version of PHP.', 'newer-php-required-error', $api->slug ) ) . '</p></div>';
 
                 if ( current_user_can( 'update_php' ) ) {
                     $wp_get_update_php_url = function_exists( 'wp_get_update_php_url' ) ?
@@ -1519,7 +1503,7 @@
 
                     printf(
                     /* translators: %s: URL to Update PHP page. */
-                        ' ' . fs_text_inline( '<a href="%s" target="_blank">Click here to learn more about updating PHP</a>.', 'php-update-learn-more-link', $api->slug ),
+                        ' ' . esc_html( fs_text_inline( '<a href="%s" target="_blank">Click here to learn more about updating PHP</a>.', 'php-update-learn-more-link', $api->slug ) ),
                         esc_url( $wp_get_update_php_url )
                     );
 
@@ -1533,9 +1517,9 @@
             }
 
             if ( ! $tested_wp ) {
-                echo '<div class="notice notice-warning"><p>' . '<strong>' . fs_text_inline( 'Warning', 'warning', $api->slug ) . ':</strong> ' . fs_text_inline( 'This plugin has not been tested with your current version of WordPress.', 'not-tested-warning', $api->slug ) . '</p></div>';
+                echo '<div class="notice notice-warning"><p>' . '<strong>' . esc_html( fs_text_inline( 'Warning', 'warning', $api->slug ) ) . ':</strong> ' . esc_html( fs_text_inline( 'This plugin has not been tested with your current version of WordPress.', 'not-tested-warning', $api->slug ) ) . '</p></div>';
             } else if ( ! $compatible_wp ) {
-                echo '<div class="notice notice-warning"><p>' . '<strong>' . fs_text_inline( 'Warning', 'warning', $api->slug ) . ':</strong> ' . fs_text_inline( 'This plugin has not been marked as compatible with your version of WordPress.', 'not-compatible-warning', $api->slug ) . '</p></div>';
+                echo '<div class="notice notice-warning"><p>' . '<strong>' . esc_html( fs_text_inline( 'Warning', 'warning', $api->slug ) ) . ':</strong> ' . esc_html( fs_text_inline( 'This plugin has not been marked as compatible with your version of WordPress.', 'not-compatible-warning', $api->slug ) ) . '</p></div>';
             }
 
             foreach ( (array) $api->sections as $section_name => $content ) {
@@ -1559,41 +1543,40 @@
                     );
                     fs_require_template( 'admin-notice.php', $missing_notice );
                 }
-                echo "\t<div id='section-{$san_section}' class='section' style='display: {$display};'>\n";
-                echo $content;
+                echo "\t<div id='section-" . esc_attr( $san_section ) . "' class='section' style='display: " . esc_attr( $display ) . ";'>\n";
+                echo wp_kses_post( $content );
                 echo "\t</div>\n";
             }
             echo "</div>\n";
             echo "</div>\n";
             echo "</div>\n"; // #plugin-information-scrollable
-            echo "<div id='$tab-footer'>\n";
+            echo esc_html("<div id='$tab-footer'>\n");
 
             if (
                 ! empty( $api->download_link ) &&
                 ! empty( $this->status ) &&
                 in_array( $this->status['status'], array( 'newer_installed', 'latest_installed' ) )
             ) {
-                if ( 'newer_installed' === $this->status['status'] ) {
-                    echo $this->get_cta(
+                if ( 'newer_installed' === esc_html( $this->status['status'] ) ) {
+                    echo wp_kses_post( $this->get_cta(
                         ( $this->status['is_premium_installed'] ?
-                            esc_html( sprintf( fs_text_inline( 'Newer Version (%s) Installed', 'newer-installed', $api->slug ), $this->status['version'] ) ) :
-                            esc_html( sprintf( fs_text_inline( 'Newer Free Version (%s) Installed', 'newer-free-installed', $api->slug ), $this->status['version'] ) ) ),
+                            esc_html( sprintf( fs_text_inline( 'Newer Version (%s) Installed', 'newer-installed', esc_html( $api->slug ) ), esc_html( $this->status['version'] ) ) ) :
+                            esc_html( sprintf( fs_text_inline( 'Newer Free Version (%s) Installed', 'newer-free-installed', esc_html( $api->slug ) ), esc_html( $this->status['version'] ) ) ) ),
                         false,
                         true
-                    );
+                    ) );
                 } else {
-                    echo $this->get_cta(
+                    echo wp_kses_post( $this->get_cta(
                         ( $this->status['is_premium_installed'] ?
-                            fs_esc_html_inline( 'Latest Version Installed', 'latest-installed', $api->slug ) :
-                            fs_esc_html_inline( 'Latest Free Version Installed', 'latest-free-installed', $api->slug ) ),
+                            esc_html( fs_esc_html_inline( 'Latest Version Installed', 'latest-installed', esc_html( $api->slug ) ) ) :
+                            esc_html( fs_esc_html_inline( 'Latest Free Version Installed', 'latest-free-installed', esc_html( $api->slug ) ) ) ),
                         false,
                         true
-                    );
+                    ) );
                 }
             }
 
-            echo $this->get_actions_dropdown( $api, null );
-
+            echo wp_kses_post( $this->get_actions_dropdown( $api, null ) );
             echo "</div>\n";
             ?>
             <script type="text/javascript">

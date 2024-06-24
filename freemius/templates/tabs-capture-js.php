@@ -43,13 +43,13 @@
 					aboveTabsHtml = settingHtml.substr(0, tabsPosition);
 
 					var tabsHtml = $('.wrap .nav-tab-wrapper').clone().wrap('<div>').parent().html(),
-						ajaxUrl  = <?php echo Freemius::ajax_url() ?>;
+						ajaxUrl  = '<?php echo esc_js( Freemius::ajax_url() ); ?>';
 
 					$.ajax({
-							url      : ajaxUrl + (ajaxUrl.includes('?') ? '&' : '?') + $.param({
-							action   : '<?php echo $fs->get_ajax_action( 'store_tabs' ) ?>',
-							security : '<?php echo $fs->get_ajax_security( 'store_tabs' ) ?>',
-							module_id: '<?php echo $fs->get_id() ?>'
+						url      : ajaxUrl + (ajaxUrl.includes('?') ? '&' : '?') + $.param({
+							action   : '<?php echo esc_js( $fs->get_ajax_action( 'store_tabs' ) ); ?>',
+							security : '<?php echo esc_js( $fs->get_ajax_security( 'store_tabs' ) ); ?>',
+							module_id: '<?php echo esc_js( $fs->get_id() ); ?>'
 						}),
 						method     : 'POST',
 						data       : aboveTabsHtml + "\n" + tabsHtml + '</div>',

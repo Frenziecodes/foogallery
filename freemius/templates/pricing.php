@@ -120,7 +120,7 @@
 ?>
 	<div id="fs_pricing" class="wrap fs-section fs-full-size-wrapper">
         <?php if ( ! $use_external_pricing ) : ?>
-        <div id="fs_pricing_wrapper" data-public-url="<?php echo trailingslashit( dirname( $pricing_js_url ) ) ?>"></div>
+		<div id="fs_pricing_wrapper" data-public-url="<?php echo esc_url( trailingslashit( dirname( $pricing_js_url ) ) ); ?>"></div>
         <?php
         $pricing_config = array_merge( array(
             'contact_url'            => $fs->contact_url(),
@@ -159,10 +159,10 @@
 					var
 					// Keep track of the i-frame height.
 					frame_height = 800,
-					base_url     = '<?php echo WP_FS__ADDRESS ?>',
+					base_url     = '<?php echo esc_url( WP_FS__ADDRESS ); ?>',
 					// Pass the parent page URL into the i-frame in a meaningful way (this URL could be
 					// passed via query string or hard coded into the child page, it depends on your needs).
-					src          = base_url + '/pricing/?<?php echo http_build_query( $query_params ) ?>#' + encodeURIComponent(document.location.href),
+					src          = base_url + '/pricing/?<?php echo esc_attr( http_build_query( $query_params ) ); ?>#' + encodeURIComponent(document.location.href),
 
 					// Append the I-frame into the DOM.
 					frame = $('<i' + 'frame " src="' + src + '" width="100%" height="' + frame_height + 'px" scrolling="no" frameborder="0" style="background: transparent; width: 1px; min-width: 100%;"><\/i' + 'frame>')

@@ -32,23 +32,23 @@
 
     $action = 'activate_license';
 ?>
-<form action="<?php echo $fs->_get_admin_page_url( 'account' ) ?>" method="POST">
-    <input type="hidden" name="fs_action" value="<?php echo $action ?>">
-    <?php wp_nonce_field( trim("{$action}:{$blog_id}:{$install_id}", ':') ) ?>
-    <input type="hidden" name="install_id" value="<?php echo $install_id ?>">
-    <input type="hidden" name="blog_id" value="<?php echo $blog_id ?>">
-    <input type="hidden" name="license_id" value="<?php echo $available_license->id ?>">
-    <input type="submit" class="fs-activate-license button<?php echo ! empty( $VARS['class'] ) ? ' ' . $VARS['class'] : '' ?>"
+<form action="<?php echo esc_url( $fs->_get_admin_page_url( 'account' ) ); ?>" method="POST">
+    <input type="hidden" name="fs_action" value="<?php echo esc_attr( $action ); ?>">
+    <?php wp_nonce_field( trim( "{$action}:{$blog_id}:{$install_id}", ':' ) ); ?>
+    <input type="hidden" name="install_id" value="<?php echo esc_attr( $install_id ); ?>">
+    <input type="hidden" name="blog_id" value="<?php echo esc_attr( $blog_id ); ?>">
+    <input type="hidden" name="license_id" value="<?php echo esc_attr( $available_license->id ); ?>">
+    <input type="submit" class="fs-activate-license button<?php echo ! empty( $VARS['class'] ) ? ' ' . esc_attr( $VARS['class'] ) : ''; ?>"
            value="<?php echo esc_attr( sprintf(
-               $activate_plan_text . '%s',
-               $premium_plan->title,
+               esc_html( $activate_plan_text ) . '%s',
+               esc_html( $premium_plan->title ),
                ( $VARS['is_localhost'] && $available_license->is_free_localhost ) ?
-                   ' [' . fs_text_inline( 'Localhost', 'localhost', $slug ) . ']' :
+                   ' [' . esc_html( fs_text_inline( 'Localhost', 'localhost', $slug ) ) . ']' :
                    ( $available_license->is_single_site() ?
                        '' :
                        ' [' . ( 1 < $available_license->left() ?
-                           sprintf( fs_text_x_inline( '%s left', 'as 5 licenses left', 'x-left', $slug ), $available_license->left() ) :
-                           strtolower( fs_text_inline( 'Last license', 'last-license', $slug ) ) ) . ']'
+                           sprintf( esc_html( fs_text_x_inline( '%s left', 'as 5 licenses left', 'x-left', $slug ) ), esc_html( $available_license->left() ) ) :
+                           strtolower( esc_html( fs_text_inline( 'Last license', 'last-license', $slug ) ) ) ) . ']'
                    )
-           ) ) ?> ">
+           ) ); ?>">
 </form>

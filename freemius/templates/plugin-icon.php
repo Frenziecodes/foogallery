@@ -18,5 +18,5 @@
     $size = isset( $VARS['size'] ) ? $VARS['size'] : 80;
 ?>
 <div class="fs-plugin-icon">
-	<img src="<?php echo $fs->get_local_icon_url() ?>" width="<?php echo $size ?>" height="<?php echo $size ?>" />
+	<img src="<?php echo esc_url( $fs->get_local_icon_url() ); ?>" width="<?php echo esc_attr( $size ); ?>" height="<?php echo esc_attr( $size ); ?>" />
 </div>

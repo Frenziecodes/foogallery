@@ -39,9 +39,20 @@
 				<td><label><span><?php fs_esc_html_echo_inline( 'Tax / VAT ID', 'tax-vat-id', $slug ) ?>:</span> <input id="tax_id" value="<?php echo esc_attr( $billing->tax_id ) ?>" placeholder="<?php fs_esc_attr_echo_inline( 'Tax / VAT ID', 'tax-vat-id', $slug ) ?>"></label></td>
 			</tr>
 			<tr>
-				<td><label><span><?php printf( fs_esc_html_inline( 'Address Line %d', 'address-line-n', $slug ), 1 ) ?>:</span> <input id="address_street" value="<?php echo esc_attr( $billing->address_street ) ?>" placeholder="<?php printf( fs_esc_attr_inline( 'Address Line %d', 'address-line-n', $slug ), 1 ) ?>"></label></td>
-				<td><label><span><?php printf( fs_esc_html_inline( 'Address Line %d', 'address-line-n', $slug ), 2 ) ?>:</span> <input id="address_apt" value="<?php echo esc_attr( $billing->address_apt ) ?>" placeholder="<?php printf( fs_esc_attr_inline( 'Address Line %d', 'address-line-n', $slug ), 2 ) ?>"></label></td>
+				<td>
+					<label>
+						<span><?php printf( esc_html( fs_esc_html_inline( 'Address Line %d', 'address-line-n', $slug ) ), 1 ); ?>:</span> 
+						<input id="address_street" value="<?php echo esc_attr( $billing->address_street ); ?>" placeholder="<?php printf( esc_attr( fs_esc_attr_inline( 'Address Line %d', 'address-line-n', $slug ) ), 1 ); ?>">
+					</label>
+				</td>
+				<td>
+					<label>
+						<span><?php printf( esc_html( fs_esc_html_inline( 'Address Line %d', 'address-line-n', $slug ) ), 2 ); ?>:</span> 
+						<input id="address_apt" value="<?php echo esc_attr( $billing->address_apt ); ?>" placeholder="<?php printf( esc_attr( fs_esc_attr_inline( 'Address Line %d', 'address-line-n', $slug ) ), 2 ); ?>">
+					</label>
+				</td>
 			</tr>
+
 			<tr>
 				<td><label><span><?php fs_esc_html_echo_inline( 'City', 'city', $slug ) ?> / <?php fs_esc_html_echo_inline( 'Town', 'town', $slug ) ?>:</span> <input id="address_city" value="<?php echo esc_attr( $billing->address_city ) ?>" placeholder="<?php fs_esc_attr_echo_inline( 'City', 'city', $slug ) ?> / <?php fs_esc_attr_echo_inline( 'Town', 'town', $slug ) ?>"></label></td>
 				<td><label><span><?php fs_esc_html_echo_inline( 'ZIP / Postal Code', 'zip-postal-code', $slug ) ?>:</span> <input id="address_zip" value="<?php echo esc_attr( $billing->address_zip ) ?>" placeholder="<?php fs_esc_attr_echo_inline( 'ZIP / Postal Code', 'zip-postal-code', $slug ) ?>"></label></td>
@@ -377,7 +388,7 @@
 				});
 
 				$.ajax({
-					url    : <?php echo Freemius::ajax_url() ?>,
+					url    : <?php echo esc_url( Freemius::ajax_url() ) ?>,
 					method : 'POST',
 					data   : {
 						action   : <?php echo wp_json_encode( $fs->get_ajax_action( 'update_billing' ) ) ?>,

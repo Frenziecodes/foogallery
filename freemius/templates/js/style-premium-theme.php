@@ -23,12 +23,12 @@
 <script type="text/javascript">
 	(function ($) {
 		// Select the premium theme version.
-		var $theme             = $('#<?php echo $slug ?>-premium-name').parents('.theme'),
+		var $theme             = $('#<?php echo esc_js( $slug ); ?>-premium-name').parents('.theme'),
 		    addPremiumMetadata = function (firstCall) {
 			    if (!firstCall) {
 				    // Seems like the original theme element is removed from the DOM,
 				    // so we need to reselect the updated one.
-				    $theme = $('#<?php echo $slug ?>-premium-name').parents('.theme');
+					var $theme = $('#<?php echo esc_js( $slug ); ?>-premium-name').parents('.theme');
 			    }
 
 			    if (0 === $theme.find('.fs-premium-theme-badge-container').length) {

@@ -66,8 +66,9 @@
 			<th></th>
 			<?php foreach ( $plans as $plan ) : ?>
 				<th>
-					<?php echo $plan->title ?>
-					<span class="fs-price"><?php
+					<?php echo esc_html( $plan->title ); ?>
+					<span class="fs-price">
+						<?php
 							if ( empty( $plan->pricing ) ) {
 								fs_esc_html_echo_inline( 'Free', 'free', $plugin->slug );
 							} else {
@@ -77,19 +78,21 @@
 									 */
 									if ( 1 == $pricing->licenses ) {
 										if ( $pricing->has_annual() ) {
-											echo "\${$pricing->annual_price} / " . fs_esc_html_x_inline( 'year', 'as annual period', 'year', $plugin->slug );
+											echo esc_html( "\${$pricing->annual_price} / " . fs_esc_html_x_inline( 'year', 'as annual period', 'year', $plugin->slug ) );
 										} else if ( $pricing->has_monthly() ) {
-											echo "\${$pricing->monthly_price} / " . fs_esc_html_x_inline( 'mo', 'as monthly period', 'mo', $plugin->slug );
+											echo esc_html( "\${$pricing->monthly_price} / " . fs_esc_html_x_inline( 'mo', 'as monthly period', 'mo', $plugin->slug ) );
 										} else {
-											echo "\${$pricing->lifetime_price}";
+											echo esc_html( "\${$pricing->lifetime_price}" );
 										}
 									}
 								}
 							}
-						?></span>
+						?>
+					</span>
 				</th>
-			<?php endforeach ?>
+			<?php endforeach; ?>
 		</tr>
+
 		</thead>
 		<tbody>
 		<?php $odd = true;

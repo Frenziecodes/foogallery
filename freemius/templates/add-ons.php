@@ -178,17 +178,17 @@
                             }
 						}
 						?>
-						<li class="fs-card fs-addon" data-slug="<?php echo $addon->slug ?>">
-							<?php
-								$view_details_link = sprintf( '<a href="%s" aria-label="%s" data-title="%s"',
-									esc_url( network_admin_url( 'plugin-install.php?fs_allow_updater_and_dialog=true' . ( ! empty( $fs_blog_id ) ? '&fs_blog_id=' . $fs_blog_id : '' ) . '&tab=plugin-information&parent_plugin_id=' . $fs->get_id() . '&plugin=' . $addon->slug .
-									                            '&TB_iframe=true&width=600&height=550' ) ),
-									esc_attr( sprintf( fs_text_inline( 'More information about %s', 'more-information-about-x', $slug ), $addon->title ) ),
-									esc_attr( $addon->title )
-								) . ' class="thickbox%s">%s</a>';
+						<li class="fs-card fs-addon" data-slug="<?php echo esc_attr( $addon->slug ); ?>">
+                            <?php
+                                $view_details_link = sprintf(
+                                    '<a href="%s" aria-label="%s" data-title="%s"',
+                                    esc_url( network_admin_url( 'plugin-install.php?fs_allow_updater_and_dialog=true' . ( ! empty( $fs_blog_id ) ? '&fs_blog_id=' . esc_attr( $fs_blog_id ) : '' ) . '&tab=plugin-information&parent_plugin_id=' . esc_attr( $fs->get_id() ) . '&plugin=' . esc_attr( $addon->slug ) . '&TB_iframe=true&width=600&height=550' ) ),
+                                    esc_attr( sprintf( fs_text_inline( 'More information about %s', 'more-information-about-x', $slug ), $addon->title ) ),
+                                    esc_attr( $addon->title )
+                                ) . ' class="thickbox%s">%s</a>';
 
-								echo sprintf(
-                                    $view_details_link,
+                                echo sprintf(
+                                    wp_kses_post( $view_details_link ),
                                     /**
                                      * Additional class.
                                      *
@@ -206,22 +206,23 @@
                                      */
                                     ''
                                 );
-							?>
-							<?php
-								if ( is_null( $addon->info ) ) {
-									$addon->info = new stdClass();
-								}
-								if ( ! isset( $addon->info->card_banner_url ) ) {
-									$addon->info->card_banner_url = '//dashboard.freemius.com/assets/img/marketing/blueprint-300x100.jpg';
-								}
-								if ( ! isset( $addon->info->short_description ) ) {
-									$addon->info->short_description = 'What\'s the one thing your add-on does really, really well?';
-								}
-							?>
-							<div class="fs-inner">
-								<ul>
-									<li class="fs-card-banner"
-                                        style="background-image: url('<?php echo $addon->info->card_banner_url ?>');"><?php
+                            ?>
+                            <?php
+                                if ( is_null( $addon->info ) ) {
+                                    $addon->info = new stdClass();
+                                }
+                                if ( ! isset( $addon->info->card_banner_url ) ) {
+                                    $addon->info->card_banner_url = '//dashboard.freemius.com/assets/img/marketing/blueprint-300x100.jpg';
+                                }
+                                if ( ! isset( $addon->info->short_description ) ) {
+                                    $addon->info->short_description = 'What\'s the one thing your add-on does really, really well?';
+                                }
+                            ?>
+                            <div class="fs-inner">
+                                <ul>
+                                    <li class="fs-card-banner"
+                                        style="background-image: url('<?php echo esc_url( $addon->info->card_banner_url ); ?>');">
+                                        <?php
                                         if ( $is_plugin_active || $is_addon_installed ) {
                                             echo sprintf(
                                                 '<span class="fs-badge fs-installed-addon-badge">%s</span>',
@@ -231,29 +232,30 @@
                                                 )
                                             );
                                         }
-                                        ?></li>
-									<!-- <li class="fs-tag"></li> -->
-									<li class="fs-title"><?php echo $addon->title ?></li>
-									<li class="fs-offer">
-									<span
-										class="fs-price"><?php
+                                        ?>
+                                    </li>
+                                    <li class="fs-title"><?php echo esc_html( $addon->title ); ?></li>
+                                    <li class="fs-offer">
+                                    <span class="fs-price">
+                                        <?php
                                         if ( $is_whitelabeled ) {
                                             echo '&nbsp;';
                                         } else {
-											$descriptors = array();
+                                            $descriptors = array();
 
-											if ($has_free_plan)
-												$descriptors[] = fs_text_inline( 'Free', 'free', $slug );
-											if ($has_paid_plan && $price > 0)
-												$descriptors[] = '$' . number_format( $price, 2 );
-											if ($has_trial)
-												$descriptors[] = fs_text_x_inline( 'Trial', 'trial period',  'trial', $slug );
+                                            if ($has_free_plan)
+                                                $descriptors[] = fs_text_inline( 'Free', 'free', $slug );
+                                            if ($has_paid_plan && $price > 0)
+                                                $descriptors[] = '$' . number_format( $price, 2 );
+                                            if ($has_trial)
+                                                $descriptors[] = fs_text_x_inline( 'Trial', 'trial period', 'trial', $slug );
 
-											echo implode(' - ', $descriptors);
-
-                                        } ?></span>
-									</li>
-									<li class="fs-description"><?php echo ! empty( $addon->info->short_description ) ? $addon->info->short_description : 'SHORT DESCRIPTION' ?></li>
+                                                echo implode(' - ', array_map('esc_html', $descriptors));
+                                            }
+                                        ?>
+                                    </span>
+                                    </li>
+                                    <li class="fs-description"><?php echo ! empty( $addon->info->short_description ) ? esc_html( $addon->info->short_description ) : 'SHORT DESCRIPTION'; ?></li>
                                     <?php
                                         $is_free_only_wp_org_compliant = ( ! $has_paid_plan && $addon->is_wp_org_compliant );
 
@@ -304,7 +306,7 @@
                                         }
                                     ?>
                                     <?php if ( ! $show_premium_activation_or_installation_action ) : ?>
-									<li class="fs-cta"><a class="button"><?php echo esc_html( $view_details_text ) ?></a></li>
+                                    <li class="fs-cta"><a class="button"><?php echo esc_html( $view_details_text ); ?></a></li>
                                     <?php else : ?>
                                         <?php
                                             $latest_download_local_url = $is_free_only_wp_org_compliant ?
@@ -319,52 +321,39 @@
                                                 if ( ! $is_addon_installed ) {
                                                     echo sprintf(
                                                         '<a class="button button-primary" href="%s">%s</a>',
-                                                        wp_nonce_url( self_admin_url( 'update.php?' . ( ( $has_paid_plan || ! $addon->is_wp_org_compliant ) ? 'fs_allow_updater_and_dialog=true&' : '' ) . 'action=install-plugin&plugin=' . $addon->slug ), 'install-plugin_' . $addon->slug ),
-                                                        fs_esc_html_inline( 'Install Now', 'install-now', $slug )
+                                                        esc_url( wp_nonce_url( self_admin_url( 'update.php?' . ( ( $has_paid_plan || ! $addon->is_wp_org_compliant ) ? 'fs_allow_updater_and_dialog=true&' : '' ) . 'action=install-plugin&plugin=' . esc_attr( $addon->slug ) ), 'install-plugin_' . esc_attr( $addon->slug ) ) ),
+                                                        esc_html( fs_esc_html_inline( 'Install Now', 'install-now', $slug ) )
                                                     );
                                                 } else {
                                                     echo sprintf(
                                                         '<a class="button button-primary edit" href="%s" title="%s" target="_parent">%s</a>',
-                                                        wp_nonce_url( 'plugins.php?action=activate&amp;plugin=' . $basename, 'activate-plugin_' . $basename ),
-                                                        fs_esc_attr_inline( 'Activate this add-on', 'activate-this-addon', $addon->slug ),
-                                                        fs_text_inline( 'Activate', 'activate', $addon->slug )
+                                                        esc_url( wp_nonce_url( 'plugins.php?action=activate&amp;plugin=' . esc_attr( $basename ), 'activate-plugin_' . esc_attr( $basename ) ) ),
+                                                        esc_attr( fs_esc_attr_inline( 'Activate this add-on', 'activate-this-addon', $addon->slug ) ),
+                                                        esc_html( fs_text_inline( 'Activate', 'activate', $addon->slug ) )
                                                     );
-                                                }
+                                                }                                                
                                             ?>
                                             <?php else : ?>
-                                            <a target="_blank" rel="noopener" class="button button-primary" href="<?php echo $latest_download_local_url ?>"><?php echo esc_html( $download_latest_text ) ?></a>
-                                            <?php endif ?>
+                                            <a target="_blank" rel="noopener" class="button button-primary" href="<?php echo esc_url( $latest_download_local_url ); ?>"><?php echo esc_html( $download_latest_text ); ?></a>
+                                            <?php endif; ?>
                                             <div class="button button-primary fs-dropdown-arrow-button"><span class="fs-dropdown-arrow"></span><ul class="fs-dropdown-list" style="display: none">
-		                                            <?php if ( $is_allowed_to_install && ! empty( $latest_download_local_url ) ) : ?>
-			                                            <li><a target="_blank" rel="noopener" href="<?php echo $latest_download_local_url ?>"><?php echo esc_html( $download_latest_text ) ?></a></li>
-		                                            <?php endif ?>
-		                                            <li><?php
-				                                            echo sprintf(
-					                                            $view_details_link,
-					                                            /**
-					                                             * No additional class.
-					                                             *
-					                                             * @author Leo Fajardo (@leorw)
-					                                             * @since 2.2.4
-					                                             */
-					                                            '',
-					                                            /**
-					                                             * Set the view details link text to a non-empty string since it is an
-					                                             * item in the dropdown list and the text should be visible.
-					                                             *
-					                                             * @author Leo Fajardo (@leorw)
-					                                             * @since 2.2.4
-					                                             */
-					                                            esc_html( $view_details_text )
-				                                            );
-			                                            ?></li>
-	                                            </ul></div>
+                                                <?php if ( $is_allowed_to_install && ! empty( $latest_download_local_url ) ) : ?>
+                                                <li><a target="_blank" rel="noopener" href="<?php echo esc_url( $latest_download_local_url ); ?>"><?php echo esc_html( $download_latest_text ); ?></a></li>
+                                                <?php endif; ?>
+                                                <li><?php
+                                                    echo wp_kses_post( sprintf(
+                                                        $view_details_link,
+                                                        '',
+                                                        esc_html( $view_details_text )
+                                                    ) );                                                    
+                                                ?></li>
+                                            </ul></div>
                                         </div>
                                     </li>
-                                    <?php endif ?>
-								</ul>
-							</div>
-						</li>
+                                    <?php endif; ?>
+                                </ul>
+                            </div>
+                        </li>
 					<?php endforeach ?>
 				<?php endif ?>
 			</ul>
@@ -389,11 +378,11 @@
 				 *     the plugin's add-ons slugs.
 				 */
 				?>
-				$('.fs-card[data-slug=<?php echo $open_addon_slug ?>] a').click();
-				if ($('#TB_iframeContent').length > 0) {
-					clearInterval(interval);
-					interval = null;
-				}
+				$('.fs-card[data-slug=<?php echo esc_js( $open_addon_slug ); ?>] a').click();
+                if ($('#TB_iframeContent').length > 0) {
+                    clearInterval(interval);
+                    interval = null;
+                }
 			}, 200);
 
 			<?php else : ?>

@@ -47,16 +47,16 @@ HTML;
 <script type="text/javascript">
 ( function( $ ) {
 	$( document ).ready( function() {
-		var modalContentHtml          = <?php echo json_encode( $modal_content_html ) ?>,
+		var modalContentHtml          = <?php echo json_encode( $modal_content_html ); ?>,
 			modalHtml                 =
-				'<div class="fs-modal fs-modal-developer-license-debug-mode fs-modal-developer-license-debug-mode-<?php echo $unique_affix ?>">'
+				'<div class="fs-modal fs-modal-developer-license-debug-mode fs-modal-developer-license-debug-mode-<?php echo esc_attr( $unique_affix ); ?>">'
 				+ '	<div class="fs-modal-dialog">'
 				+ '		<div class="fs-modal-body">'
 				+ '			<div class="fs-modal-panel active">' + modalContentHtml + '</div>'
 				+ '		</div>'
 				+ '		<div class="fs-modal-footer">'
-				+ '			<button class="button button-secondary button-close" tabindex="4"><?php fs_esc_js_echo_inline( 'Cancel', 'cancel', $slug ) ?></button>'
-				+ '			<button class="button button-primary button-submit-license-or-user-key"  tabindex="3"><?php echo esc_js( $submit_button_text ) ?></button>'
+				+ '			<button class="button button-secondary button-close" tabindex="4"><?php fs_esc_js_echo_inline( 'Cancel', 'cancel', $slug ); ?></button>'
+				+ '			<button class="button button-primary button-submit-license-or-user-key"  tabindex="3"><?php echo esc_js( $submit_button_text ); ?></button>'
 				+ '		</div>'
 				+ '	</div>'
 				+ '</div>',
@@ -65,7 +65,7 @@ HTML;
 			$submitKeyButton                   = $modal.find( '.button-submit-license-or-user-key' ),
 			$licenseOrUserKeyInput             = $modal.find( 'input.fs-license-or-user-key' ),
 			$licenseOrUserKeySubmissionMessage = $modal.find( '.license-or-user-key-submission-message' ),
-            isDebugMode                        = <?php echo $fs->is_data_debug_mode() ? 'true' : 'false' ?>;
+            isDebugMode                        = <?php echo $fs->is_data_debug_mode() ? 'true' : 'false'; ?>;
 
 		$modal.appendTo( $( 'body' ) );
 
@@ -132,20 +132,20 @@ HTML;
 
 		function setDeveloperLicenseDebugMode( licenseOrUserKey ) {
             var data = {
-                action             : '<?php echo $fs->get_ajax_action( 'set_data_debug_mode' ) ?>',
-                security           : '<?php echo $fs->get_ajax_security( 'set_data_debug_mode' ) ?>',
+                action             : '<?php echo esc_js( $fs->get_ajax_action( 'set_data_debug_mode' ) ); ?>',
+                security           : '<?php echo esc_js( $fs->get_ajax_security( 'set_data_debug_mode' ) ); ?>',
                 license_or_user_key: licenseOrUserKey,
                 is_debug_mode      : isDebugMode,
-                module_id          : '<?php echo $fs->get_id() ?>'
+                module_id          : '<?php echo esc_js( $fs->get_id() ); ?>'
             };
 
             $.ajax( {
-                url       : <?php echo Freemius::ajax_url() ?>,
+                url       : <?php echo esc_url( Freemius::ajax_url() ); ?>,
                 method    : 'POST',
                 data      : data,
                 beforeSend: function () {
-                    $debugLicenseLink.find('span').text( '<?php echo $processing_text ?>' );
-                    $submitKeyButton.text( '<?php echo $processing_text ?>' );
+                    $debugLicenseLink.find('span').text( '<?php echo esc_js( $processing_text ); ?>' );
+                    $submitKeyButton.text( '<?php echo esc_js( $processing_text ); ?>' );
                 },
                 success   : function ( result ) {
                     if ( result.success ) {
@@ -159,7 +159,7 @@ HTML;
                     }
                 },
                 error     : function () {
-                    showError( <?php echo json_encode( fs_text_inline( 'An unknown error has occurred.', 'unknown-error', $slug ) ) ?> );
+                    showError( <?php echo json_encode( fs_text_inline( 'An unknown error has occurred.', 'unknown-error', $slug ) ); ?> );
                     resetButtons();
                 }
             });
@@ -183,8 +183,8 @@ HTML;
 
 		function resetButtons() {
 			enableSubmitButton();
-			$submitKeyButton.text( <?php echo json_encode( $submit_button_text ) ?> );
-			$debugLicenseLink.find('span').text( <?php echo json_encode( $debug_license_link_text ) ?> );
+			$submitKeyButton.text( <?php echo json_encode( $submit_button_text ); ?> );
+			$debugLicenseLink.find('span').text( <?php echo json_encode( $debug_license_link_text ); ?> );
 		}
 
 		function resetModal() {

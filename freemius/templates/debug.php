@@ -21,7 +21,7 @@
 
     $is_multisite = is_multisite();
 ?>
-<h1><?php echo fs_text_inline( 'Freemius Debug' ) . ' - ' . fs_text_inline( 'SDK' ) . ' v.' . $fs_active_plugins->newest->version ?></h1>
+<h1><?php echo esc_html( fs_text_inline( 'Freemius Debug' ) . ' - ' . fs_text_inline( 'SDK' ) . ' v.' . $fs_active_plugins->newest->version ) ?></h1>
 <div>
     <!-- Debugging Switch -->
     <?php //$debug_mode = get_option( 'fs_debug_mode', null ) ?>
@@ -39,10 +39,10 @@
                         .toggleClass( 'fs-on' )
                         .toggleClass( 'fs-off' );
 
-                    $.post( <?php echo Freemius::ajax_url() ?>, {
+                    $.post( <?php echo json_encode(Freemius::ajax_url()) ?>, {
                         action: 'fs_toggle_debug_mode',
                         // As such we don't need to use `wp_json_encode` method but using it to follow wp.org guideline.
-                        _wpnonce   : <?php echo wp_json_encode( wp_create_nonce( 'fs_toggle_debug_mode' ) ); ?>,
+                        _wpnonce   : <?php echo json_encode( wp_create_nonce( 'fs_toggle_debug_mode' ) ); ?>,
                         is_on : ($(this).hasClass( 'fs-on' ) ? 1 : 0)
                     }, function ( response ) {
                         if ( 1 == response ) {
@@ -58,74 +58,74 @@
 <h2><?php fs_esc_html_echo_inline( 'Actions', 'actions' ) ?></h2>
 <table>
     <tbody>
-    <tr>
-        <td>
-            <!-- Delete All Accounts -->
-            <form action="" method="POST">
-                <input type="hidden" name="fs_action" value="restart_freemius">
-                <?php wp_nonce_field( 'restart_freemius' ) ?>
-                <button class="button button-primary"
-                        onclick="if (confirm('<?php fs_esc_attr_echo_inline( 'Are you sure you want to delete all Freemius data?', 'delete-all-confirm' ) ?>')) this.parentNode.submit(); return false;"><?php fs_esc_html_echo_inline( 'Delete All Accounts' ) ?></button>
-            </form>
-        </td>
-        <td>
-            <!-- Clear API Cache -->
-            <form action="" method="POST">
-                <input type="hidden" name="fs_clear_api_cache" value="true">
-                <button class="button button-primary"><?php fs_esc_html_echo_inline( 'Clear API Cache' ) ?></button>
-            </form>
-        </td>
-        <td>
-            <!-- Clear Updates Transients -->
-            <form action="" method="POST">
-                <input type="hidden" name="fs_action" value="clear_updates_data">
-                <?php wp_nonce_field( 'clear_updates_data' ) ?>
-                <button class="button"><?php fs_esc_html_echo_inline( 'Clear Updates Transients' ) ?></button>
-            </form>
-        </td>
-        <?php if ( Freemius::is_deactivation_snoozed() ) : ?>
-        <td>
-            <!-- Reset Deactivation Snoozing -->
-            <form action="" method="POST">
-                <input type="hidden" name="fs_action" value="reset_deactivation_snoozing">
-                <?php wp_nonce_field( 'reset_deactivation_snoozing' ) ?>
-                <button class="button"><?php fs_esc_html_echo_inline( 'Reset Deactivation Snoozing' ) ?> (Expires in <?php echo ( Freemius::deactivation_snooze_expires_at() - time() ) ?> sec)</button>
-            </form>
-        </td>
-        <?php endif ?>
-        <td>
-            <!-- Sync Data with Server -->
-            <form action="" method="POST">
-                <input type="hidden" name="background_sync" value="true">
-                <button class="button button-primary"><?php fs_esc_html_echo_inline( 'Sync Data From Server' ) ?></button>
-            </form>
-        </td>
-        <?php if ( fs_is_network_admin() && true !== $fs_options->get_option( 'ms_migration_complete', false, true ) ) : ?>
-        <td>
-            <!-- Migrate Options to Network -->
-            <form action="" method="POST">
-                <input type="hidden" name="fs_action" value="migrate_options_to_network">
-                <?php wp_nonce_field( 'migrate_options_to_network' ) ?>
-                <button class="button button-primary"><?php fs_esc_html_echo_inline( 'Migrate Options to Network' ) ?></button>
-            </form>
-        </td>
-        <?php endif ?>
-        <td>
-            <button id="fs_load_db_option" class="button"><?php fs_esc_html_echo_inline( 'Load DB Option' ) ?></button>
-        </td>
-        <td>
-            <button id="fs_set_db_option" class="button"><?php fs_esc_html_echo_inline( 'Set DB Option' ) ?></button>
-        </td>
-        <td>
-            <?php
-                $fs_debug_page_url = 'admin.php?page=freemius&fs_action=allow_clone_resolution_notice';
-                $fs_debug_page_url = fs_is_network_admin() ?
-                    network_admin_url( $fs_debug_page_url ) :
-                    admin_url( $fs_debug_page_url );
-            ?>
-            <a href="<?php echo wp_nonce_url( $fs_debug_page_url, 'fs_allow_clone_resolution_notice' ) ?>" class="button button-primary">Resolve Clone(s)</a>
-        </td>
-    </tr>
+        <tr>
+            <td>
+                <!-- Delete All Accounts -->
+                <form action="" method="POST">
+                    <input type="hidden" name="fs_action" value="restart_freemius">
+                    <?php wp_nonce_field( 'restart_freemius' ) ?>
+                    <button class="button button-primary"
+                            onclick="if (confirm('<?php fs_esc_attr_echo_inline( 'Are you sure you want to delete all Freemius data?', 'delete-all-confirm' ) ?>')) this.parentNode.submit(); return false;"><?php fs_esc_html_echo_inline( 'Delete All Accounts' ) ?></button>
+                </form>
+            </td>
+            <td>
+                <!-- Clear API Cache -->
+                <form action="" method="POST">
+                    <input type="hidden" name="fs_clear_api_cache" value="true">
+                    <button class="button button-primary"><?php fs_esc_html_echo_inline( 'Clear API Cache' ) ?></button>
+                </form>
+            </td>
+            <td>
+                <!-- Clear Updates Transients -->
+                <form action="" method="POST">
+                    <input type="hidden" name="fs_action" value="clear_updates_data">
+                    <?php wp_nonce_field( 'clear_updates_data' ) ?>
+                    <button class="button"><?php fs_esc_html_echo_inline( 'Clear Updates Transients' ) ?></button>
+                </form>
+            </td>
+            <?php if ( Freemius::is_deactivation_snoozed() ) : ?>
+            <td>
+                <!-- Reset Deactivation Snoozing -->
+                <form action="" method="POST">
+                    <input type="hidden" name="fs_action" value="reset_deactivation_snoozing">
+                    <?php wp_nonce_field( 'reset_deactivation_snoozing' ) ?>
+                    <button class="button"><?php fs_esc_html_echo_inline( 'Reset Deactivation Snoozing' ) ?> (Expires in <?php echo esc_html( Freemius::deactivation_snooze_expires_at() - time() ) ?> sec)</button>
+                </form>
+            </td>
+            <?php endif ?>
+            <td>
+                <!-- Sync Data with Server -->
+                <form action="" method="POST">
+                    <input type="hidden" name="background_sync" value="true">
+                    <button class="button button-primary"><?php fs_esc_html_echo_inline( 'Sync Data From Server' ) ?></button>
+                </form>
+            </td>
+            <?php if ( fs_is_network_admin() && true !== $fs_options->get_option( 'ms_migration_complete', false, true ) ) : ?>
+            <td>
+                <!-- Migrate Options to Network -->
+                <form action="" method="POST">
+                    <input type="hidden" name="fs_action" value="migrate_options_to_network">
+                    <?php wp_nonce_field( 'migrate_options_to_network' ) ?>
+                    <button class="button button-primary"><?php fs_esc_html_echo_inline( 'Migrate Options to Network' ) ?></button>
+                </form>
+            </td>
+            <?php endif ?>
+            <td>
+                <button id="fs_load_db_option" class="button"><?php fs_esc_html_echo_inline( 'Load DB Option' ) ?></button>
+            </td>
+            <td>
+                <button id="fs_set_db_option" class="button"><?php fs_esc_html_echo_inline( 'Set DB Option' ) ?></button>
+            </td>
+            <td>
+                <?php
+                    $fs_debug_page_url = 'admin.php?page=freemius&fs_action=allow_clone_resolution_notice';
+                    $fs_debug_page_url = fs_is_network_admin() ?
+                        network_admin_url( $fs_debug_page_url ) :
+                        admin_url( $fs_debug_page_url );
+                ?>
+                <a href="<?php echo esc_url( wp_nonce_url( $fs_debug_page_url, 'fs_allow_clone_resolution_notice' ) ) ?>" class="button button-primary">Resolve Clone(s)</a>
+            </td>
+        </tr>
     </tbody>
 </table>
 <script type="text/javascript">
@@ -134,7 +134,7 @@
             var optionName = prompt('Please enter the option name:');
 
             if (optionName) {
-                $.post(<?php echo Freemius::ajax_url() ?>, {
+                $.post(<?php echo esc_url( Freemius::ajax_url() ) ?>, {
                     action     : 'fs_get_db_option',
                     // As such we don't need to use `wp_json_encode` method but using it to follow wp.org guideline.
                     _wpnonce   : <?php echo wp_json_encode( wp_create_nonce( 'fs_get_db_option' ) ); ?>,
@@ -155,7 +155,7 @@
                 var optionValue = prompt('Please enter the option value:');
 
                 if (optionValue) {
-                    $.post(<?php echo Freemius::ajax_url() ?>, {
+                    $.post(<?php echo esc_url( Freemius::ajax_url() ) ?>, {
                         action      : 'fs_set_db_option',
                         // As such we don't need to use `wp_json_encode` method but using it to follow wp.org guideline.
                         _wpnonce    : <?php echo wp_json_encode( wp_create_nonce( 'fs_set_db_option' ) ); ?>,
@@ -218,8 +218,8 @@
             <tr<?php if ( $alternate ) {
                 echo ' class="alternate"';
             } ?>>
-                <td><?php echo $p['key'] ?></td>
-                <td><?php echo $p['val'] ?></td>
+            <td><?php echo esc_html( $p['key'] ) ?></td>
+            <td><?php echo esc_html( $p['val'] ) ?></td>
             </tr>
             <?php $alternate = ! $alternate ?>
         <?php endforeach ?>
@@ -241,10 +241,10 @@
         <tr<?php if ( $is_active ) {
             echo ' style="background: #E6FFE6; font-weight: bold"';
         } ?>>
-            <td><?php echo $data->version ?></td>
-            <td><?php echo $sdk_path ?></td>
-            <td><?php echo $data->plugin_path ?></td>
-            <td><?php echo ( $is_active ) ? 'Active' : 'Inactive' ?></td>
+        <td><?php echo esc_html( $data->version ) ?></td>
+        <td><?php echo esc_html( $sdk_path ) ?></td>
+        <td><?php echo esc_html( $data->plugin_path ) ?></td>
+        <td><?php echo esc_html( $is_active ? 'Active' : 'Inactive' ) ?></td>
         </tr>
     <?php endforeach ?>
     </tbody>
@@ -261,7 +261,7 @@
     <?php $modules = fs_get_entities( $fs_options->get_option( $module_type . 's' ), FS_Plugin::get_class_name() ) ?>
     <?php if ( is_array( $modules ) && count( $modules ) > 0 ) : ?>
         <h2><?php echo esc_html( ( WP_FS__MODULE_TYPE_PLUGIN == $module_type ) ? fs_text_inline( 'Plugins', 'plugins' ) : fs_text_inline( 'Themes', 'themes' ) ) ?></h2>
-        <table id="fs_<?php echo $module_type ?>" class="widefat">
+        <table id="fs_<?php echo esc_attr( $module_type ) ?>" class="widefat">
             <thead>
             <tr>
                 <th><?php fs_esc_html_echo_inline( 'ID', 'id' ) ?></th>
@@ -312,10 +312,11 @@
                         echo ' style="background: #ffd0d0; font-weight: bold"';
                     }
                 } ?>>
-                    <td><?php echo $data->id ?></td>
-                    <td><?php echo $slug ?></td>
-                    <td><?php echo $data->version ?></td>
-                    <td><?php echo $data->title ?></td>
+                    <td><?php echo esc_html( $data->id ) ?></td>
+                    <td><?php echo esc_html( $slug ) ?></td>
+                    <td><?php echo esc_html( $data->version ) ?></td>
+                    <td><?php echo esc_html( $data->title ) ?></td>
+
                     <td<?php if ( $is_active && true !== $has_api_connectivity ) {
                         echo ' style="color: red; text-transform: uppercase;"';
                     } ?>><?php if ( $is_active ) {
@@ -334,8 +335,8 @@
                                 $off_text
                             );
                         } ?></td>
-                    <td><?php echo $data->file ?></td>
-                    <td><?php echo $data->public_key ?></td>
+                    <td><?php echo esc_html( $data->file ) ?></td>
+                    <td><?php echo esc_html( $data->public_key ) ?></td>
                     <?php if ( $is_multisite ) : ?>
                         <?php
                         $network_blog_id = null;
@@ -346,29 +347,30 @@
                             $network_user    = $fs->get_network_user();
                         }
                         ?>
-                        <td><?php echo is_numeric( $network_blog_id ) ? $network_blog_id : '' ?></td>
+                        <td><?php echo is_numeric( $network_blog_id ) ? esc_html( $network_blog_id ) : '' ?></td>
                         <td><?php if ( is_object( $network_user ) ) {
-                                echo $network_user->email;
+                                echo esc_html( $network_user->email );
                             } ?></td>
+
                     <?php endif ?>
                     <td>
                         <?php if ( $is_active ) : ?>
                             <?php if ( $fs->has_trial_plan() ) : ?>
                                 <form action="" method="POST">
                                     <input type="hidden" name="fs_action" value="simulate_trial">
-                                    <input type="hidden" name="module_id" value="<?php echo $fs->get_id() ?>">
+                                    <input type="hidden" name="module_id" value="<?php echo esc_attr( $fs->get_id() ) ?>">
                                     <?php wp_nonce_field( 'simulate_trial' ) ?>
 
                                     <button type="submit" class="button button-primary simulate-trial"><?php fs_esc_html_echo_inline( 'Simulate Trial Promotion' ) ?></button>
                                 </form>
                             <?php endif ?>
                             <?php if ( $fs->is_registered() ) : ?>
-                                <a class="button" href="<?php echo $fs->get_account_url() ?>"><?php fs_esc_html_echo_inline( 'Account', 'account' ) ?></a>
+                                <a class="button" href="<?php echo esc_url( $fs->get_account_url() ) ?>"><?php fs_esc_html_echo_inline( 'Account', 'account' ) ?></a>
                             <?php endif ?>
                             <?php if ( fs_is_network_admin() && ! $fs->is_network_upgrade_mode() ) : ?>
                                 <form action="" method="POST">
                                     <input type="hidden" name="fs_action" value="simulate_network_upgrade">
-                                    <input type="hidden" name="module_id" value="<?php echo $fs->get_id() ?>">
+                                    <input type="hidden" name="module_id" value="<?php echo esc_attr( $fs->get_id() ) ?>">
                                     <?php wp_nonce_field( 'simulate_network_upgrade' ) ?>
 
                                     <button type="submit" class="button button-small"><?php fs_esc_html_echo_inline( 'Simulate Network Upgrade' ) ?></button>
@@ -395,10 +397,10 @@
     <?php if ( is_array( $sites_map ) && count( $sites_map ) > 0 ) : ?>
         <h2><?php echo esc_html( sprintf(
             /* translators: %s: 'plugin' or 'theme' */
-                fs_text_inline( '%s Installs', 'module-installs' ),
-                ( WP_FS__MODULE_TYPE_PLUGIN === $module_type ? fs_text_inline( 'Plugin', 'plugin' ) : fs_text_inline( 'Theme', 'theme' ) )
-            ) ) ?> / <?php fs_esc_html_echo_x_inline( 'Sites', 'like websites', 'sites' ) ?></h2>
-        <table id="fs_<?php echo $module_type ?>_installs" class="widefat">
+            fs_text_inline( '%s Installs', 'module-installs' ),
+            ( WP_FS__MODULE_TYPE_PLUGIN === $module_type ? fs_text_inline( 'Plugin', 'plugin' ) : fs_text_inline( 'Theme', 'theme' ) )
+        ) ) ?> / <?php fs_esc_html_echo_x_inline( 'Sites', 'like websites', 'sites' ) ?></h2>
+        <table id="fs_<?php echo esc_attr( $module_type ) ?>_installs" class="widefat">
             <thead>
             <tr>
                 <th><?php fs_esc_html_echo_inline( 'ID', 'id' ) ?></th>
@@ -440,61 +442,61 @@
                     ?>
                     <tr>
                         <td>
-                            <?php echo $site->id ?>
-                            <?php if ( $is_active_clone ) : ?>
+                            <?php echo esc_html($site->id); ?>
+                            <?php if ($is_active_clone) : ?>
                             <label class="fs-tag fs-warn">Clone</label>
-                            <?php endif ?>
+                            <?php endif; ?>
                         </td>
-                        <?php if ( $is_multisite ) : ?>
-                            <td><?php echo $blog_id ?></td>
-                            <td><?php echo fs_strip_url_protocol( $site->url ) ?></td>
-                        <?php endif ?>
-                        <td><?php echo $slug ?></td>
-                        <td><?php echo $site->user_id ?></td>
-                        <td><?php echo !empty($site->license_id) ? $site->license_id : '' ?></td>
+                        <?php if ($is_multisite) : ?>
+                        <td><?php echo esc_html($blog_id); ?></td>
+                        <td><?php echo esc_html(fs_strip_url_protocol($site->url)); ?></td>
+                        <?php endif; ?>
+                        <td><?php echo esc_html($slug); ?></td>
+                        <td><?php echo esc_html($site->user_id); ?></td>
+                        <td><?php echo !empty($site->license_id) ? esc_html($site->license_id) : ''; ?></td>
                         <td><?php
-                                $plan_name = '';
-                                if ( FS_Plugin_Plan::is_valid_id( $site->plan_id ) ) {
-                                    if ( false === $all_plans ) {
-                                        $option_name = 'plans';
-                                        if ( WP_FS__MODULE_TYPE_PLUGIN !== $module_type ) {
-                                            $option_name = $module_type . '_' . $option_name;
-                                        }
-
-                                        $all_plans = fs_get_entities( $fs_options->get_option( $option_name, array() ), FS_Plugin_Plan::get_class_name() );
+                            $plan_name = '';
+                            if (FS_Plugin_Plan::is_valid_id($site->plan_id)) {
+                                if (false === $all_plans) {
+                                    $option_name = 'plans';
+                                    if (WP_FS__MODULE_TYPE_PLUGIN !== $module_type) {
+                                        $option_name = $module_type . '_' . $option_name;
                                     }
 
-                                    foreach ( $all_plans[ $slug ] as $plan ) {
-                                        $plan_id = Freemius::_decrypt( $plan->id );
-
-                                        if ( $site->plan_id == $plan_id ) {
-                                            $plan_name = Freemius::_decrypt( $plan->name );
-                                            break;
-                                        }
-                                    }
+                                    $all_plans = fs_get_entities($fs_options->get_option($option_name, array()), FS_Plugin_Plan::get_class_name());
                                 }
 
-                                echo $plan_name;
-                            ?></td>
-                        <td><?php echo $site->public_key ?></td>
-                        <td><?php
-                                $plugin_storage = FS_Storage::instance( $module_type, $slug );
+                                foreach ($all_plans[$slug] as $plan) {
+                                    $plan_id = Freemius::_decrypt($plan->id);
 
-                                echo $plugin_storage->is_whitelabeled ?
-                                    FS_Plugin_License::mask_secret_key_for_html( $site->secret_key ) :
-                                    esc_html( $site->secret_key );
-                        ?></td>
+                                    if ($site->plan_id == $plan_id) {
+                                        $plan_name = Freemius::_decrypt($plan->name);
+                                        break;
+                                    }
+                                }
+                            }
+
+                            echo esc_html($plan_name);
+                            ?></td>
+                        <td><?php echo esc_html($site->public_key); ?></td>
+                        <td><?php
+                            $plugin_storage = FS_Storage::instance($module_type, $slug);
+
+                            echo $plugin_storage->is_whitelabeled ?
+                            esc_html( FS_Plugin_License::mask_secret_key_for_html( $site->secret_key ) ) :
+                            esc_html( $site->secret_key );
+                            ?></td>
                         <td>
                             <form action="" method="POST">
                                 <input type="hidden" name="fs_action" value="delete_install">
-                                <?php wp_nonce_field( 'delete_install' ) ?>
-                                <input type="hidden" name="module_id" value="<?php echo $site->plugin_id ?>">
-                                <?php if ( $is_multisite ) : ?>
-                                    <input type="hidden" name="blog_id" value="<?php echo $site->blog_id ?>">
-                                <?php endif ?>
-                                <input type="hidden" name="module_type" value="<?php echo $module_type ?>">
-                                <input type="hidden" name="slug" value="<?php echo $slug ?>">
-                                <button type="submit" class="button"><?php fs_esc_html_echo_x_inline( 'Delete', 'verb', 'delete' ) ?></button>
+                                <?php wp_nonce_field('delete_install'); ?>
+                                <input type="hidden" name="module_id" value="<?php echo esc_attr($site->plugin_id); ?>">
+                                <?php if ($is_multisite) : ?>
+                                <input type="hidden" name="blog_id" value="<?php echo esc_attr($site->blog_id); ?>">
+                                <?php endif; ?>
+                                <input type="hidden" name="module_type" value="<?php echo esc_attr($module_type); ?>">
+                                <input type="hidden" name="slug" value="<?php echo esc_attr($slug); ?>">
+                                <button type="submit" class="button"><?php fs_esc_html_echo_x_inline('Delete', 'verb', 'delete'); ?></button>
                             </form>
                         </td>
                     </tr>
@@ -527,11 +529,11 @@
              */
             foreach ( $plugin_addons as $addon ) : ?>
                 <tr>
-                    <td><?php echo $addon->id ?></td>
-                    <td><?php echo $addon->title ?></td>
-                    <td><?php echo $addon->slug ?></td>
-                    <td><?php echo $addon->version ?></td>
-                    <td><?php echo $addon->public_key ?></td>
+                    <td><?php echo esc_html($addon->id); ?></td>
+                    <td><?php echo esc_html($addon->title); ?></td>
+                    <td><?php echo esc_html($addon->slug); ?></td>
+                    <td><?php echo esc_html($addon->version); ?></td>
+                    <td><?php echo esc_html($addon->public_key); ?></td>
                     <td><?php echo esc_html( $addon->secret_key ) ?></td>
                 </tr>
             <?php endforeach ?>
@@ -581,31 +583,31 @@
         </tr>
         </thead>
         <tbody>
-        <?php foreach ( $users as $user_id => $user ) : ?>
-            <?php $has_developer_license = isset( $users_with_developer_license_by_id[ $user_id ] ) ?>
-            <tr>
-                <td><?php echo $user->id ?></td>
-                <td><?php echo $has_developer_license ? '' : $user->get_name() ?></td>
-                <td>
-                    <?php if ( ! $has_developer_license ) : ?>
-                    <a href="mailto:<?php echo esc_attr( $user->email ) ?>"><?php echo $user->email ?></a>
-                    <?php endif ?>
-                </td>
-                <td><?php echo $has_developer_license ? '' : json_encode( $user->is_verified ) ?></td>
-                <td><?php echo $user->public_key ?></td>
-                <td><?php echo $has_developer_license ? FS_Plugin_License::mask_secret_key_for_html($user->secret_key) : esc_html( $user->secret_key ) ?></td>
-                <td>
-                    <?php if ( ! $has_developer_license ) : ?>
-                    <form action="" method="POST">
-                        <input type="hidden" name="fs_action" value="delete_user">
-                        <?php wp_nonce_field( 'delete_user' ) ?>
-                        <input type="hidden" name="user_id" value="<?php echo $user->id ?>">
-                        <button type="submit" class="button"><?php fs_esc_html_echo_x_inline( 'Delete', 'verb', 'delete' ) ?></button>
-                    </form>
-                    <?php endif ?>
-                </td>
-            </tr>
-        <?php endforeach ?>
+            <?php foreach ( $users as $user_id => $user ) : ?>
+                <?php $has_developer_license = isset( $users_with_developer_license_by_id[ $user_id ] ); ?>
+                <tr>
+                    <td><?php echo esc_html($user->id); ?></td>
+                    <td><?php echo $has_developer_license ? '' : esc_html($user->get_name()); ?></td>
+                    <td>
+                        <?php if ( ! $has_developer_license ) : ?>
+                        <a href="mailto:<?php echo esc_attr($user->email); ?>"><?php echo esc_html($user->email); ?></a>
+                        <?php endif; ?>
+                    </td>
+                    <td><?php echo $has_developer_license ? '' : esc_html(json_encode($user->is_verified)); ?></td>
+                    <td><?php echo esc_html($user->public_key); ?></td>
+                    <td><?php echo $has_developer_license ? esc_html( FS_Plugin_License::mask_secret_key_for_html( $user->secret_key ) ) : esc_html( $user->secret_key ); ?></td>
+                    <td>
+                        <?php if ( ! $has_developer_license ) : ?>
+                        <form action="" method="POST">
+                            <input type="hidden" name="fs_action" value="delete_user">
+                            <?php wp_nonce_field('delete_user'); ?>
+                            <input type="hidden" name="user_id" value="<?php echo esc_attr($user->id); ?>">
+                            <button type="submit" class="button"><?php fs_esc_html_echo_x_inline('Delete', 'verb', 'delete'); ?></button>
+                        </form>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
         </tbody>
     </table>
 <?php endif ?>
@@ -617,43 +619,43 @@
     $licenses = $VARS[ $module_type . '_licenses' ] ?>
     <?php if ( is_array( $licenses ) && count( $licenses ) > 0 ) : ?>
         <h2><?php echo esc_html( sprintf( fs_text_inline( '%s Licenses', 'module-licenses' ), ( WP_FS__MODULE_TYPE_PLUGIN === $module_type ? fs_text_inline( 'Plugin', 'plugin' ) : fs_text_inline( 'Theme', 'theme' ) ) ) ) ?></h2>
-        <table id="fs_<?php echo $module_type ?>_licenses" class="widefat">
+        <table id="fs_<?php echo esc_attr( $module_type ); ?>_licenses" class="widefat">
             <thead>
             <tr>
-                <th><?php fs_esc_html_echo_inline( 'ID', 'id' ) ?></th>
-                <th><?php fs_esc_html_echo_inline( 'Plugin ID' ) ?></th>
-                <th><?php fs_esc_html_echo_inline( 'User ID' ) ?></th>
-                <th><?php fs_esc_html_echo_inline( 'Plan ID' ) ?></th>
-                <th><?php fs_esc_html_echo_inline( 'Quota' ) ?></th>
-                <th><?php fs_esc_html_echo_inline( 'Activated' ) ?></th>
-                <th><?php fs_esc_html_echo_inline( 'Blocking' ) ?></th>
-                <th><?php fs_esc_html_echo_inline( 'Type' ) ?></th>
-                <th><?php fs_esc_html_echo_inline( 'License Key' ) ?></th>
-                <th><?php fs_esc_html_echo_x_inline( 'Expiration', 'as expiration date' ) ?></th>
+                <th><?php fs_esc_html_echo_inline( 'ID', 'id' ); ?></th>
+                <th><?php fs_esc_html_echo_inline( 'Plugin ID' ); ?></th>
+                <th><?php fs_esc_html_echo_inline( 'User ID' ); ?></th>
+                <th><?php fs_esc_html_echo_inline( 'Plan ID' ); ?></th>
+                <th><?php fs_esc_html_echo_inline( 'Quota' ); ?></th>
+                <th><?php fs_esc_html_echo_inline( 'Activated' ); ?></th>
+                <th><?php fs_esc_html_echo_inline( 'Blocking' ); ?></th>
+                <th><?php fs_esc_html_echo_inline( 'Type' ); ?></th>
+                <th><?php fs_esc_html_echo_inline( 'License Key' ); ?></th>
+                <th><?php fs_esc_html_echo_x_inline( 'Expiration', 'as expiration date' ); ?></th>
             </tr>
             </thead>
             <tbody>
             <?php foreach ( $licenses as $license ) : ?>
                 <tr>
-                    <td><?php echo $license->id ?></td>
-                    <td><?php echo $license->plugin_id ?></td>
-                    <td><?php echo $license->user_id ?></td>
-                    <td><?php echo $license->plan_id ?></td>
-                    <td><?php echo $license->is_unlimited() ? 'Unlimited' : ( $license->is_single_site() ? 'Single Site' : $license->quota ) ?></td>
-                    <td><?php echo $license->activated ?></td>
-                    <td><?php echo $license->is_block_features ? 'Blocking' : 'Flexible' ?></td>
-                    <td><?php echo $license->is_whitelabeled ? 'Whitelabeled' : 'Normal' ?></td>
+                    <td><?php echo esc_html( $license->id ); ?></td>
+                    <td><?php echo esc_html( $license->plugin_id ); ?></td>
+                    <td><?php echo esc_html( $license->user_id ); ?></td>
+                    <td><?php echo esc_html( $license->plan_id ); ?></td>
+                    <td><?php echo esc_html( $license->is_unlimited() ? 'Unlimited' : ( $license->is_single_site() ? 'Single Site' : $license->quota ) ); ?></td>
+                    <td><?php echo esc_html( $license->activated ); ?></td>
+                    <td><?php echo esc_html( $license->is_block_features ? 'Blocking' : 'Flexible' ); ?></td>
+                    <td><?php echo esc_html( $license->is_whitelabeled ? 'Whitelabeled' : 'Normal' ); ?></td>
                     <td><?php
                             echo ( $license->is_whitelabeled || ! isset( $user_ids_map[ $license->user_id ] ) ) ?
-                                $license->get_html_escaped_masked_secret_key() :
-                                esc_html( $license->secret_key );
+                            esc_html( $license->get_html_escaped_masked_secret_key() ) :
+                            esc_html( $license->secret_key );                        
                     ?></td>
-                    <td><?php echo $license->expiration ?></td>
+                    <td><?php echo esc_html( $license->expiration ); ?></td>
                 </tr>
-            <?php endforeach ?>
+            <?php endforeach; ?>
             </tbody>
         </table>
-    <?php endif ?>
+    <?php endif; ?>
 <?php endforeach ?>
 <?php if ( FS_Logger::is_storage_logging_on() ) : ?>
 
@@ -792,7 +794,7 @@
                     offset = 0;
                 }
 
-                $.post(<?php echo Freemius::ajax_url() ?>, {
+                $.post(<?php echo esc_url( Freemius::ajax_url() ) ?>, {
                     action : 'fs_get_debug_log',
                     // As such we don't need to use `wp_json_encode` method but using it to follow wp.org guideline.
                     _wpnonce : <?php echo wp_json_encode( wp_create_nonce( 'fs_get_debug_log' ) ); ?>,

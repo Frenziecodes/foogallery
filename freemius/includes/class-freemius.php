@@ -2010,11 +2010,11 @@
                 }
 
                 wp_die(
-                    $this->get_text_inline( 'Freemius SDK couldn\'t find the plugin\'s main file. Please contact sdk@freemius.com with the current error.', 'failed-finding-main-path' ) .
-                    " Module: {$this->_slug}; SDK: " . WP_FS__SDK_VERSION . ";",
-                    $this->get_text_inline( 'Error', 'error' ),
+                    esc_html( $this->get_text_inline( 'Freemius SDK couldn\'t find the plugin\'s main file. Please contact sdk@freemius.com with the current error.', 'failed-finding-main-path' ) ) .
+                    " " . esc_html( "Module: {$this->_slug}; SDK: " . WP_FS__SDK_VERSION . ";" ),
+                    esc_html( $this->get_text_inline( 'Error', 'error' ) ),
                     array( 'back_link' => true )
-                );
+                );                
             }
 
             /**
@@ -7352,7 +7352,7 @@
                 jQuery(document).ready(function ($) {
                     if ('undefined' !== typeof(jQuery().pointer)) {
 
-                        var element = <?php echo $this->apply_filters( 'optin_pointer_element', '$("#non_existing_element");' ) ?>;
+                        var $element = esc_js( $this->apply_filters( 'optin_pointer_element', '$("#non_existing_element");' ) );
 
                         if (element.length > 0) {
                             var optin = $(element).pointer($.extend(true, {}, {
@@ -7366,10 +7366,10 @@
                                     return '';
                                 },
                                 pointerWidth: 482
-                            }, <?php echo $this->apply_filters( 'optin_pointer_options_json', '{}' ) ?>));
+                            }, <?php echo esc_js( $this->apply_filters( 'optin_pointer_options_json', '{}' ) ) ?>));
 
                             <?php
-                            echo $this->apply_filters( 'optin_pointer_execute', "
+                            echo esc_js( $this->apply_filters( 'optin_pointer_execute', "
 
                             optin.pointer('open');
 
@@ -7378,7 +7378,7 @@
                                 .parents('.wp-pointer.wp-pointer-top')
                                 .addClass('fs-opt-in-pointer');
 
-                            ", 'element', 'optin' ) ?>
+                            ", 'element', 'optin' ) )?>
                         }
                     }
                 });
@@ -15675,14 +15675,12 @@
          * @return bool
          */
         private static function is_site_active( $blog_id ) {
-            global $wpdb;
-
-            $blog_info = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->blogs} WHERE blog_id = %d", $blog_id ) );
-
+            $blog_info = get_blog_details( $blog_id );
+        
             if ( ! is_object( $blog_info ) ) {
                 return false;
             }
-
+        
             return (
                 true == $blog_info->public &&
                 false == $blog_info->archived &&
@@ -15690,7 +15688,7 @@
                 false == $blog_info->spam &&
                 false == $blog_info->deleted
             );
-        }
+        }        
 
         /**
          * Get a mapping between the site addresses to their blog IDs.
@@ -23432,7 +23430,7 @@
                 'id'           => $this->_module_id,
                 'plugin_title' => $plugin_title,
             );
-            echo $this->apply_filters( "/forms/affiliation.php", fs_get_template( '/forms/affiliation.php', $vars ) );
+            echo esc_js( $this->apply_filters( "/forms/affiliation.php", fs_get_template( '/forms/affiliation.php', $vars ) ) );
         }
 
 
@@ -23455,7 +23453,7 @@
              * @author Vova Feldman (@svovaf)
              * @since  1.2.1.6
              */
-            echo $this->apply_filters( "templates/{$template}", fs_get_template( $template, $vars ) );
+            echo esc_js( $this->apply_filters( "templates/{$template}", fs_get_template( $template, $vars ) ) );
         }
 
         /**
@@ -23476,7 +23474,7 @@
              * @author Vova Feldman (@svovaf)
              * @since  1.2.1.6
              */
-            echo $this->apply_filters( 'templates/connect.php', fs_get_template( 'connect.php', $vars ) );
+            echo esc_js( $this->apply_filters( 'templates/connect.php', fs_get_template( 'connect.php', $vars ) ) );
         }
 
         /**
@@ -23521,7 +23519,7 @@
              * @author Vova Feldman (@svovaf)
              * @since  1.2.1.6
              */
-            echo $this->apply_filters( 'templates/add-ons.php', fs_get_template( 'add-ons.php', $vars ) );
+            echo esc_js( $this->apply_filters( 'templates/add-ons.php', fs_get_template( 'add-ons.php', $vars ) ) );
         }
 
         /* Pricing & Upgrade
@@ -23538,9 +23536,9 @@
             $vars = array( 'id' => $this->_module_id );
 
             if ( 'true' === fs_request_get( 'checkout', false ) ) {
-                echo $this->apply_filters( 'templates/checkout.php', fs_get_template( 'checkout.php', $vars ) );
+                echo esc_js( $this->apply_filters( 'templates/checkout.php', fs_get_template( 'checkout.php', $vars ) ) );
             } else {
-                echo $this->apply_filters( 'templates/pricing.php', fs_get_template( 'pricing.php', $vars ) );
+                echo esc_js( $this->apply_filters( 'templates/pricing.php', fs_get_template( 'pricing.php', $vars ) ) );
             }
         }
 
@@ -23646,7 +23644,7 @@
              * @author Vova Feldman (@svovaf)
              * @since  2.1.3
              */
-            echo $this->apply_filters( 'templates/contact.php', fs_get_template( 'contact.php', $vars ) );
+            echo esc_js( $this->apply_filters( 'templates/contact.php', fs_get_template( 'contact.php', $vars ) ) );
         }
 
         #endregion ------------------------------------------------------------------------
@@ -25480,8 +25478,9 @@
             }
 
             // Cut closing </div> tag.
-            echo substr( trim( $tabs_html ), 0, - 6 );
-
+            $tabs_html = trim( $tabs_html );
+            $trimmed_html = mb_substr( $tabs_html, 0, -6 );
+            echo esc_html( $trimmed_html ); // Escape HTML before outputting
             return true;
         }
 

@@ -29,7 +29,7 @@
 					message_id: id
 				};
 
-				$.post( <?php echo Freemius::ajax_url() ?>, data, function( response ) {
+				$.post( '<?php echo esc_js( Freemius::ajax_url() ); ?>', data, function( response ) {
 
 				});
 

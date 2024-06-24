@@ -95,10 +95,10 @@
 	<?php foreach ( $scheduled_crons as $slug => $crons ) : ?>
 		<?php foreach ( $crons as $cron ) : ?>
 			<tr>
-				<td><?php echo $slug ?></td>
-				<td><?php echo $cron['name'] ?></td>
-				<td><?php echo $cron['module_type'] ?></td>
-				<td><?php echo $cron['type'] ?></td>
+				<td><?php echo esc_html( $slug ); ?></td>
+				<td><?php echo esc_html( $cron['name'] ); ?></td>
+				<td><?php echo esc_html( $cron['module_type'] ); ?></td>
+				<td><?php echo esc_html( $cron['type'] ); ?></td>
 				<td><?php
 						if ( is_numeric( $cron['last'] ) ) {
 							$diff       = abs( WP_FS__SCRIPT_START_TIME - $cron['last'] );
