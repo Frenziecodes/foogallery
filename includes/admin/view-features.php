@@ -168,9 +168,9 @@ $premium_count = count( array_filter( $extensions, function ( $extension ) {
 		<div style="display:flex; justify-content:space-evenly; align-items:center;">
 
 			<p>
-				<label for="tag-filter"><?php _e( 'Filter by Tag:', 'foogallery' ); ?></label>
+				<label for="tag-filter"><?php esc_html_e( 'Filter by Tag:', 'foogallery' ); ?></label>
 				<select id="tag-filter" name="tag">
-					<option value="all"><?php _e( 'All Tags', 'foogallery' ); ?></option>
+					<option value="all"><?php esc_html_e( 'All Tags', 'foogallery' ); ?></option>
 					<?php
 					// Get all unique tags from extensions data.
 					$all_tags = array();
@@ -195,7 +195,7 @@ $premium_count = count( array_filter( $extensions, function ( $extension ) {
 
 			<p class="search-box">
 				<label class="screen-reader-text" for="extension-search-input">
-					<?php _e( 'Search Extensions', 'foogallery' ); ?>:</label>
+					<?php esc_html_e( 'Search Extensions', 'foogallery' ); ?>:</label>
 				<input type="search" id="extension-search-input" placeholder="Search features..."
 					name="s" value="<?php echo esc_attr( isset( $_REQUEST['s'] ) ? $_REQUEST['s'] : '' ); ?>" />
 			</p>

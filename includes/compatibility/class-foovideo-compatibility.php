@@ -88,7 +88,7 @@ if ( ! class_exists( 'FooGallery_FooVideo_Compatibility' ) ) {
 						<strong><?php echo $notice_title; ?></strong><br />
 						<?php echo $notice_message; ?><br />
 						<br />
-						<a class="button button-primary button-large" href="<?php echo $url; ?>"><?php _e( 'Redeem Now!', 'foogallery' ); ?></a>
+						<a class="button button-primary button-large" href="<?php echo $url; ?>"><?php esc_html_e( 'Redeem Now!', 'foogallery' ); ?></a>
 					</p>
 				</div>
 				<?php

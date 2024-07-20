@@ -80,7 +80,7 @@ if ( ! class_exists( 'FooGallery_Admin_Columns' ) ) {
 						}
 						echo '</ul>';
 					} else {
-						_e( 'Not used!', 'foogallery' );
+						esc_html_e( 'Not used!', 'foogallery' );
 					}
 					break;
 			}
@@ -98,7 +98,7 @@ if ( ! class_exists( 'FooGallery_Admin_Columns' ) ) {
 								document.execCommand('copy');
 								//show the copied message
 								$('.foogallery-shortcode-message').remove();
-								$(this).after('<p class="foogallery-shortcode-message"><?php _e( 'Shortcode copied to clipboard :)','foogallery' ); ?></p>');
+								$(this).after('<p class="foogallery-shortcode-message"><?php esc_html_e( 'Shortcode copied to clipboard :)','foogallery' ); ?></p>');
 							} catch(err) {
 								console.log('Oops, unable to copy!');
 							}

@@ -321,7 +321,7 @@ if ( ! class_exists( 'FooGallery_Pro_Promotion' ) ) {
 ?>
 			<div class="foogallery_template_field_type-promo <?php echo $class; ?>">
 				<div class="foogallery-promo">
-					<strong><?php echo $plan; ?> <?php _e('Feature', 'foogallery' ); ?> : <?php echo $datasouce_title; ?></strong>
+					<strong><?php echo $plan; ?> <?php esc_html_e('Feature', 'foogallery' ); ?> : <?php echo $datasouce_title; ?></strong>
 					<br><br>
 					<?php echo $datasource_desc; ?>
 					<br><br>

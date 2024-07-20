@@ -168,7 +168,7 @@ if ( ! class_exists( 'FooGallery_Admin_Album_MetaBoxes' ) ) {
 			<div>
 				<?php if ( !$album->has_galleries() ) { ?>
 					<div class="foogallery-album-error">
-						<?php _e( 'There are no galleries selected for your album yet! Click any gallery to add it to your album.', 'foogallery' ); ?>
+						<?php esc_html_e( 'There are no galleries selected for your album yet! Click any gallery to add it to your album.', 'foogallery' ); ?>
 					</div>
 				<?php } ?>
 
@@ -176,26 +176,26 @@ if ( ! class_exists( 'FooGallery_Admin_Album_MetaBoxes' ) ) {
 					<div class="media-modal-content">
 						<div class="media-frame mode-select">
 							<div class="media-frame-title">
-								<h1><?php _e('Edit Gallery Details', 'foogallery'); ?></h1>
+								<h1><?php esc_html_e('Edit Gallery Details', 'foogallery'); ?></h1>
 								<span class="spinner is-active"></span>
 							</div>
 							<div class="modal-content">
 								<?php wp_nonce_field( 'foogallery_album_gallery_details', 'foogallery_album_gallery_details_nonce', false ); ?>
-								<div class="gallery-details" data-loading="<?php _e( 'Loading details for ', 'foogallery' ); ?>"></div>
+								<div class="gallery-details" data-loading="<?php esc_html_e( 'Loading details for ', 'foogallery' ); ?>"></div>
 							</div>
 						</div>
 						<div class="media-frame-toolbar">
 							<div class="media-toolbar">
 								<div class="media-toolbar-secondary"></div>
 								<div class="media-toolbar-primary search-form">
-									<button type="button" class="button media-button button-primary button-large media-button-select gallery-details-save"><?php _e('Save Gallery Details', 'foogallery'); ?></button>
+									<button type="button" class="button media-button button-primary button-large media-button-select gallery-details-save"><?php esc_html_e('Save Gallery Details', 'foogallery'); ?></button>
 									<span class="spinner"></span>
 								</div>
 							</div>
 						</div>
 					</div>
 					<button type="button" class="button-link media-modal-close">
-						<span class="media-modal-icon"><span class="screen-reader-text"><?php _e('Close media panel', 'foogallery'); ?></span></span>
+						<span class="media-modal-icon"><span class="screen-reader-text"><?php esc_html_e('Close media panel', 'foogallery'); ?></span></span>
 					</button>
 
 				</div>
@@ -222,7 +222,7 @@ if ( ! class_exists( 'FooGallery_Admin_Album_MetaBoxes' ) ) {
 									</div>
 								</div>
 								<a class="info foogallery-album-info" href="#"
-								   title="<?php _e( 'Edit Album Info', 'foogallery' ); ?>"
+								   title="<?php esc_html_e( 'Edit Album Info', 'foogallery' ); ?>"
 								   data-gallery-title="<?php echo $title; ?>"
 								   data-gallery-id="<?php echo $gallery->ID; ?>"><span class="dashicons dashicons-info"></span>
                                 </a>
@@ -243,7 +243,7 @@ if ( ! class_exists( 'FooGallery_Admin_Album_MetaBoxes' ) ) {
 				<input type="text" id="foogallery_copy_shortcode" size="<?php echo strlen( $shortcode ); ?>" value="<?php echo htmlspecialchars( $shortcode ); ?>" readonly="readonly" />
 			</p>
 			<p>
-				<?php _e( 'Paste the above shortcode into a post or page to show the album.', 'foogallery' ); ?>
+				<?php esc_html_e( 'Paste the above shortcode into a post or page to show the album.', 'foogallery' ); ?>
 			</p>
 			<script>
 				jQuery(function($) {
@@ -256,7 +256,7 @@ if ( ! class_exists( 'FooGallery_Admin_Album_MetaBoxes' ) ) {
 							document.execCommand('copy');
 							//show the copied message
 							$('.foogallery-shortcode-message').remove();
-							$(shortcodeInput).after('<p class="foogallery-shortcode-message"><?php _e( 'Shortcode copied to clipboard :)','foogallery' ); ?></p>');
+							$(shortcodeInput).after('<p class="foogallery-shortcode-message"><?php esc_html_e( 'Shortcode copied to clipboard :)','foogallery' ); ?></p>');
 						} catch(err) {
 							console.log('Oops, unable to copy!');
 						}
@@ -270,7 +270,7 @@ if ( ! class_exists( 'FooGallery_Admin_Album_MetaBoxes' ) ) {
 			$album = $this->get_album( $post );
 			$sorting_options = foogallery_sorting_options(); ?>
 			<p>
-				<?php _e('Change the way galleries are sorted within your album. By default, they are sorted in the order you see them.', 'foogallery'); ?>
+				<?php esc_html_e('Change the way galleries are sorted within your album. By default, they are sorted in the order you see them.', 'foogallery'); ?>
 			</p>
 			<?php
 			foreach ( $sorting_options as $sorting_key => $sorting_label ) { ?>
@@ -297,7 +297,7 @@ if ( ! class_exists( 'FooGallery_Admin_Album_MetaBoxes' ) ) {
 				<tbody>
 				<tr class="foogallery_template_field foogallery_template_field_selector">
 					<th>
-						<label for="FooGallerySettings_AlbumTemplate"><?php _e( 'Album Template', 'foogallery' ); ?></label>
+						<label for="FooGallerySettings_AlbumTemplate"><?php esc_html_e( 'Album Template', 'foogallery' ); ?></label>
 					</th>
 					<td>
 						<select id="FooGallerySettings_AlbumTemplate" name="<?php echo FOOGALLERY_ALBUM_META_TEMPLATE; ?>">
@@ -309,7 +309,7 @@ if ( ! class_exists( 'FooGallery_Admin_Album_MetaBoxes' ) ) {
 							?>
 						</select>
 						<br />
-						<small><?php _e( 'The album template that will be used when the album is output to the frontend.', 'foogallery' ); ?></small>
+						<small><?php esc_html_e( 'The album template that will be used when the album is output to the frontend.', 'foogallery' ); ?></small>
 					</td>
 				</tr>
 				<?php
