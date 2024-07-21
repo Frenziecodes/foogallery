@@ -331,7 +331,7 @@ if ( ! class_exists( 'FooGallery_Admin_Gallery_MetaBoxes' ) ) {
 					$url = get_permalink( $post->ID );
 					echo '<li>' . $post->post_title . '&nbsp;';
 					edit_post_link( __( 'Edit', 'foogallery' ), '<span class="edit">', ' | </span>', $post->ID );
-					echo '<span class="view"><a href="' . esc_url( $url ) . '" target="_blank">' . __( 'View', 'foogallery' ) . '</a></li>';
+					echo '<span class="view"><a href="' . esc_url( $url ) . '" target="_blank">' . esc_html__( 'View', 'foogallery' ) . '</a></li>';
 				} ?>
 				</ul>
 			<?php } else { ?>
@@ -449,7 +449,7 @@ if ( ! class_exists( 'FooGallery_Admin_Gallery_MetaBoxes' ) ) {
 			$example = '<code>#foogallery-gallery-' . $post->ID . ' { }</code>';
 			?>
 			<p>
-				<?php printf( __( 'Add any custom CSS to target this specific gallery. For example %s', 'foogallery' ), $example ); ?>
+				<?php printf( esc_html__( 'Add any custom CSS to target this specific gallery. For example %s', 'foogallery' ), $example ); ?>
 			</p>
 			<table id="table_styling" class="form-table">
 				<tbody>
@@ -504,9 +504,9 @@ if ( ! class_exists( 'FooGallery_Admin_Gallery_MetaBoxes' ) ) {
 
 					ob_end_clean();
 
-					echo __( 'The thumbnail cache has been cleared!', 'foogallery' );
+					echo esc_html__( 'The thumbnail cache has been cleared!', 'foogallery' );
 				} else {
-					echo __( 'There was no thumbnail cache to clear.', 'foogallery' );
+					echo esc_html__( 'There was no thumbnail cache to clear.', 'foogallery' );
 				}
 			}
 
@@ -529,9 +529,9 @@ if ( ! class_exists( 'FooGallery_Admin_Gallery_MetaBoxes' ) ) {
 
 					ob_end_clean();
 
-					echo __( 'The thumbnail cache has been cleared!', 'foogallery' );
+					echo esc_html__( 'The thumbnail cache has been cleared!', 'foogallery' );
 				} else {
-					echo __( 'There was no thumbnail cache to clear.', 'foogallery' );
+					echo esc_html__( 'There was no thumbnail cache to clear.', 'foogallery' );
 				}
 			}
 

@@ -45,7 +45,7 @@ if ( isset( $_POST['foogallery_demo_content_generate'] ) ) {
 
 	<div class="foogallery-help">
 		<?php esc_html_e( 'Search for images and generate galleries below. Use multiple keywords to ensure you find enough images.', 'foogallery' ); ?>
-		<?php printf( __( 'Images are provided by %s', 'foogallery' ), '<a href="https://pixabay.com/" target="_blank">Pixabay</a>.' ); ?>
+		<?php printf( esc_html__( 'Images are provided by %s', 'foogallery' ), '<a href="https://pixabay.com/" target="_blank">Pixabay</a>.' ); ?>
 	</div>
 
 	<a target="_blank" href="https://pixabay.com/"><img src="https://pixabay.com/static/img/public/leaderboard_a.png" alt="Pixabay"></a>
@@ -54,7 +54,7 @@ if ( isset( $_POST['foogallery_demo_content_generate'] ) ) {
 
 	<form id="demo_content_form" method="POST">
 		<?php wp_nonce_field( 'foogallery_demo_content_generate', 'foogallery_demo_content_generate' ); ?>
-		<?php esc_html_e( 'Keywords', 'foogallery' ); ?> <input placeholder="<?php __('Search for?', 'foogallery'); ?>" type="text" name="q" value="<?php echo $query; ?>" />
+		<?php esc_html_e( 'Keywords', 'foogallery' ); ?> <input placeholder="<?php esc_html__('Search for?', 'foogallery'); ?>" type="text" name="q" value="<?php echo $query; ?>" />
 		<?php esc_html_e( 'Images', 'foogallery' ); ?> <input type="number" name="c" style="width: 3em" value="<?php echo $count; ?>" />
 		<input type="submit" class="button button-primary" name="btn_search" value="<?php esc_html_e( 'Search', 'foogallery' ); ?>">
 		<?php if ( isset( $results ) ) {

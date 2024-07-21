@@ -32,10 +32,10 @@ if ( ! class_exists( 'FooGallery_Datasource_MediaLibrary' ) ) {
                 $setting_value = foogallery_get_setting( 'advanced_attachment_modal' );
                 if ( 'on' === $setting_value ) {
                     $setting_value = '';
-                    echo __( 'The Attachment Modal feature has been disabled. The page will now refresh.' ,'foogallery' );
+                    echo esc_html__( 'The Attachment Modal feature has been disabled. The page will now refresh.' ,'foogallery' );
                 } else {
                     $setting_value = 'on';
-                    echo __( 'The Attachment Modal feature has been enabled. The page will now refresh.' ,'foogallery' );
+                    echo esc_html__( 'The Attachment Modal feature has been enabled. The page will now refresh.' ,'foogallery' );
                 }
 
                 foogallery_set_setting( 'advanced_attachment_modal', $setting_value );
@@ -158,10 +158,10 @@ if ( ! class_exists( 'FooGallery_Datasource_MediaLibrary' ) ) {
                     $attachment_modal_link_html = sprintf('<a target="_blank" href="%s">%s</a>',$attachment_modal_url, __( 'Advanced Attachment Modal', 'foogallery' ) );
 
                     if ( 'on' !== $modal_enabled ) {
-                        printf( __( 'Try the new %s feature : a better way to update your attachment details!', 'foogallery' ), $attachment_modal_link_html );
+                        printf( esc_html__( 'Try the new %s feature : a better way to update your attachment details!', 'foogallery' ), $attachment_modal_link_html );
                         $attachment_modal_action = __( 'Enable it now!', 'foogallery' );
                     } else {
-                        printf( __( 'The new %s feature is enabled and ready to use!', 'foogallery' ), $attachment_modal_link_html );
+                        printf( esc_html__( 'The new %s feature is enabled and ready to use!', 'foogallery' ), $attachment_modal_link_html );
                         $attachment_modal_action = __( 'Disable it now!', 'foogallery' );
                     }
                     ?>

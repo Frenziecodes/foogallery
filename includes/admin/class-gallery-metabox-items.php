@@ -89,7 +89,7 @@ if ( ! class_exists( 'FooGallery_Admin_Gallery_MetaBox_Items' ) ) {
 
 		public function render_empty_gallery_preview() {
 			echo '<div class="foogallery-preview-empty" style="padding:20px; text-align: center">';
-			echo '<h3>' . __( 'Please add media to your gallery to see a preview!', 'foogallery' ) . '</h3>';
+			echo '<h3>' . esc_html__( 'Please add media to your gallery to see a preview!', 'foogallery' ) . '</h3>';
 			echo '</div>';
 		}
 
@@ -120,7 +120,7 @@ if ( ! class_exists( 'FooGallery_Admin_Gallery_MetaBox_Items' ) ) {
 					$args = apply_filters( 'foogallery_preview_arguments-' . $template, $args, $_POST );
 
 					if ( foogallery_is_debug() ) {
-                        echo '<pre style="display: none">' . __('Preview Debug Arguments:', 'foogallery') . '<br>' . print_r( $args, true ) . '</pre>';
+                        echo '<pre style="display: none">' . esc_html__('Preview Debug Arguments:', 'foogallery') . '<br>' . print_r( $args, true ) . '</pre>';
                     }
 
 					foogallery_render_gallery( $foogallery_id, $args );
@@ -129,8 +129,8 @@ if ( ! class_exists( 'FooGallery_Admin_Gallery_MetaBox_Items' ) ) {
 
 				} else {
 					echo '<div style="padding:20px 50px 50px 50px; text-align: center">';
-					echo '<h3>' . __( 'Preview not available!', 'foogallery' ) . '</h3>';
-					echo __('Sorry, but this gallery template does not support live previews. Please update the gallery in order to see what the gallery will look like.', 'foogallery' );
+					echo '<h3>' . esc_html__( 'Preview not available!', 'foogallery' ) . '</h3>';
+					echo esc_html__('Sorry, but this gallery template does not support live previews. Please update the gallery in order to see what the gallery will look like.', 'foogallery' );
 					echo '</div>';
 				}
 			}

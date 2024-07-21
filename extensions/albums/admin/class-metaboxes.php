@@ -365,7 +365,7 @@ if ( ! class_exists( 'FooGallery_Admin_Album_MetaBoxes' ) ) {
 			$example = '<code>#foogallery-album-' . $post->ID . ' { }</code>';
 			?>
 			<p>
-				<?php printf( __( 'Add any custom CSS to target this specific album. For example %s', 'foogallery' ), $example ); ?>
+				<?php printf( esc_html__( 'Add any custom CSS to target this specific album. For example %s', 'foogallery' ), $example ); ?>
 			</p>
 			<table id="table_styling" class="form-table">
 				<tbody>
@@ -494,7 +494,7 @@ if ( ! class_exists( 'FooGallery_Admin_Album_MetaBoxes' ) ) {
 					</table>
 					</form><?php
 				} else {
-					echo '<h2>' . __( 'Invalid Gallery!', 'foogallery' ) . '</h2>';
+					echo '<h2>' . esc_html__( 'Invalid Gallery!', 'foogallery' ) . '</h2>';
 				}
 			}
 			die();

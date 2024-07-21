@@ -116,7 +116,7 @@ $premium_count = count( array_filter( $extensions, function ( $extension ) {
 </style>
 <div class="wrap foogallery-features">
 	<h2>
-		<?php printf( __( '%s Features', 'foogallery' ), foogallery_plugin_name() ); ?>
+		<?php printf( esc_html__( '%s Features', 'foogallery' ), foogallery_plugin_name() ); ?>
 		<span class="spinner"></span>
 	</h2>
 

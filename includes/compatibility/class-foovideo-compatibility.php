@@ -63,8 +63,8 @@ if ( ! class_exists( 'FooGallery_FooVideo_Compatibility' ) ) {
 			$show_message = get_option( FooGallery_FooVideo_Compatibility::option_discount_key, 0 );
 			if ( '1' === $show_message ) {
 
-				$notice_title   = apply_filters( 'foogallery_foovideo_discount_offer_notice_title', __( 'FooGallery PRO Discount Available!', 'foogallery' ) );
-				$notice_message = apply_filters( 'foogallery_foovideo_discount_offer_notice_message', __( 'We noticed that you own a license for the older FooVideo extension but not for FooGallery PRO, which has all the awesome features of FooVideo, plus more! And because you already own FooVideo, you are eligible for a discount when upgrading to FooGallery PRO.', 'foogallery' ) );
+				$notice_title   = apply_filters( 'foogallery_foovideo_discount_offer_notice_title', esc_html__( 'FooGallery PRO Discount Available!', 'foogallery' ) );
+				$notice_message = apply_filters( 'foogallery_foovideo_discount_offer_notice_message', esc_html__( 'We noticed that you own a license for the older FooVideo extension but not for FooGallery PRO, which has all the awesome features of FooVideo, plus more! And because you already own FooVideo, you are eligible for a discount when upgrading to FooGallery PRO.', 'foogallery' ) );
 
 				$url = admin_url( add_query_arg( array( 'page' => 'foogallery-video-offer' ), foogallery_admin_menu_parent_slug() ) );
 				?>
@@ -115,7 +115,7 @@ if ( ! class_exists( 'FooGallery_FooVideo_Compatibility' ) ) {
 		 * Add a new menu item for running the migration
 		 */
 		function add_discount_menu() {
-			$menu = apply_filters( 'foogallery_foovideo_discount_offer_menu', __( 'Discount Offer', 'foogallery' ) );
+			$menu = apply_filters( 'foogallery_foovideo_discount_offer_menu', esc_html__( 'Discount Offer', 'foogallery' ) );
 
 			foogallery_add_submenu_page( $menu, 'manage_options', 'foogallery-video-offer', array( $this, 'render_video_offer_view', ) );
 		}
@@ -125,9 +125,9 @@ if ( ! class_exists( 'FooGallery_FooVideo_Compatibility' ) ) {
 				$license_key = get_site_option( 'foo-video_licensekey' );
 
 				if ( empty( $license_key ) ) {
-					echo '<h3>' . __( 'No FooVideo License Found!', 'foogallery' ) . '</h3>';
-					$settings_link = '<a target="_blank" href="' . foogallery_admin_settings_url() . '#extensions">' . __('FooGallery Settings page', 'foogallery') . '</a>';
-					echo '<h4>' . sprintf( __( 'There is no FooVideo license key set for this site. Please set it via the %s under the extensions tab and try again.', 'foogallery' ), $settings_link ) . '</h4>';
+					echo '<h3>' . esc_htmlesc_html__( 'No FooVideo License Found!', 'foogallery' ) . '</h3>';
+					$settings_link = '<a target="_blank" href="' . foogallery_admin_settings_url() . '#extensions">' . esc_html__('FooGallery Settings page', 'foogallery') . '</a>';
+					echo '<h4>' . sprintf( esc_htmlesc_html__( 'There is no FooVideo license key set for this site. Please set it via the %s under the extensions tab and try again.', 'foogallery' ), $settings_link ) . '</h4>';
 				} else {
 					$license_url = "https://fooplugins.com/api/{$license_key}/licensekey/";
 
@@ -143,41 +143,41 @@ if ( ! class_exists( 'FooGallery_FooVideo_Compatibility' ) ) {
 								$coupon = $license_details['coupon'];
 
 								if ( $coupon['valid'] ) {
-									echo '<h3>' . __( 'Your discount code is : ', 'foogallery' ) . $coupon['code'] . '</h3>';
-									echo '<h4>' . __( 'The value of the discount is : ', 'foogallery' ) . $coupon['value'] . '</h4>';
+									echo '<h3>' . esc_htmlesc_html__( 'Your discount code is : ', 'foogallery' ) . $coupon['code'] . '</h3>';
+									echo '<h4>' . esc_htmlesc_html__( 'The value of the discount is : ', 'foogallery' ) . $coupon['value'] . '</h4>';
 
-									$license_option = __( 'Single Site', 'foogallery' );
+									$license_option = esc_html__( 'Single Site', 'foogallery' );
 									if ( 'FooVideo Extension (Multi)' === $license_details['license'] ) {
-										$license_option = __( '5 Site', 'foogallery' );
+										$license_option = esc_html__( '5 Site', 'foogallery' );
 									} else if ( 'FooVideo Extension (Business)' === $license_details['license'] ) {
-										$license_option = __( '25 Site', 'foogallery' );
+										$license_option = esc_html__( '25 Site', 'foogallery' );
 									}
 									$license_option = '<strong>' . $license_option . '</strong>';
 									$pricing_page_url  = foogallery_admin_pricing_url();
-									$pricing_page_text = apply_filters( 'foogallery_foovideo_pricing_menu_text', __( 'FooGallery -> Upgrade', 'foogallery' ) );
+									$pricing_page_text = apply_filters( 'foogallery_foovideo_pricing_menu_text', esc_html__( 'FooGallery -> Upgrade', 'foogallery' ) );
 									$pricing_page_link = '<a target="_blank" href="' . $pricing_page_url . '">' . $pricing_page_text . '</a>';
 
 									if ( !class_exists( 'FooGallery_Pro_Video' ) ) {
-										echo sprintf( __( 'Your discount entitles you to a FooGallery PRO - %s license for no additional cost!', 'foogallery' ), $license_option );
-										echo '<br />' . sprintf( __( 'Copy the discount code above and use it when purchasing FooGallery PRO from %s (make sure to select %s plan!).', 'foogallery' ), $pricing_page_link, $license_option );
+										echo sprintf( esc_htmlesc_html__( 'Your discount entitles you to a FooGallery PRO - %s license for no additional cost!', 'foogallery' ), $license_option );
+										echo '<br />' . sprintf( esc_htmlesc_html__( 'Copy the discount code above and use it when purchasing FooGallery PRO from %s (make sure to select %s plan!).', 'foogallery' ), $pricing_page_link, $license_option );
 									} else {
-										echo sprintf( __( 'Your discount entitles you to a free FooGallery PRO - %s license renewal or extension!', 'foogallery' ), $license_option );
-										echo '<br />' . sprintf( __( 'Copy the discount code above and use it when extending your FooGallery PRO license from %s (make sure to select the %s plan!).', 'foogallery' ), $pricing_page_link, $license_option );
+										echo sprintf( esc_htmlesc_html__( 'Your discount entitles you to a free FooGallery PRO - %s license renewal or extension!', 'foogallery' ), $license_option );
+										echo '<br />' . sprintf( esc_htmlesc_html__( 'Copy the discount code above and use it when extending your FooGallery PRO license from %s (make sure to select the %s plan!).', 'foogallery' ), $pricing_page_link, $license_option );
 									}
-									$doc_link = '<a href="https://fooplugins.link/foovideo-upgrade" target="_blank">' . __( 'read our documentation', 'foogallery' ) . '</a>';
-									echo '<br />' . sprintf( __( 'For a more detailed guide on the process, %s.', 'foogallery' ), $doc_link );
+									$doc_link = '<a href="https://fooplugins.link/foovideo-upgrade" target="_blank">' . esc_html__( 'read our documentation', 'foogallery' ) . '</a>';
+									echo '<br />' . sprintf( esc_html__( 'For a more detailed guide on the process, %s.', 'foogallery' ), $doc_link );
 
 									//redeemed the code - no need to show the admin notice anymore
 									update_option( FooGallery_FooVideo_Compatibility::option_discount_key, '2' );
 								} else {
-									echo '<h3>' . __( 'Invalid License!', 'foogallery' ) . '</h3>';
+									echo '<h3>' . esc_html__( 'Invalid License!', 'foogallery' ) . '</h3>';
 									echo '<h4>' .$coupon['code'] . '</h4>';
 								}
 
 							}
 						}
 					} else {
-						echo '<h4>'. __('Sorry! There was an error retrieving your discount code from our servers. Please log a support ticket and we will help.', 'foogallery') . '</h4>';
+						echo '<h4>'. esc_html__('Sorry! There was an error retrieving your discount code from our servers. Please log a support ticket and we will help.', 'foogallery') . '</h4>';
 					}
 				}
 			}
@@ -189,9 +189,9 @@ if ( ! class_exists( 'FooGallery_FooVideo_Compatibility' ) ) {
 				//send the support email!
 				$message = $_POST['message'];
 				if ( wp_mail( 'support@fooplugins.com', 'FooGallery/FooVideo Discount Offer Query', $message ) ) {
-					echo __('Support email logged successfully!', 'foogallery' );
+					echo esc_html__('Support email logged successfully!', 'foogallery' );
 				} else {
-					echo __('We could not log the ticket. Please email support@fooplugins.com directly.', 'foogallery' );
+					echo esc_html__('We could not log the ticket. Please email support@fooplugins.com directly.', 'foogallery' );
 				}
 			}
 			die();

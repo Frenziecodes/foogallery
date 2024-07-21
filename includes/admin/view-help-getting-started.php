@@ -20,7 +20,7 @@ $migrator_link = sprintf( '<a href="%s" target="_blank">%s</a>', 'https://wordpr
 			<p><?php esc_html_e( 'Better galleries for WordPress, that are faster, more flexible and beautiful!', 'foogallery' ); ?></p>
 		</header>
 		<footer>
-			<a class="foogallery-admin-help-button-cta" target="_blank" href="<?php echo esc_url ( $plugin_url ); ?>"><?php echo sprintf( __( 'Visit the %s Homepage', 'foogallery' ), $plugin_name ); ?></a>
+			<a class="foogallery-admin-help-button-cta" target="_blank" href="<?php echo esc_url ( $plugin_url ); ?>"><?php echo sprintf( esc_html__( 'Visit the %s Homepage', 'foogallery' ), $plugin_name ); ?></a>
 		</footer>
 	</section>
 
@@ -28,12 +28,12 @@ $migrator_link = sprintf( '<a href="%s" target="_blank">%s</a>', 'https://wordpr
         <header>
             <h3><?php esc_html_e(  'Are you migrating from another gallery plugin?', 'foogallery' ); ?></h3>
             <p>
-                <?php printf( __( 'We have built a separate migration tool to help you seamlessly migrate from other gallery plugins to %s.', 'foogallery' ), foogallery_plugin_name() ); ?>
+                <?php printf( esc_html__( 'We have built a separate migration tool to help you seamlessly migrate from other gallery plugins to %s.', 'foogallery' ), foogallery_plugin_name() ); ?>
                 <?php echo $migrator_link; ?>
             </p>
         </header>
         <footer>
-            <a class="foogallery-admin-help-button-cta" target="_blank" href="<?php echo esc_url ( $migrator_url ); ?>"><?php echo sprintf( __( 'Install our migrator!', 'foogallery' ), $plugin_name ); ?></a>
+            <a class="foogallery-admin-help-button-cta" target="_blank" href="<?php echo esc_url ( $migrator_url ); ?>"><?php echo sprintf( esc_html__( 'Install our migrator!', 'foogallery' ), $plugin_name ); ?></a>
         </footer>
     </section>
 
@@ -95,7 +95,7 @@ $migrator_link = sprintf( '<a href="%s" target="_blank">%s</a>', 'https://wordpr
                 <img width="556" height="407" src="<?php echo esc_url( 'https://assets.fooplugins.com/foogallery/plugin/foogallery-admin-help-embed.png' ); ?>" alt="Show off your gallery" />
             </figure>
             <dl>
-                <dt><?php printf(  __( '%s Block','foogallery' ), foogallery_plugin_name() ); ?></dt>
+                <dt><?php printf(  __( '%s Block','foogallery' ), esc_html( foogallery_plugin_name() ) ); ?></dt>
                 <dd><?php esc_html_e( 'Use our block to embed a gallery in the Gutenberg editor. Live previews help you visualize how the gallery will really look on the frontend.', 'foogallery' );?></dd>
                 <dt><?php printf( __( 'The <code>[%s]</code> Shortcode','foogallery' ), foogallery_gallery_shortcode_tag() );?></dt>
                 <dd><?php esc_html_e( 'Copy and paste the gallery shortcode into any page. You can find the shortcode from the gallery listing or within the Gallery Shortcode metabox when you edit a gallery.', 'foogallery' );?></dd>

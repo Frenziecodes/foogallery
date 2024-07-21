@@ -31,12 +31,12 @@ if ( ! class_exists( 'FooGallery_Albums_Admin_Columns' ) ) {
 					$album = FooGalleryAlbum::get( $post );
 					$template = $album->album_template_details();
 					if ( false !== $template ) {
-						echo $template['name'];
+						echo esc_html( $template['name'] );
 					}
 					break;
 				case FOOGALLERY_CPT_ALBUM . '_galleries':
 					$album = FooGalleryAlbum::get( $post );
-					echo $album->gallery_count();
+					echo esc_html( $album->gallery_count() );
 					break;
 				case FOOGALLERY_CPT_ALBUM . '_shortcode':
 					$album = FooGalleryAlbum::get( $post );

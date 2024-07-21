@@ -35,7 +35,7 @@ $foogallery_pro_features = foogallery_pro_features();
             </footer>
         <?php } else if ( $show_thanks_for_pro ) { ?>
             <header>
-                <h3><?php echo sprintf( __( 'Thanks for your support by purchasing a %s license 😍', 'foogallery' ), '<span class="fgah-plan-' . $foogallery_current_plan . '">' . $foogallery_plans[ $foogallery_current_plan ] . '</span>' );?></h3>
+                <h3><?php echo sprintf( esc_html__( 'Thanks for your support by purchasing a %s license 😍', 'foogallery' ), '<span class="fgah-plan-' . $foogallery_current_plan . '">' . $foogallery_plans[ $foogallery_current_plan ] . '</span>' );?></h3>
                 <p><?php esc_html_e( 'Check out the PRO features you can start using immediately...', 'foogallery' );?></p>
             </header>
         <?php } else if ( $is_trial ) { ?>
