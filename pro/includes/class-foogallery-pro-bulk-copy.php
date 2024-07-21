@@ -47,26 +47,26 @@ if ( ! class_exists( 'FooGallery_Pro_Bulk_Copy' ) ) {
         }
 
         public function ajax_bulk_copy_run() {
-            if (check_admin_referer('foogallery_bulk_copy_run', 'foogallery_bulk_copy_run_nonce')) {
+            if (check_admin_referer( 'foogallery_bulk_copy_run', 'foogallery_bulk_copy_run_nonce')) {
                 $data = $_POST['foogallery_bulk_copy'];
                 $foogallery_id = $data['foogallery'];
                 $errors = $settings = $galleries = array();
                 $destination = false;
                 if ( !array_key_exists( 'settings', $data ) ) {
-                    $errors['settings'] = __('You need to decide which settings you want to copy across.', 'foogallery');
+                    $errors['settings'] = __( 'You need to decide which settings you want to copy across.', 'foogallery');
                 } else {
                     $settings = $data['settings'];
                 }
 
                 if ( !isset( $data['destination'] ) ) {
-                    $errors['destination'] = __('You need to choose the destination you want to copy to.', 'foogallery');
+                    $errors['destination'] = __( 'You need to choose the destination you want to copy to.', 'foogallery');
                 } else {
                     $destination = $data['destination'];
                 }
 
                 if ( 'custom' === $destination ) {
                     if (!isset($data['gallery'])) {
-                        $errors['gallery'] = __('You need to select which galleries you want to copy to.', 'foogallery');
+                        $errors['gallery'] = __( 'You need to select which galleries you want to copy to.', 'foogallery');
                     } else {
                         $galleries = $data['gallery'];
                     }
@@ -91,7 +91,7 @@ if ( ! class_exists( 'FooGallery_Pro_Bulk_Copy' ) ) {
         private function run_bulk_copy($foogallery_id, $settings, $destination = false, $galleries = array()) {
 
             if ( false === $settings ) {
-                return __('No settings were selected to be copied!', 'foogallery');
+                return __( 'No settings were selected to be copied!', 'foogallery');
             }
 
             $args = array(
@@ -120,20 +120,20 @@ if ( ! class_exists( 'FooGallery_Pro_Bulk_Copy' ) ) {
             foreach ( $gallery_posts as $post ) {
 
                 //override the post meta for the gallery
-                if ( array_key_exists(FOOGALLERY_META_SETTINGS, $settings) ) {
+                if ( array_key_exists( FOOGALLERY_META_SETTINGS, $settings) ) {
                     update_post_meta( $post->ID, FOOGALLERY_META_TEMPLATE, $source_gallery_template );
                     update_post_meta( $post->ID, FOOGALLERY_META_SETTINGS, $source_settings );
                 }
 
-                if ( array_key_exists(FOOGALLERY_META_SORT, $settings) ) {
+                if ( array_key_exists( FOOGALLERY_META_SORT, $settings) ) {
                     update_post_meta( $post->ID, FOOGALLERY_META_SORT, $source_sorting );
                 }
 
-                if ( array_key_exists(FOOGALLERY_META_RETINA, $settings) ) {
+                if ( array_key_exists( FOOGALLERY_META_RETINA, $settings) ) {
                     update_post_meta( $post->ID, FOOGALLERY_META_RETINA, $source_retina );
                 }
 
-                if ( array_key_exists(FOOGALLERY_META_CUSTOM_CSS, $settings) ) {
+                if ( array_key_exists( FOOGALLERY_META_CUSTOM_CSS, $settings) ) {
                     update_post_meta( $post->ID, FOOGALLERY_META_CUSTOM_CSS, $source_custom_css );
                 }
 
@@ -157,71 +157,72 @@ if ( ! class_exists( 'FooGallery_Pro_Bulk_Copy' ) ) {
                 <table class="foogallery-metabox-settings">
                     <tr class="foogallery_template_field">
                         <th>
-                            <label><?php esc_html_e('Which Settings?', 'foogallery'); ?></label>
+                            <label><?php esc_html_e( 'Which Settings?', 'foogallery'); ?></label>
                             <span data-balloon-length="large" data-balloon-pos="right" data-balloon="Choose which settings you wish to bulk copy to other galleries."><i class="dashicons dashicons-editor-help"></i></span>
                         </th>
                         <td>
                             <?php if ( array_key_exists( 'settings', $errors ) ) {?>
-                                <div class="foogallery_bulk_copy_error"><?php echo $errors['settings']; ?></div>
+                                <div class="foogallery_bulk_copy_error"><?php echo esc_html( $errors['settings'] ); ?></div>
                             <?php } ?>
-                            <div class="foogallery_metabox_field-radio">
-                                <input <?php echo (array_key_exists(FOOGALLERY_META_SETTINGS, $settings) ? 'checked="checked"' : ''); ?> type="checkbox" name="foogallery_bulk_copy[settings][<?php echo FOOGALLERY_META_SETTINGS; ?>]" id="FooGalleryBulkCopy_Settings_Template" value="<?php echo FOOGALLERY_META_SETTINGS; ?>">
-                                <label for="FooGalleryBulkCopy_Settings_Template"><?php esc_html_e('Gallery Template & Settings', 'foogallery'); ?></label><br>
+                            <div class="foogallery_metabox_field_radio">
+                                <input <?php echo ( array_key_exists( FOOGALLERY_META_SETTINGS, $settings ) ? 'checked="checked"' : '' ); ?> type="checkbox" name="foogallery_bulk_copy[settings][<?php echo esc_attr( FOOGALLERY_META_SETTINGS ); ?>]" id="FooGalleryBulkCopy_Settings_Template" value="<?php echo esc_attr( FOOGALLERY_META_SETTINGS ); ?>">
+                                <label for="FooGalleryBulkCopy_Settings_Template"><?php esc_html_e( 'Gallery Template & Settings', 'foogallery' ); ?></label><br>
 
-                                <input <?php echo (array_key_exists(FOOGALLERY_META_RETINA, $settings) ? 'checked="checked"' : ''); ?> type="checkbox" name="foogallery_bulk_copy[settings][<?php echo FOOGALLERY_META_RETINA; ?>]" id="FooGalleryBulkCopy_Settings_Retina" value="<?php echo FOOGALLERY_META_RETINA; ?>">
-                                <label for="FooGalleryBulkCopy_Settings_Retina"><?php esc_html_e('Retina Settings', 'foogallery'); ?></label><br>
+                                <input <?php echo ( array_key_exists( FOOGALLERY_META_RETINA, $settings ) ? 'checked="checked"' : '' ); ?> type="checkbox" name="foogallery_bulk_copy[settings][<?php echo esc_attr( FOOGALLERY_META_RETINA ); ?>]" id="FooGalleryBulkCopy_Settings_Retina" value="<?php echo esc_attr( FOOGALLERY_META_RETINA ); ?>">
+                                <label for="FooGalleryBulkCopy_Settings_Retina"><?php esc_html_e( 'Retina Settings', 'foogallery' ); ?></label><br>
 
-                                <input <?php echo (array_key_exists(FOOGALLERY_META_SORT, $settings) ? 'checked="checked"' : ''); ?> type="checkbox" name="foogallery_bulk_copy[settings][<?php echo FOOGALLERY_META_SORT; ?>]" id="FooGalleryBulkCopy_Settings_Sorting" value="<?php echo FOOGALLERY_META_SORT; ?>">
-                                <label for="FooGalleryBulkCopy_Settings_Sorting"><?php esc_html_e('Sorting Settings', 'foogallery'); ?></label><br>
+                                <input <?php echo ( array_key_exists( FOOGALLERY_META_SORT, $settings ) ? 'checked="checked"' : '' ); ?> type="checkbox" name="foogallery_bulk_copy[settings][<?php echo esc_attr( FOOGALLERY_META_SORT ); ?>]" id="FooGalleryBulkCopy_Settings_Sorting" value="<?php echo esc_attr( FOOGALLERY_META_SORT ); ?>">
+                                <label for="FooGalleryBulkCopy_Settings_Sorting"><?php esc_html_e( 'Sorting Settings', 'foogallery' ); ?></label><br>
 
-                                <input <?php echo (array_key_exists(FOOGALLERY_META_CUSTOM_CSS, $settings) ? 'checked="checked"' : ''); ?> type="checkbox" name="foogallery_bulk_copy[settings][<?php echo FOOGALLERY_META_CUSTOM_CSS; ?>]" id="FooGalleryBulkCopy_Settings_CustomCSS" value="<?php echo FOOGALLERY_META_CUSTOM_CSS; ?>">
-                                <label for="FooGalleryBulkCopy_Settings_CustomCSS"><?php esc_html_e('Custom CSS', 'foogallery'); ?></label>
+                                <input <?php echo ( array_key_exists( FOOGALLERY_META_CUSTOM_CSS, $settings ) ? 'checked="checked"' : '' ); ?> type="checkbox" name="foogallery_bulk_copy[settings][<?php echo esc_attr( FOOGALLERY_META_CUSTOM_CSS ); ?>]" id="FooGalleryBulkCopy_Settings_CustomCSS" value="<?php echo esc_attr( FOOGALLERY_META_CUSTOM_CSS ); ?>">
+                                <label for="FooGalleryBulkCopy_Settings_CustomCSS"><?php esc_html_e( 'Custom CSS', 'foogallery' ); ?></label>
                             </div>
+
                         </td>
                     </tr>
                     <tr class="foogallery_template_field">
                         <th>
-                            <label for="FooGallerySettings_default_lightbox"><?php esc_html_e('Destination', 'foogallery'); ?></label>
+                            <label for="FooGallerySettings_default_lightbox"><?php esc_html_e( 'Destination', 'foogallery'); ?></label>
                             <span data-balloon-length="large" data-balloon-pos="right" data-balloon="Choose which galleries you want to copy the settings to."><i class="dashicons dashicons-editor-help"></i></span>
                         </th>
                         <td>
                             <?php if ( array_key_exists( 'destination', $errors ) ) {?>
-                                <div class="foogallery_bulk_copy_error"><?php echo $errors['destination']; ?></div>
+                                <div class="foogallery_bulk_copy_error"><?php echo esc_html( $errors['destination'] ); ?></div>
                             <?php } ?>
                             <div class="foogallery_metabox_field-radio">
-                                <input <?php echo ('all' === $destination ? 'checked="checked"' : ''); ?> type="radio" name="foogallery_bulk_copy[destination]" id="FooGalleryBulkCopy_Destination_All" value="all">
-                                <label for="FooGalleryBulkCopy_Destination_All"><?php esc_html_e('All Galleries', 'foogallery'); ?></label><br>
+                                <input <?php echo ( 'all' === $destination ? 'checked="checked"' : '' ); ?> type="radio" name="foogallery_bulk_copy[destination]" id="FooGalleryBulkCopy_Destination_All" value="all">
+                                <label for="FooGalleryBulkCopy_Destination_All"><?php esc_html_e( 'All Galleries', 'foogallery'); ?></label><br>
 
-                                <input <?php echo ('custom' === $destination ? 'checked="checked"' : ''); ?> type="radio" name="foogallery_bulk_copy[destination]" id="FooGalleryBulkCopy_Destination_Custom" value="custom">
-                                <label for="FooGalleryBulkCopy_Destination_Custom"><?php esc_html_e('Custom Selection', 'foogallery'); ?></label><br>
+                                <input <?php echo ( 'custom' === $destination ? 'checked="checked"' : '' ); ?> type="radio" name="foogallery_bulk_copy[destination]" id="FooGalleryBulkCopy_Destination_Custom" value="custom">
+                                <label for="FooGalleryBulkCopy_Destination_Custom"><?php esc_html_e( 'Custom Selection', 'foogallery'); ?></label><br>
                             </div>
                         </td>
                     </tr>
                     <tr class="foogallery_template_field">
                         <th>
-                            <label for="FooGallerySettings_default_lightbox"><?php esc_html_e('Select the galleries', 'foogallery'); ?></label>
+                            <label for="FooGallerySettings_default_lightbox"><?php esc_html_e( 'Select the galleries', 'foogallery'); ?></label>
                         </th>
                         <td>
-                            <?php if ( array_key_exists( 'gallery', $errors ) ) {?><div class="foogallery_bulk_copy_error"><?php echo $errors['gallery']; ?></div><?php } ?>
+                            <?php if ( array_key_exists( 'gallery', $errors ) ) { ?><div class="foogallery_bulk_copy_error"><?php echo esc_html( $errors['gallery'] ); ?></div><?php } ?>
                             <div class="foogallery_metabox_field-radio bulk_copy_custom">
-                                <?php foreach ( foogallery_get_all_galleries($exclude) as $foogallery ) {
+                                <?php foreach ( foogallery_get_all_galleries( $exclude ) as $foogallery ) {
                                     $checked = array_key_exists( $foogallery->ID, $galleries ) ? 'checked="checked"' : '';
                                     ?><div class="foogallery_bulk_copy_custom_selection">
-                                    <input <?php echo $checked; ?> type="checkbox" name="foogallery_bulk_copy[gallery][<?php echo $foogallery->ID; ?>]" id="FooGalleryBulkCopy_Custom_<?php echo $foogallery->ID; ?>" value="<?php echo $foogallery->ID; ?>">
-                                    <label for="FooGalleryBulkCopy_Custom_<?php echo $foogallery->ID; ?>"><?php echo $foogallery->name . ' [' . $foogallery->ID . ']'; ?></label>
-                                    </div>
-                                <?php } ?>
+                                    <input <?php echo $checked; ?> type="checkbox" name="foogallery_bulk_copy[gallery][<?php echo esc_attr( $foogallery->ID ); ?>]" id="FooGalleryBulkCopy_Custom_<?php echo esc_attr( $foogallery->ID ); ?>" value="<?php echo esc_attr( $foogallery->ID ); ?>">
+                                    <label for="FooGalleryBulkCopy_Custom_<?php echo esc_attr( $foogallery->ID ); ?>"><?php echo esc_html( $foogallery->name ) . ' [' . esc_attr( $foogallery->ID ) . ']'; ?></label>
+                                    </div><?php
+                                } ?>
                             </div>
                         </td>
                     </tr>
                 </table>
                 <p>
-                    <input type="hidden" name="foogallery_bulk_copy[foogallery]" value="<?php echo $foogallery_id; ?>" />
+                    <input type="hidden" name="foogallery_bulk_copy[foogallery]" value="<?php echo esc_attr( $foogallery_id ); ?>" />
                     <button class="button button-primary button-large" id="foogallery_bulk_copy_run"><?php esc_html_e( 'Run Bulk Copy', 'foogallery' ); ?></button>
                     <span class="foogallery_bulk_copy_spinner spinner"></span>
                     <?php if ( count ($errors) > 0 ) { ?>
                         <br />
-                        <div class="foogallery_bulk_copy_error"><?php esc_html_e('The bulk copy could not be run, due to errors. Please see above and correct the errors before continuing.', 'foogallery'); ?></div>
+                        <div class="foogallery_bulk_copy_error"><?php esc_html_e( 'The bulk copy could not be run, due to errors. Please see above and correct the errors before continuing.', 'foogallery'); ?></div>
                     <?php } ?>
                     <?php wp_nonce_field( 'foogallery_bulk_copy_run', 'foogallery_bulk_copy_run_nonce', false ); ?>
                 </p>
@@ -231,7 +232,7 @@ if ( ! class_exists( 'FooGallery_Pro_Bulk_Copy' ) ) {
 
         public function ajax_bulk_copy_start()
         {
-            if (check_admin_referer('foogallery_bulk_copy_start', 'foogallery_bulk_copy_start_nonce')) {
+            if (check_admin_referer( 'foogallery_bulk_copy_start', 'foogallery_bulk_copy_start_nonce')) {
                 $foogallery_id = $_POST['foogallery'];
                 $this->output_bulk_copy_form( $foogallery_id );
             }
@@ -303,50 +304,50 @@ if ( ! class_exists( 'FooGallery_Pro_Bulk_Copy' ) ) {
                 }
             </style>
             <script type="text/javascript">
-                jQuery(function ($) {
-                    $('#foogallery_bulk_copy_container').on('click', '#foogallery_bulk_copy_start', function(e) {
+                jQuery( Function ($) {
+                    $( '#foogallery_bulk_copy_container').on( 'click', '#foogallery_bulk_copy_start', function(e) {
                         e.preventDefault();
 
-                        $('.foogallery_bulk_copy_spinner').addClass('is-active');
+                        $( '.foogallery_bulk_copy_spinner').addClass( 'is-active');
                         var data = 'action=foogallery_bulk_copy_start' +
                             '&foogallery=<?php echo $post->ID; ?>' +
-                            '&foogallery_bulk_copy_start_nonce=' + $('#foogallery_bulk_copy_start_nonce').val() +
-                            '&_wp_http_referer=' + encodeURIComponent($('input[name="_wp_http_referer"]').val());
+                            '&foogallery_bulk_copy_start_nonce=' + $( '#foogallery_bulk_copy_start_nonce').val() +
+                            '&_wp_http_referer=' + encodeURIComponent($( 'input[name="_wp_http_referer"]').val());
 
                         $.ajax({
                             type: "POST",
                             url: ajaxurl,
                             data: data,
                             success: function(data) {
-                                $('#foogallery_bulk_copy_container').html(data);
-                                $('.foogallery_bulk_copy_spinner').removeClass('is-active');
+                                $( '#foogallery_bulk_copy_container').html(data);
+                                $( '.foogallery_bulk_copy_spinner').removeClass( 'is-active');
                             }
                         });
                     });
 
-                    $('#foogallery_bulk_copy_container').on('click', '#foogallery_bulk_copy_run', function(e) {
+                    $( '#foogallery_bulk_copy_container').on( 'click', '#foogallery_bulk_copy_run', function(e) {
                         e.preventDefault();
 
-                        $('.foogallery_bulk_copy_spinner').addClass('is-active');
-                        var data = $('.foogallery-bulk-copy-settings').find('select, textarea, input').serialize() +
+                        $( '.foogallery_bulk_copy_spinner').addClass( 'is-active');
+                        var data = $( '.foogallery-bulk-copy-settings').find( 'select, textarea, input').serialize() +
                             '&action=foogallery_bulk_copy_run' +
-                            '&foogallery_bulk_copy_run_nonce=' + $('#foogallery_bulk_copy_run_nonce').val() +
-                            '&_wp_http_referer=' + encodeURIComponent($('input[name="_wp_http_referer"]').val());
+                            '&foogallery_bulk_copy_run_nonce=' + $( '#foogallery_bulk_copy_run_nonce').val() +
+                            '&_wp_http_referer=' + encodeURIComponent($( 'input[name="_wp_http_referer"]').val());
 
                         $.ajax({
                             type: "POST",
                             url: ajaxurl,
                             data: data,
                             success: function(data) {
-                                $('#foogallery_bulk_copy_container').html(data);
-                                $('.foogallery_bulk_copy_spinner').removeClass('is-active');
+                                $( '#foogallery_bulk_copy_container').html(data);
+                                $( '.foogallery_bulk_copy_spinner').removeClass( 'is-active');
                             }
                         });
                     });
                 });
             </script>
             <div>
-                <p class="foogallery-help"><?php esc_html_e('You can bulk copy the settings from this gallery to other galleries in a few easy steps. To get started, click the button below. Please be sure to save your gallery before you start the copy, as only the saved settings stored in the database will be copied across.', 'foogallery'); ?></p>
+                <p class="foogallery-help"><?php esc_html_e( 'You can bulk copy the settings from this gallery to other galleries in a few easy steps. To get started, click the button below. Please be sure to save your gallery before you start the copy, as only the saved settings stored in the database will be copied across.', 'foogallery'); ?></p>
             </div>
             <br/>
             <div id="foogallery_bulk_copy_container">

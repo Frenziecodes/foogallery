@@ -84,11 +84,9 @@ if ( !class_exists( 'FooGallery_FooGrid_Gallery_Template' ) ) {
 
 				// @formatter:off
 				?>
-<style type="text/css">
-	<?php echo '#' . $id; ?> .fg-image {
-        width: <?php echo $width; ?>px;
-    }
-</style>
+				<style type="text/css">
+					<?php echo '#' . esc_attr( $id ) . ' .fg-image { width: ' . esc_attr( $width ) . 'px; }'; ?>
+				</style>
 				<?php
 				// @formatter:on
 			}
