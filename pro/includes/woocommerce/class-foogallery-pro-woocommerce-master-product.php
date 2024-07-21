@@ -752,13 +752,13 @@ if ( ! class_exists( 'FooGallery_Pro_Woocommerce_Master_Product' ) ) {
             <div class="foogallery-master-product-modal-wrapper" data-foogalleryid="<?php echo $post->ID; ?>" data-nonce="<?php echo wp_create_nonce( 'foogallery_master_product' ); ?>" style="display: none;">
                 <div class="media-modal wp-core-ui">
                     <button type="button" class="media-modal-close foogallery-master-product-modal-close">
-						<span class="media-modal-icon"><span class="screen-reader-text"><?php _e( 'Close', 'foogallery' ); ?></span>
+						<span class="media-modal-icon"><span class="screen-reader-text"><?php esc_html_e( 'Close', 'foogallery' ); ?></span>
                     </button>
                     <div class="media-modal-content">
                         <div class="media-frame wp-core-ui">
                             <div class="foogallery-master-product-modal-title">
-                                <h1><?php _e('Select a Master Product', 'foogallery'); ?></h1>
-                                <a class="foogallery-master-product-modal-reload button" href="#"><span style="padding-top: 4px;" class="dashicons dashicons-update"></span> <?php _e('Reload', 'foogallery'); ?></a>
+                                <h1><?php esc_html_e('Select a Master Product', 'foogallery'); ?></h1>
+                                <a class="foogallery-master-product-modal-reload button" href="#"><span style="padding-top: 4px;" class="dashicons dashicons-update"></span> <?php esc_html_e('Reload', 'foogallery'); ?></a>
                             </div>
                             <div class="foogallery-master-product-modal-container not-loaded">
                                 <div class="spinner is-active"></div>
@@ -768,10 +768,10 @@ if ( ! class_exists( 'FooGallery_Pro_Woocommerce_Master_Product' ) ) {
                                     <div class="media-toolbar-primary">
                                         <a href="#"
                                            class="foogallery-master-product-modal-close button button-large button-secondary"
-                                           title="<?php esc_attr_e('Close', 'foogallery'); ?>"><?php _e('Close', 'foogallery'); ?></a>
+                                           title="<?php esc_attr_e('Close', 'foogallery'); ?>"><?php esc_html_e('Close', 'foogallery'); ?></a>
                                         <a href="#" disabled="disabled"
                                            class="foogallery-master-product-modal-set button button-large button-primary"
-                                           title="<?php esc_attr_e('Select Master Product', 'foogallery'); ?>"><?php _e('Select Master Product', 'foogallery'); ?></a>
+                                           title="<?php esc_attr_e('Select Master Product', 'foogallery'); ?>"><?php esc_html_e('Select Master Product', 'foogallery'); ?></a>
                                     </div>
                                 </div>
                             </div>

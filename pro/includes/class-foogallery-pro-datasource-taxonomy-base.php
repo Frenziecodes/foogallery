@@ -251,7 +251,7 @@ if ( ! class_exists( 'FooGallery_Pro_Datasource_Taxonomy_Base' ) ) {
             if ( $term_count > 0 ) {
 
                 ?>
-                <p><?php printf(__('Select %s from the list below. The gallery will then dynamically load all attachments that are assigned to the selected items.', 'foogallery'), $datasource['name']); ?></p>
+                <p><?php printf(esc_html__('Select %s from the list below. The gallery will then dynamically load all attachments that are assigned to the selected items.', 'foogallery'), $datasource['name']); ?></p>
                 <ul data-taxonomy="<?php echo $this->taxonomy; ?>">
                     <?php
 
@@ -269,11 +269,11 @@ if ( ! class_exists( 'FooGallery_Pro_Datasource_Taxonomy_Base' ) ) {
                 <?php
 
             } else {
-                echo '<p>' . sprintf( __( 'We found no %s for you to choose. You will need to create a few first, by clicking the link below. Once you have created them, you can click the reload button above.', 'foogallery' ), $datasource['name']) . '</p>';
+                echo '<p>' . sprintf( esc_html__( 'We found no %s for you to choose. You will need to create a few first, by clicking the link below. Once you have created them, you can click the reload button above.', 'foogallery' ), $datasource['name']) . '</p>';
             }
 
             $taxonomy_url = admin_url( 'edit-tags.php?taxonomy=' . $this->taxonomy );
-            echo '<div style="clear: both"></div><p><a target="_blank" href="' . $taxonomy_url . '">' . sprintf( __('Manage your %s', 'foogallery'), $datasource['name'] ) . '</a></p>';
+            echo '<div style="clear: both"></div><p><a target="_blank" href="' . $taxonomy_url . '">' . sprintf( esc_html__('Manage your %s', 'foogallery'), $datasource['name'] ) . '</a></p>';
 		}
 
 		/**
@@ -319,36 +319,36 @@ if ( ! class_exists( 'FooGallery_Pro_Datasource_Taxonomy_Base' ) ) {
 					});
 				});
 			</script>
-			<div class="foogallery-datasource-taxonomy foogallery-datasource-taxonomy-<?php echo $this->taxonomy; ?>" data-media-title="<?php _e('Media Library', 'foogallery'); ?>" data-media-button="<?php _e('Close', 'foogallery'); ?>" <?php echo $show_container ? '' : 'style="display:none" '; ?>>
-				<h3><?php echo sprintf( __('Datasource : %s', 'foogallery'), $datasource['name'] ); ?></h3>
-				<p><?php echo sprintf( __('This gallery will be dynamically populated with all attachments assigned to the following %s:', 'foogallery'), $datasource['name'] ); ?></p>
+			<div class="foogallery-datasource-taxonomy foogallery-datasource-taxonomy-<?php echo $this->taxonomy; ?>" data-media-title="<?php esc_html_e('Media Library', 'foogallery'); ?>" data-media-button="<?php esc_html_e('Close', 'foogallery'); ?>" <?php echo $show_container ? '' : 'style="display:none" '; ?>>
+				<h3><?php echo sprintf( esc_html__('Datasource : %s', 'foogallery'), $datasource['name'] ); ?></h3>
+				<p><?php echo sprintf( esc_html__('This gallery will be dynamically populated with all attachments assigned to the following %s:', 'foogallery'), $datasource['name'] ); ?></p>
 				<div class="foogallery-items-html"><?php echo $html; ?></div>
 				<button type="button" class="button edit" data-datasource="<?php echo $this->datasource_name; ?>">
-					<?php echo sprintf( __( 'Change %s', 'foogallery' ), $datasource['name'] ); ?>
+					<?php echo sprintf( esc_html__( 'Change %s', 'foogallery' ), $datasource['name'] ); ?>
 				</button>
 				<button type="button" class="button remove">
-					<?php echo sprintf( __( 'Remove All %s', 'foogallery' ), $datasource['name'] ); ?>
+					<?php echo sprintf( esc_html__( 'Remove All %s', 'foogallery' ), $datasource['name'] ); ?>
 				</button>
 				<?php if ( $show_media_button ) { ?>
 				<button type="button" class="button media">
-					<?php _e( 'Open Media Library', 'foogallery' ); ?>
+					<?php esc_html_e( 'Open Media Library', 'foogallery' ); ?>
 				</button>
 				<?php } ?>
 				<button type="button" class="button bulk_media_management">
-					<?php _e( 'Bulk Taxonomy Manager', 'foogallery' ); ?>
+					<?php esc_html_e( 'Bulk Taxonomy Manager', 'foogallery' ); ?>
 				</button>
 				<button type="button" class="button help">
-					<?php _e( 'Show Help', 'foogallery' ); ?>
+					<?php esc_html_e( 'Show Help', 'foogallery' ); ?>
 				</button>
 				<div style="display: none" class="foogallery-datasource-taxonomy-help">
-					<h4><?php echo sprintf( __('%s Datasource Help', 'foogallery'), $datasource['name'] ); ?></h4>
-					<p><?php echo sprintf( __('You can change which %s are assigned to this gallery by clicking "Change %s".', 'foogalley' ), $datasource['name'], $datasource['name'] ); ?></p>
-					<p><?php echo sprintf( __('You can remove all %s from this gallery by clicking "Remove All %s".', 'foogalley' ), $datasource['name'], $datasource['name'] ); ?></p>
+					<h4><?php echo sprintf( esc_html__('%s Datasource Help', 'foogallery'), $datasource['name'] ); ?></h4>
+					<p><?php echo sprintf( esc_html__('You can change which %s are assigned to this gallery by clicking "Change %s".', 'foogalley' ), $datasource['name'], $datasource['name'] ); ?></p>
+					<p><?php echo sprintf( esc_html__('You can remove all %s from this gallery by clicking "Remove All %s".', 'foogalley' ), $datasource['name'], $datasource['name'] ); ?></p>
 					<?php if ( $show_media_button ) { ?>
-					<p><?php echo sprintf( __('You can assign %s to attachments within the WordPress Media Library. Launch by clicking "Open Media Library".', 'foogalley' ), $datasource['name'] ); ?></p>
+					<p><?php echo sprintf( esc_html__('You can assign %s to attachments within the WordPress Media Library. Launch by clicking "Open Media Library".', 'foogalley' ), $datasource['name'] ); ?></p>
 					<?php } ?>
-					<p><?php echo sprintf( __('When an attachment is assigned to one of the %s, it will automatically be shown in the gallery.', 'foogalley' ), $datasource['name'] ); ?></p>
-					<p><?php echo __('Click on the "Gallery Preview" to see which attachments will be loaded into the gallery.', 'foogallery'); ?></p>
+					<p><?php echo sprintf( esc_html__('When an attachment is assigned to one of the %s, it will automatically be shown in the gallery.', 'foogalley' ), $datasource['name'] ); ?></p>
+					<p><?php echo esc_html__('Click on the "Gallery Preview" to see which attachments will be loaded into the gallery.', 'foogallery'); ?></p>
 				</div>
 			</div><?php
 		}

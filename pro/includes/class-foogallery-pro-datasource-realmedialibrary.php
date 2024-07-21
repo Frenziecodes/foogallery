@@ -219,16 +219,16 @@ if ( ! class_exists( 'FooGallery_Pro_Datasource_RealMediaLibrary' ) ) {
 			//check for plugin version and show message
 
 			if ( ! defined( 'RML_VERSION' ) ) { ?>
-				<p><?php echo sprintf( __( 'You need to activate the %s plugin in order to use the Real Media Library datasource', 'foogallery' ), $rml_link ); ?></p>
-				<p><?php echo __( 'RML (Real Media Library) is one of the most wanted media wordpress plugins. It is easy to use and it allows you to organize your thousands of images in folders. It is similar to wordpress categories like in the posts.', 'foogallery' ); ?></p>
+				<p><?php echo sprintf( esc_html__( 'You need to activate the %s plugin in order to use the Real Media Library datasource', 'foogallery' ), $rml_link ); ?></p>
+				<p><?php echo esc_html__( 'RML (Real Media Library) is one of the most wanted media wordpress plugins. It is easy to use and it allows you to organize your thousands of images in folders. It is similar to wordpress categories like in the posts.', 'foogallery' ); ?></p>
 				<a href="<?php echo $rml_url; ?>" target="_blank"><img src="https://matthias-web.com/wp-content/uploads/Plugins/Real-Media-Library/preview.jpg" width="500" /></a>
 			<?php } else {
 
 				if ( !$this->correct_version() ) { ?>
-					<p><?php echo sprintf( __( 'You are using an outdated version of %s - please download the latest version of the plugin, which is 100%% datasource compatible.', 'foogallery' ), $rml_link ); ?></p>
+					<p><?php echo sprintf( esc_html__( 'You are using an outdated version of %s - please download the latest version of the plugin, which is 100%% datasource compatible.', 'foogallery' ), $rml_link ); ?></p>
 				<?php }
 
-				echo '<p>' . __( 'Select a folder below. Your gallery will then be dynamically populated with all the images within the selected folder.', 'foogallery' ) . '</p>';
+				echo '<p>' . esc_html__( 'Select a folder below. Your gallery will then be dynamically populated with all the images within the selected folder.', 'foogallery' ) . '</p>';
 
 				// Preselect to edit
 				$folder = _wp_rml_root();
@@ -334,15 +334,15 @@ if ( ! class_exists( 'FooGallery_Pro_Datasource_RealMediaLibrary' ) ) {
 			}
 			?>
 			<div <?php echo $show_container ? '' : 'style="display:none" '; ?>class="foogallery-datasource-rml">
-				<h3><?php _e( 'Datasource : Real Media Library folder', 'foogallery' ); ?></h3>
-				<p><?php _e( 'This gallery will be dynamically populated with all images within the following folder:', 'foogallery' ); ?></p>
+				<h3><?php esc_html_e( 'Datasource : Real Media Library folder', 'foogallery' ); ?></h3>
+				<p><?php esc_html_e( 'This gallery will be dynamically populated with all images within the following folder:', 'foogallery' ); ?></p>
 				<div class="foogallery-items-html"><?php echo $value ?></div>
 				<br />
 				<button type="button" class="button edit">
-					<?php _e( 'Change Folder', 'foogallery' ); ?>
+					<?php esc_html_e( 'Change Folder', 'foogallery' ); ?>
 				</button>
 				<button type="button" class="button remove">
-					<?php _e( 'Remove Folder', 'foogallery' ); ?>
+					<?php esc_html_e( 'Remove Folder', 'foogallery' ); ?>
 				</button>
 			</div><?php
 		}
